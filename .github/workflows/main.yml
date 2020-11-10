@@ -14,15 +14,17 @@ jobs:
 
     steps:
       - name: Checkout code
-      - uses: actions/checkout@v1
+        uses: actions/checkout@v1
       
       - name: Use Node.js 12.x
         uses: actions/setup-node@v1
         with:
-          node-version: 12.x
-      - run: npm install
-      - run: npm test  
-      - run: npm run build --if-present
+          node-version: 12.x              
+      - name: Install and Test
+        run: |
+          npm install
+          npm test  
+          npm run build --if-present
 
       - name: Deploy to netlify
         uses: netlify/actions/cli@master
