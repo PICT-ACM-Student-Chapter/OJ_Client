@@ -1,0 +1,10 @@
+.lefthalf{
+  width: 70em;
+  background-color: azure;
+  height: 100em;
+}
+.righthalf{
+ width: 30em;
+ background-color: azure;
+ height: 100em;
+}
