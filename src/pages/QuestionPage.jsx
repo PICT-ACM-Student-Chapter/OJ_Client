@@ -58,6 +58,7 @@ const data = [
 function QuestionPage() {
 	return (
 		<div style={{ width: "60%", border: "1px solid #ffffff", margin: "1rem" }}>
+			{/* Question Title */}
 			<div className="site-page-header-ghost-wrapper">
 				<PageHeader
 					ghost={false}
@@ -82,29 +83,25 @@ function QuestionPage() {
 				</PageHeader>
 			</div>
 
+			{/* Question Descriptions */}
 			<Typography style={{ textAlign: "left", padding: "1rem" }}>
 				<Paragraph>
 					In the process of internal desktop applications development, many
 					different design specs and implementations would be involved, which
 					might cause designers and developers difficulties and duplication and
-					reduce the efficiency of development.
-				</Paragraph>
-				<Paragraph>
-					After massive project practice and summaries, Ant Design, a design
-					language for background applications, is refined by Ant UED Team,
-					which aims to uniform the user interface specs for internal background
-					projects, lower the unnecessary cost of design differences and
-					implementation and liberate the resources of design and front-end
+					reduce the efficiency of development. After massive project practice
+					and summaries, Ant Design, a design language for background
+					applications, is refined by Ant UED Team, which aims to uniform the
+					user interface specs for internal background projects, lower the
+					unnecessary cost of design differences and implementation and liberate
+					the resources of design and front-end development. In the process of
+					internal desktop applications development, many different design specs
+					and implementations would be involved, which might cause designers and
+					developers difficulties and duplication and reduce the efficiency of
 					development. In the process of internal desktop applications
 					development, many different design specs and implementations would be
 					involved, which might cause designers and developers difficulties and
 					duplication and reduce the efficiency of development.
-				</Paragraph>
-				<Paragraph>
-					In the process of internal desktop applications development, many
-					different design specs and implementations would be involved, which
-					might cause designers and developers difficulties and duplication and
-					reduce the efficiency of development.
 				</Paragraph>
 
 				<Divider style={{ background: "#616161" }} />
