@@ -1,6 +1,5 @@
 import './App.less';
 import Login from './components/Auth/Login';
-import LeaderBoard from './components/LeaderBoard';
 import Navbar from './components/Navbars/Navbar';
 function App() {
   return (
