@@ -16,7 +16,7 @@ const tailLayout = {
     span: 16,
   },
 };
-function Login() {
+function Register() {
   const onFinish = (values) => {
     console.log("Success:", values);
   };
@@ -35,7 +35,7 @@ function Login() {
       <Row style={{ height: "94vh" }}>
         <Col span={2} />
         <Col span={10}>
-          <h2>Pulzion21 OJ Login</h2>
+          <h2>Pulzion21 OJ Register</h2>
           <img src={svg} width="100%" alt="login" />
         </Col>
         <Col span={10}>
@@ -43,7 +43,6 @@ function Login() {
             style={{ marginTop: "20%" }}
             {...layout}
             name="basic"
-            // value={user.username}
             initialValues={{
               remember: true,
             }}
@@ -51,9 +50,44 @@ function Login() {
             onFinishFailed={onFinishFailed}
           >
             <Form.Item
+              label="name"
+              name="name"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your name!",
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="Email"
+              name="email"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your email!",
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="College"
+              name="college"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your college!",
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
               label="Username"
               name="username"
-              // value={user.password}
               rules={[
                 {
                   required: true,
@@ -63,7 +97,19 @@ function Login() {
             >
               <Input />
             </Form.Item>
-
+            <Form.Item
+              label="Phone Number"
+              name="phone"
+              type="number"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your phone number!",
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
             <Form.Item
               label="Password"
               name="password"
@@ -94,4 +140,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Register;
