@@ -10,13 +10,21 @@ import { Space, Tabs } from "antd";
 const { TabPane } = Tabs;
 
 const problemTitle = "Lets's Do it!";
-const extraProbDetails = "NONE";
-const questionDescription = "This is QD";
-const inputDescription = "this is ID";
-const contrainsDescription = "this is CD";
-const outputDescription = "this is OD";
+const extraProbDetails = [
+	{ name: "Time Limit", val: "1 sec" },
+	{ name: "Memory Limit", val: "50000 Bytes" },
+];
+const questionDescription = `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore 
+et dolore magna aliqua. Viverra maecenas accumsan lacus vel facilisis volutpat est velit egestas. Vestibulum mattis ullamcorper vel.
+Risus commodo viverra maecenas accumsan lacus vel facilisis volutpat est. Vestibulum morbi blandit cursus risus at ultrices mi. Lacinia at quis risus sed. Ut enim blandit volutpat maecenas volutpat blandit. In tellus integer feugiat scelerisque varius morbi enim nunc. Egestas quis ipsum suspendisse ultrices gravida dictum fusce. Venenatis tellus in metus vulputate eu scelerisque felis imperdiet proin. Dis parturient montes nascetur ridiculus. Elementum facilisis leo vel fringilla est ullamcorper. Semper risus in hendrerit gravida rutrum quisque.`;
+const inputDescription =
+	"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
+const contrainsDescription =
+	"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
+const outputDescription =
+	"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
 
-// testcases data - to be provided in tabular form
+// testcases data
 const testCaseData = [
 	{
 		key: "1",
@@ -25,13 +33,13 @@ const testCaseData = [
 		Output: "6",
 	},
 	{
-		key: "1",
+		key: "2",
 		Number: 2,
 		Input: "6 1 2 2 3 4 5 6",
 		Output: "6",
 	},
 	{
-		key: "1",
+		key: "3",
 		Number: 3,
 		Input: "6 1 2 2 3 4 5 6",
 		Output: "6",
@@ -49,7 +57,7 @@ const submHistoryData = [
 		Language: "cpp",
 	},
 	{
-		key: "1",
+		key: "2",
 		Time_Submitted: "19:05",
 		Submission_ID: "PZ100293094",
 		Status: "Accepted",
@@ -58,7 +66,7 @@ const submHistoryData = [
 		Language: "cpp",
 	},
 	{
-		key: "1",
+		key: "3",
 		Time_Submitted: "19:05",
 		Submission_ID: "PZ100293094",
 		Status: "Accepted",

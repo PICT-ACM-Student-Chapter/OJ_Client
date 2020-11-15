@@ -13,22 +13,25 @@ function QuestionHeader(props) {
 				ghost={false}
 				title={props.title}
 				extra={[
-					<Button key="3">
+					<Button key="1">
 						<CaretLeftFilled />
-						<a>Prev Problem</a>
+						Prev Problem
 					</Button>,
 					<Button key="2">
-						<a>Next Problem</a>
+						Next Problem
 						<CaretRightFilled />
 					</Button>,
 				]}
 				size="medium"
 			>
 				<Descriptions size="small" column={1}>
-					<Descriptions.Item label="Time Limit">1 sec</Descriptions.Item>
-					<Descriptions.Item label="Memory Limit">
-						50000 Bytes
-					</Descriptions.Item>
+					{props.otherDetails.map((item) => {
+						return (
+							<Descriptions.Item label={item.name} key={item.name}>
+								{item.val}
+							</Descriptions.Item>
+						);
+					})}
 				</Descriptions>
 			</PageHeader>
 		</div>
