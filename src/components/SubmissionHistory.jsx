@@ -45,43 +45,13 @@ const submHistoryCol = [
 	},
 ];
 
-const submHistoryData = [
-	{
-		key: "1",
-		Time_Submitted: "19:05",
-		Submission_ID: "PZ100293094",
-		Status: "Accepted",
-		Runtime: "23ms",
-		Memory: "13kb",
-		Language: "cpp",
-	},
-	{
-		key: "1",
-		Time_Submitted: "19:05",
-		Submission_ID: "PZ100293094",
-		Status: "Accepted",
-		Runtime: "23ms",
-		Memory: "13kb",
-		Language: "cpp",
-	},
-	{
-		key: "1",
-		Time_Submitted: "19:05",
-		Submission_ID: "PZ100293094",
-		Status: "Accepted",
-		Runtime: "23ms",
-		Memory: "13kb",
-		Language: "cpp",
-	},
-];
-
-function SubmissionHistory() {
+function SubmissionHistory(props) {
 	return (
 		<div>
 			<Title level={5}>SUBMISSION HISTORY</Title>
 			<Table
 				columns={submHistoryCol}
-				dataSource={submHistoryData}
+				dataSource={props.submHistoryData}
 				pagination={false}
 				size="small"
 			/>

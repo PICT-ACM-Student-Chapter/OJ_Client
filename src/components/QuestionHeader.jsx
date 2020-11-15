@@ -1,8 +1,8 @@
 import React from "react";
 import { CaretLeftFilled, CaretRightFilled } from "@ant-design/icons";
-import { PageHeader, Button, Descriptions, Typography, Tabs } from "antd";
+import { PageHeader, Button, Descriptions } from "antd";
 
-function QuestionHeader() {
+function QuestionHeader(props) {
 	return (
 		<div
 			style={{
@@ -11,14 +11,14 @@ function QuestionHeader() {
 		>
 			<PageHeader
 				ghost={false}
-				title="A. Let's Crack it."
+				title={props.title}
 				extra={[
 					<Button key="3">
 						<CaretLeftFilled />
-						Prev Problem
+						<a>Prev Problem</a>
 					</Button>,
 					<Button key="2">
-						Next Problem
+						<a>Next Problem</a>
 						<CaretRightFilled />
 					</Button>,
 				]}
