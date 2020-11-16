@@ -1,7 +1,9 @@
-import { Col, Row } from "antd";
 import React from "react";
-import { Form, Input, Button, Checkbox } from "antd";
-import svg from "../../undraw_Login_re_4vu2.svg";
+import { Form, Input, Button } from "antd";
+import { Card } from "antd";
+import { Link } from "react-router-dom";
+// import svg from "../../undraw_Login_re_4vu2.svg";
+import svg from "../../signup.svg";
 const layout = {
   labelCol: {
     span: 8,
@@ -16,6 +18,7 @@ const tailLayout = {
     span: 16,
   },
 };
+
 function Register() {
   const onFinish = (values) => {
     console.log("Success:", values);
@@ -25,22 +28,33 @@ function Register() {
     console.log("Failed:", errorInfo);
   };
   return (
-    <div
-      style={{
-        backgroundColor: "#ffffff",
-        paddingTop: "10%",
-        margin: "auto",
-      }}
-    >
-      <Row style={{ height: "94vh" }}>
-        <Col span={2} />
-        <Col span={10}>
-          <h2>Pulzion21 OJ Register</h2>
+    <div className="login-register-page">
+      <div
+        className="login-register"
+        style={{
+          backgroundColor: "#141414",
+          margin: "auto",
+        }}
+      >
+        <div className="svg-card ">
+          <h1>Pulzion21 OJ Register</h1>
           <img src={svg} width="100%" alt="login" />
-        </Col>
-        <Col span={10}>
+        </div>
+        <Card
+          title="Register For Pulzion 21"
+          style={{
+            width: "40%",
+            height: "fit-content",
+            padding: "2 em",
+            background: "#019183",
+            border: 0,
+            marginTop: "auto",
+            marginBottom: "auto",
+            maxWidth: "500px",
+          }}
+          className="form-card"
+        >
           <Form
-            style={{ marginTop: "20%" }}
             {...layout}
             name="basic"
             initialValues={{
@@ -48,9 +62,18 @@ function Register() {
             }}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
+            style={{
+              width: "100%",
+
+              justifyContent: "center",
+              maxWidth: "500px",
+            }}
           >
             <Form.Item
-              label="name"
+              // label="Username"
+              style={{
+                width: "100%",
+              }}
               name="name"
               rules={[
                 {
@@ -59,10 +82,21 @@ function Register() {
                 },
               ]}
             >
-              <Input />
+              <Input
+                placeHolder="name"
+                style={{
+                  width: "150%",
+                  height: "3em",
+                  margin: 0,
+                  maxWidth: "500px",
+                }}
+              />
             </Form.Item>
             <Form.Item
-              label="Email"
+              // label="Username"
+              style={{
+                width: "100%",
+              }}
               name="email"
               rules={[
                 {
@@ -71,22 +105,44 @@ function Register() {
                 },
               ]}
             >
-              <Input />
+              <Input
+                placeHolder="email"
+                style={{
+                  width: "150%",
+                  height: "3em",
+                  margin: 0,
+                  maxWidth: "500px",
+                }}
+              />
             </Form.Item>
             <Form.Item
-              label="College"
-              name="college"
+              // label="Username"
+              style={{
+                width: "100%",
+              }}
+              name="phone number"
               rules={[
                 {
                   required: true,
-                  message: "Please input your college!",
+                  message: "Please input your phone number!",
                 },
               ]}
             >
-              <Input />
+              <Input
+                placeHolder="phone number"
+                style={{
+                  width: "150%",
+                  height: "3em",
+                  margin: 0,
+                  maxWidth: "500px",
+                }}
+              />
             </Form.Item>
             <Form.Item
-              label="Username"
+              // label="Username"
+              style={{
+                width: "100%",
+              }}
               name="username"
               rules={[
                 {
@@ -95,23 +151,44 @@ function Register() {
                 },
               ]}
             >
-              <Input />
+              <Input
+                placeHolder="username"
+                style={{
+                  width: "150%",
+                  height: "3em",
+                  margin: 0,
+                  maxWidth: "500px",
+                }}
+              />
             </Form.Item>
             <Form.Item
-              label="Phone Number"
-              name="phone"
-              type="number"
+              // label="Username"
+              style={{
+                width: "100%",
+              }}
+              name="college"
               rules={[
                 {
                   required: true,
-                  message: "Please input your phone number!",
+                  message: "Please input your college!",
                 },
               ]}
             >
-              <Input />
+              <Input
+                placeHolder="college"
+                style={{
+                  width: "150%",
+                  height: "3em",
+                  margin: 0,
+                  maxWidth: "500px",
+                }}
+              />
             </Form.Item>
             <Form.Item
-              label="Password"
+              // label="Password"
+              style={{
+                width: "100%",
+              }}
               name="password"
               rules={[
                 {
@@ -120,22 +197,61 @@ function Register() {
                 },
               ]}
             >
-              <Input.Password />
+              <Input.Password
+                placeHolder="password"
+                style={{
+                  height: "3em",
+                  margin: 0,
+                  width: "150%",
+                }}
+              />
+            </Form.Item>
+            <Form.Item
+              // label="Password"
+              style={{
+                width: "100%",
+              }}
+              name="confirm password"
+              rules={[
+                {
+                  required: true,
+                  message: "Please confirm your password!",
+                },
+              ]}
+            >
+              <Input.Password
+                placeHolder="confirm password"
+                style={{
+                  height: "3em",
+                  margin: 0,
+                  width: "150%",
+                }}
+              />
             </Form.Item>
 
-            <Form.Item {...tailLayout} name="remember" valuePropName="checked">
-              <Checkbox>Remember me</Checkbox>
-            </Form.Item>
-
-            <Form.Item {...tailLayout}>
-              <Button type="primary" htmlType="submit">
-                Submit
+            <Form.Item {...tailLayout} style={{ padding: "0" }}>
+              <Button
+                type="primary"
+                htmlType="submit"
+                style={{
+                  margin: "auto",
+                  // width: "100%",
+                  marginLeft: "-50%",
+                  marginBottom: "0",
+                }}
+              >
+                Sign-In
               </Button>
             </Form.Item>
           </Form>
-        </Col>
-        <Col span={2} />
-      </Row>
+          <p>
+            Already have an account ?{" "}
+            <a className="link" href="#">
+              Login
+            </a>
+          </p>
+        </Card>
+      </div>
     </div>
   );
 }

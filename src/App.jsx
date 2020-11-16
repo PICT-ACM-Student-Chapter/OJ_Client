@@ -1,8 +1,8 @@
 import "./App.less";
 import Login from "./components/Auth/Login";
 import Navbar from "./components/Navbars/Navbar";
-import Signup from "./components/Auth/Register";
 import Register from "./components/Auth/Register";
+
 function App() {
   return (
     <div className="App" style={{ backgroundColor: "black" }}>

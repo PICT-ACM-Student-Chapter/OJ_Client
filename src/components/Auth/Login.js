@@ -1,7 +1,10 @@
-import { Col, Row } from "antd";
 import React from "react";
 import { Form, Input, Button, Checkbox } from "antd";
-import svg from "../../undraw_Login_re_4vu2.svg";
+// import svg from "../../undraw_Login_re_4vu2.svg";
+import { Card } from "antd";
+import { Link } from "react-router-dom";
+import svg from "../../login.svg";
+
 const layout = {
   labelCol: {
     span: 8,
@@ -16,6 +19,7 @@ const tailLayout = {
     span: 16,
   },
 };
+
 function Login() {
   const onFinish = (values) => {
     console.log("Success:", values);
@@ -24,36 +28,56 @@ function Login() {
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
+
   return (
-    <div
-      style={{
-        backgroundColor: "#ffffff",
-        paddingTop: "10%",
-        margin: "auto",
-      }}
-    >
-      <Row style={{ height: "94vh" }}>
-        <Col span={2} />
-        <Col span={10}>
-          <h2>Pulzion21 OJ Login</h2>
+    <div className="login-register-page">
+      <div
+        className="login-register"
+        style={{
+          backgroundColor: "#141414",
+          margin: "auto",
+        }}
+      >
+        <div className="svg-card ">
+          <h1>Pulzion21 OJ Login</h1>
           <img src={svg} width="100%" alt="login" />
-        </Col>
-        <Col span={10}>
+        </div>
+        <Card
+          title="Login For Pulzion 21"
+          style={{
+            width: "40%",
+            height: "fit-content",
+            padding: "2 em",
+            background: "#019183",
+            border: 0,
+            marginTop: "auto",
+            marginBottom: "auto",
+
+            maxWidth: "500px",
+          }}
+          className="form-card"
+        >
           <Form
-            style={{ marginTop: "20%" }}
             {...layout}
             name="basic"
-            // value={user.username}
             initialValues={{
               remember: true,
             }}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
+            style={{
+              width: "100%",
+
+              justifyContent: "center",
+              maxWidth: "500px",
+            }}
           >
             <Form.Item
-              label="Username"
+              // label="Username"
+              style={{
+                width: "100%",
+              }}
               name="username"
-              // value={user.password}
               rules={[
                 {
                   required: true,
@@ -61,11 +85,22 @@ function Login() {
                 },
               ]}
             >
-              <Input />
+              <Input
+                placeHolder="username"
+                style={{
+                  width: "150%",
+                  height: "3em",
+                  margin: 0,
+                  maxWidth: "500px",
+                }}
+              />
             </Form.Item>
 
             <Form.Item
-              label="Password"
+              // label="Password"
+              style={{
+                width: "100%",
+              }}
               name="password"
               rules={[
                 {
@@ -74,22 +109,49 @@ function Login() {
                 },
               ]}
             >
-              <Input.Password />
+              <Input.Password
+                placeHolder="password"
+                style={{
+                  height: "3em",
+                  margin: 0,
+                  width: "150%",
+                }}
+              />
             </Form.Item>
 
             <Form.Item {...tailLayout} name="remember" valuePropName="checked">
-              <Checkbox>Remember me</Checkbox>
+              <Checkbox
+                style={{
+                  marginLeft: "-50%",
+                }}
+              >
+                Remember me
+              </Checkbox>
             </Form.Item>
 
-            <Form.Item {...tailLayout}>
-              <Button type="primary" htmlType="submit">
+            <Form.Item {...tailLayout} style={{ padding: "0" }}>
+              <Button
+                type="primary"
+                htmlType="submit"
+                style={{
+                  margin: "auto",
+                  // width: "100%",
+                  marginLeft: "-50%",
+                  marginBottom: "0",
+                }}
+              >
                 Submit
               </Button>
             </Form.Item>
           </Form>
-        </Col>
-        <Col span={2} />
-      </Row>
+          <p>
+            Don't have an account ?{" "}
+            <a href="#" className="link">
+              Register
+            </a>
+          </p>
+        </Card>
+      </div>
     </div>
   );
 }
