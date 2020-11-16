@@ -88,6 +88,25 @@ form {
   color: #000000;
   background-color: aquamarine;
 }
+
+.form-item input {
+  width: 150%;
+  height: "3em";
+  margin: 0;
+  max-width: "500px";
+}
+
+.ant-input-affix-wrapper.ant-input-password {
+  width: 150%;
+}
+@media (max-width: 575px) {
+  .form-item input {
+    width: 100%;
+  }
+  .ant-input-affix-wrapper.ant-input-password {
+    width: 100%;
+  }
+}
 @media (max-width: 1300px) {
   .login-register {
     flex-direction: column;

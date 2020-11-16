@@ -67,13 +67,13 @@ function Login() {
             onFinishFailed={onFinishFailed}
             style={{
               width: "100%",
-
               justifyContent: "center",
               maxWidth: "500px",
             }}
           >
             <Form.Item
               // label="Username"
+              className="form-item"
               style={{
                 width: "100%",
               }}
@@ -88,7 +88,7 @@ function Login() {
               <Input
                 placeHolder="username"
                 style={{
-                  width: "150%",
+                  // width: "150%",
                   height: "3em",
                   margin: 0,
                   maxWidth: "500px",
@@ -98,6 +98,7 @@ function Login() {
 
             <Form.Item
               // label="Password"
+              className="form-item"
               style={{
                 width: "100%",
               }}
@@ -114,7 +115,7 @@ function Login() {
                 style={{
                   height: "3em",
                   margin: 0,
-                  width: "150%",
+                  // width: "150%",
                 }}
               />
             </Form.Item>

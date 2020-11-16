@@ -70,6 +70,7 @@ function Register() {
             }}
           >
             <Form.Item
+              className="form-item"
               // label="Username"
               style={{
                 width: "100%",
@@ -85,7 +86,7 @@ function Register() {
               <Input
                 placeHolder="name"
                 style={{
-                  width: "150%",
+                  // width: "150%",
                   height: "3em",
                   margin: 0,
                   maxWidth: "500px",
@@ -93,6 +94,7 @@ function Register() {
               />
             </Form.Item>
             <Form.Item
+              className="form-item"
               // label="Username"
               style={{
                 width: "100%",
@@ -108,7 +110,7 @@ function Register() {
               <Input
                 placeHolder="email"
                 style={{
-                  width: "150%",
+                  // width: "150%",
                   height: "3em",
                   margin: 0,
                   maxWidth: "500px",
@@ -116,6 +118,7 @@ function Register() {
               />
             </Form.Item>
             <Form.Item
+              className="form-item"
               // label="Username"
               style={{
                 width: "100%",
@@ -131,7 +134,7 @@ function Register() {
               <Input
                 placeHolder="phone number"
                 style={{
-                  width: "150%",
+                  // width: "150%",
                   height: "3em",
                   margin: 0,
                   maxWidth: "500px",
@@ -139,6 +142,7 @@ function Register() {
               />
             </Form.Item>
             <Form.Item
+              className="form-item"
               // label="Username"
               style={{
                 width: "100%",
@@ -154,7 +158,7 @@ function Register() {
               <Input
                 placeHolder="username"
                 style={{
-                  width: "150%",
+                  // width: "150%",
                   height: "3em",
                   margin: 0,
                   maxWidth: "500px",
@@ -162,6 +166,7 @@ function Register() {
               />
             </Form.Item>
             <Form.Item
+              className="form-item"
               // label="Username"
               style={{
                 width: "100%",
@@ -177,7 +182,7 @@ function Register() {
               <Input
                 placeHolder="college"
                 style={{
-                  width: "150%",
+                  // width: "150%",
                   height: "3em",
                   margin: 0,
                   maxWidth: "500px",
@@ -185,6 +190,7 @@ function Register() {
               />
             </Form.Item>
             <Form.Item
+              className="form-item"
               // label="Password"
               style={{
                 width: "100%",
@@ -202,11 +208,12 @@ function Register() {
                 style={{
                   height: "3em",
                   margin: 0,
-                  width: "150%",
+                  // width: "150%",
                 }}
               />
             </Form.Item>
             <Form.Item
+              className="form-item"
               // label="Password"
               style={{
                 width: "100%",
@@ -224,12 +231,16 @@ function Register() {
                 style={{
                   height: "3em",
                   margin: 0,
-                  width: "150%",
+                  // width: "150%",
                 }}
               />
             </Form.Item>
 
-            <Form.Item {...tailLayout} style={{ padding: "0" }}>
+            <Form.Item
+              {...tailLayout}
+              className="form-item"
+              style={{ padding: "0" }}
+            >
               <Button
                 type="primary"
                 htmlType="submit"
