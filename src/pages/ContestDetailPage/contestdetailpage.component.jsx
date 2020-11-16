@@ -1,6 +1,6 @@
 import React from 'react';
 import Navbar from '../../components/Navbars/Navbar';
-import { Space } from "antd";
+import { Space , Card } from "antd";
 import './contestdetailpage.styles.css'
 
 
@@ -9,11 +9,24 @@ const ContestDetail = () =>(
  <div>
     <Navbar contents={[{name:"Compete"},{name:"User"}]}></Navbar>
     <div>
-      <h1 style={{backgroundColor:"white"}}>Contest Name</h1>
+      <h1 style={{backgroundColor:"#A9A9A9"}}>Contest Name</h1>
     </div>
     <Space>
-      <div className='lefthalf'> <h1>om</h1> </div>
-      <div className='righthalf' > <h1>soham</h1> </div>
+      <div className='lefthalf'> 
+        
+    
+      <Card  style={{ marginBottom: 16 }} className='card-container' type="inner" title="Inner Card title" >
+        Inner Card content
+      </Card>
+
+      <Card  style={{ marginBottom: 16 }} className='card-container' type="inner" title="Inner Card title" >
+        Inner Card content
+      </Card>
+      
+    
+
+      </div>
+      <div className='righthalf' >  </div>
     </Space>
     
 
