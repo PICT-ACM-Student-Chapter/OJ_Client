@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "-": "0.0.1",
     "@craco/craco": "^5.8.0",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
@@ -10,6 +11,8 @@
     "antd": "^4.8.2",
     "classnames": "^2.2.6",
     "craco-antd": "^1.18.1",
+    "g": "^2.0.1",
+    "nodemon": "^2.0.6",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "react-router-dom": "^5.2.0",
@@ -17,7 +20,7 @@
     "web-vitals": "^0.2.4"
   },
   "scripts": {
-    "start": "craco start",
+    "start": "nodemon -w ./antd.customize.less --exec \"craco start\"",
     "build": "craco build",
     "test": "craco test",
     "eject": "react-scripts eject"
@@ -39,5 +42,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "devDependencies": {}
 }
