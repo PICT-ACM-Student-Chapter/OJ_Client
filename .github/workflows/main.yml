@@ -17,10 +17,9 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12.x              
-      - name: Install and Test
+      - name: Install and Deploy
         run: |
           npm install
-          npm test  
           npm run build --if-present
 
       - name: Deploy to netlify
