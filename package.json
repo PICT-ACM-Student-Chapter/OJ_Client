@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "-": "0.0.1",
+    "@ant-design/icons": "^4.3.0",
     "@craco/craco": "^5.8.0",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
@@ -14,9 +15,11 @@
     "g": "^2.0.1",
     "nodemon": "^2.0.6",
     "react": "^16.14.0",
+    "react-custom-scrollbars": "^4.2.1",
     "react-dom": "^16.14.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.0",
+    "react-split-pane": "^0.1.92",
     "web-vitals": "^0.2.4"
   },
   "scripts": {
