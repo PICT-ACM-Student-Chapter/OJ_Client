@@ -1,5 +1,5 @@
 import React from 'react'
-import { List, Card, Row, Col } from 'antd'
+import { List, Card, Row } from 'antd'
 import Meta from 'antd/lib/card/Meta';
 function Contests() {
     const cardStyle = {
