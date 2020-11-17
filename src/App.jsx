@@ -4,7 +4,7 @@ import './App.less';
 import ContestDetail from './pages/ContestDetailPage/contestdetailpage.component';
 function App() {
   return (
-    <div className="App" style={{backgroundColor:"black"}}>
+    <div className="App" style={{backgroundColor:"black" }}>
       {/* <Navbar></Navbar>
       <Login></Login> */}
       <ContestDetail/>

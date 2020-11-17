@@ -1,0 +1,19 @@
+.card-container:hover {
+    border-color: #A64EED;
+    border-width: medium;
+  } 
+  .card-container{
+    padding:0;
+  }
+  .cardtitle{
+    margin:0;
+    display:flex;
+    justify-content: space-between;
+    border-bottom: #019183 2px solid;
+  }
+  .cardcontent{
+    display: flex;
+  }
+  .card-container p{
+    margin:0.5em;
+  }

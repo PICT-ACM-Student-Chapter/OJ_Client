@@ -1,33 +1,36 @@
 import React from 'react';
 import Navbar from '../../components/Navbars/Navbar';
-import { Space , Card } from "antd";
-import './contestdetailpage.styles.css'
 
+import './contestdetailpage.styles.css'
+import QuestionCard from './QuestionCard/QuestionCard.component'
 
 const ContestDetail = () =>(
   
- <div>
+ <div style={{display:"flex" ,flexDirection:"column",width:"100%"}} >
     <Navbar contents={[{name:"Compete"},{name:"User"}]}></Navbar>
-    <div>
-      <h1 style={{backgroundColor:"#A9A9A9"}}>Contest Name</h1>
+    <div >
+      <h1 style={{color:"#019183",float:"left"}}>Contest Name</h1>
     </div>
-    <Space>
+    <div className="space">
       <div className='lefthalf'> 
         
     
-      <Card  style={{ marginBottom: 16 }} className='card-container' type="inner" title="Inner Card title" >
-        Inner Card content
-      </Card>
+     
+      <QuestionCard className='quecard' contents={{title:"Tom&Jerry" ,difficulty:"Medium" ,SuccessRate:"50%" , maxScore:"100"}}></QuestionCard>
 
-      <Card  style={{ marginBottom: 16 }} className='card-container' type="inner" title="Inner Card title" >
-        Inner Card content
-      </Card>
+      <QuestionCard className='quecard' contents={{title:"Who is thief" ,difficulty:"Easy" ,SuccessRate:"50%" , maxScore:"100"}}></QuestionCard>
+
+      <QuestionCard className='quecard' contents={{title:"Check for Prime" ,difficulty:"Hard" ,SuccessRate:"50%" , maxScore:"100"}}></QuestionCard>
+
+      <QuestionCard className='quecard' contents={{title:"Aisha's Birthday" ,difficulty:"Easy" ,SuccessRate:"50%" , maxScore:"100"}}></QuestionCard>
+
+      <QuestionCard className='quecard' contents={{title:"Count the jumps" ,difficulty:"Medium" ,SuccessRate:"50%" , maxScore:"100"}}></QuestionCard>
       
-    
-
       </div>
-      <div className='righthalf' >  </div>
-    </Space>
+      
+      <div className='righthalf' > 
+      <a style={{color:"black"}} href='/'>Leaderboard</a> </div>
+    </div>
     
 
  </div>
