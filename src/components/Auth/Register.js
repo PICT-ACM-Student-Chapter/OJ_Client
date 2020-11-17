@@ -4,6 +4,7 @@ import { Card } from "antd";
 import { Link } from "react-router-dom";
 // import svg from "../../undraw_Login_re_4vu2.svg";
 import svg from "../../signup.svg";
+import "./css/LoginRegister.css";
 const layout = {
   labelCol: {
     span: 8,

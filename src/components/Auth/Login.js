@@ -4,7 +4,7 @@ import { Form, Input, Button, Checkbox } from "antd";
 import { Card } from "antd";
 import { Link } from "react-router-dom";
 import svg from "../../login.svg";
-
+import "./css/LoginRegister.css";
 const layout = {
   labelCol: {
     span: 8,
