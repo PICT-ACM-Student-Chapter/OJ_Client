@@ -1,6 +1,7 @@
 import React from "react";
 import { Form, Input, Button, Checkbox } from "antd";
 // import svg from "../../undraw_Login_re_4vu2.svg";
+import axios from "axios";
 import { Card } from "antd";
 import { Link } from "react-router-dom";
 import svg from "../../login.svg";
@@ -22,7 +23,24 @@ const tailLayout = {
 
 function Login() {
   const onFinish = (values) => {
-    console.log("Success:", values);
+    if (localStorage.getItem("token")) {
+      console.log("Already Logged In");
+    } else {
+      const { username, password } = values;
+      // console.log(typeof axios.defaults.baseURL);
+      axios
+        .post("/auth/login", { username, password })
+        .then((res) => {
+          localStorage.setItem("token", res.data.access);
+          localStorage.setItem("refresh-token", res.data.refresh);
+          console.log("Logged In Successfully");
+        })
+        .catch((e) => {
+          console.log("Login Failed");
+
+          console.log(e);
+        });
+    }
   };
 
   const onFinishFailed = (errorInfo) => {

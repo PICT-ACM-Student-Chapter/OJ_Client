@@ -3,6 +3,7 @@ import { Form, Input, Button } from "antd";
 import { Card } from "antd";
 import { Link } from "react-router-dom";
 // import svg from "../../undraw_Login_re_4vu2.svg";
+import axios from "axios";
 import svg from "../../signup.svg";
 import "./css/LoginRegister.css";
 const layout = {
@@ -23,6 +24,32 @@ const tailLayout = {
 function Register() {
   const onFinish = (values) => {
     console.log("Success:", values);
+    if (values.password != values.confirm_password) {
+      console.log("Passwords don't match");
+    } else {
+      const { username, password, first_name, last_name, email } = values;
+      const data = {
+        username,
+        password,
+        first_name,
+        last_name,
+        email,
+      };
+      axios
+        .post("/auth/register", data)
+        .then((res) => {
+          console.log(res);
+          // localStorage.setItem("token", res.data.access);
+          // localStorage.setItem("refresh-token", res.data.refresh);
+          console.log("Registered Successfully");
+          console.log("Redirect to Login Page");
+        })
+        .catch((e) => {
+          console.log("Registration Failed");
+
+          console.log(e);
+        });
+    }
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -76,16 +103,63 @@ function Register() {
               style={{
                 width: "100%",
               }}
-              name="name"
+              name="username"
               rules={[
                 {
                   required: true,
-                  message: "Please input your name!",
+                  message: "Please input your username!",
                 },
               ]}
             >
               <Input
-                placeHolder="name"
+                placeHolder="username"
+                style={{
+                  // width: "150%",
+                  height: "3em",
+                  margin: 0,
+                  maxWidth: "500px",
+                }}
+              />
+            </Form.Item>
+            <Form.Item
+              className="form-item"
+              // label="Username"
+              style={{
+                width: "100%",
+              }}
+              name="first_name"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your First Name!",
+                },
+              ]}
+            >
+              <Input
+                placeHolder="first Name"
+                style={{
+                  // width: "150%",
+                  height: "3em",
+                  margin: 0,
+                  maxWidth: "500px",
+                }}
+              />
+            </Form.Item>
+            <Form.Item
+              className="form-item"
+              style={{
+                width: "100%",
+              }}
+              name="last_name"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your Last Name!",
+                },
+              ]}
+            >
+              <Input
+                placeHolder="last Name"
                 style={{
                   // width: "150%",
                   height: "3em",
@@ -118,7 +192,7 @@ function Register() {
                 }}
               />
             </Form.Item>
-            <Form.Item
+            {/* <Form.Item
               className="form-item"
               // label="Username"
               style={{
@@ -141,32 +215,9 @@ function Register() {
                   maxWidth: "500px",
                 }}
               />
-            </Form.Item>
-            <Form.Item
-              className="form-item"
-              // label="Username"
-              style={{
-                width: "100%",
-              }}
-              name="username"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your username!",
-                },
-              ]}
-            >
-              <Input
-                placeHolder="username"
-                style={{
-                  // width: "150%",
-                  height: "3em",
-                  margin: 0,
-                  maxWidth: "500px",
-                }}
-              />
-            </Form.Item>
-            <Form.Item
+            </Form.Item> */}
+
+            {/* <Form.Item
               className="form-item"
               // label="Username"
               style={{
@@ -189,7 +240,7 @@ function Register() {
                   maxWidth: "500px",
                 }}
               />
-            </Form.Item>
+            </Form.Item> */}
             <Form.Item
               className="form-item"
               // label="Password"
@@ -219,7 +270,7 @@ function Register() {
               style={{
                 width: "100%",
               }}
-              name="confirm password"
+              name="confirm_password"
               rules={[
                 {
                   required: true,
