@@ -20,7 +20,7 @@
     "web-vitals": "^0.2.4"
   },
   "scripts": {
-    "start": "nodemon -w ./antd.customize.less --exec \"craco start\"",
+    "start": "env-cmd -f ./.env nodemon -w ./antd.customize.less --exec \"craco start\"",
     "build": "craco build",
     "test": "craco test",
     "eject": "react-scripts eject"
@@ -44,6 +44,7 @@
     ]
   },
   "devDependencies": {
+    "dotenv": "^8.2.0",
     "env-cmd": "^10.1.0"
   }
 }

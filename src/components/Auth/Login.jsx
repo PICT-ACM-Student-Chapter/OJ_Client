@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import Feedback from "./Feedback";
 import { Form, Input, Button, Checkbox } from "antd";
 // import svg from "../../undraw_Login_re_4vu2.svg";
 import axios from "axios";
@@ -22,20 +23,36 @@ const tailLayout = {
 };
 
 function Login() {
+  const [feedback, setFeedback] = useState({
+    message: "",
+    type: 1,
+    show: false,
+  });
   const onFinish = (values) => {
+    setFeedback({ message: "Loading...", type: 1, show: true });
+
     if (localStorage.getItem("token")) {
-      console.log("Already Logged In");
+      setFeedback({ message: "Already Logged In", type: 1, show: true });
     } else {
       const { username, password } = values;
-      // console.log(typeof axios.defaults.baseURL);
       axios
         .post("/auth/login", { username, password })
         .then((res) => {
           localStorage.setItem("token", res.data.access);
           localStorage.setItem("refresh-token", res.data.refresh);
           console.log("Logged In Successfully");
+          setFeedback({
+            message: "Successfully Logged In!!",
+            type: 2,
+            show: true,
+          });
         })
         .catch((e) => {
+          setFeedback({ message: "Login Failed!", type: 3, show: true });
+          values = {
+            username: "",
+            password: "",
+          };
           console.log("Login Failed");
 
           console.log(e);
@@ -147,8 +164,12 @@ function Login() {
                 Remember me
               </Checkbox>
             </Form.Item>
-
-            <Form.Item {...tailLayout} style={{ padding: "0" }}>
+            <Feedback feedback={feedback} />
+            <Form.Item
+              className="form-item"
+              {...tailLayout}
+              style={{ padding: "0" }}
+            >
               <Button
                 type="primary"
                 htmlType="submit"

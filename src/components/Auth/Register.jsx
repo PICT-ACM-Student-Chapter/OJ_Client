@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { Form, Input, Button } from "antd";
 import { Card } from "antd";
+import Feedback from "./Feedback";
 import { Link } from "react-router-dom";
 // import svg from "../../undraw_Login_re_4vu2.svg";
 import axios from "axios";
@@ -22,9 +23,16 @@ const tailLayout = {
 };
 
 function Register() {
+  const [feedback, setFeedback] = useState({
+    message: "",
+    type: 1,
+    show: false,
+  });
   const onFinish = (values) => {
+    setFeedback({ message: "Loading...", type: 1, show: true });
     console.log("Success:", values);
-    if (values.password != values.confirm_password) {
+    if (values.password !== values.confirm_password) {
+      setFeedback({ message: "Passwords don't match", type: 3, show: true });
       console.log("Passwords don't match");
     } else {
       const { username, password, first_name, last_name, email } = values;
@@ -39,12 +47,16 @@ function Register() {
         .post("/auth/register", data)
         .then((res) => {
           console.log(res);
-          // localStorage.setItem("token", res.data.access);
-          // localStorage.setItem("refresh-token", res.data.refresh);
+          setFeedback({
+            message: "Registered Successfully!!",
+            type: 2,
+            show: true,
+          });
           console.log("Registered Successfully");
           console.log("Redirect to Login Page");
         })
         .catch((e) => {
+          setFeedback({ message: "Registration Failed!", type: 3, show: true });
           console.log("Registration Failed");
 
           console.log(e);
@@ -288,6 +300,7 @@ function Register() {
               />
             </Form.Item>
 
+            <Feedback feedback={feedback} />
             <Form.Item
               {...tailLayout}
               className="form-item"

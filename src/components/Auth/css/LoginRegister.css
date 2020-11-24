@@ -90,6 +90,10 @@ form {
   .ant-input-affix-wrapper.ant-input-password {
     width: 100%;
   }
+  .form-item button {
+    /* border: aqua 2px solid; */
+    left: -10%;
+  }
 }
 @media (max-width: 1300px) {
   .login-register {
