@@ -1,7 +1,7 @@
 import { Row , Col, Menu } from 'antd'
 import Layout ,{Header}from 'antd/lib/layout/layout'
 import React from 'react'
-function Navbar() {
+function Navbar(props) {
 
     return (
         <>
@@ -12,8 +12,9 @@ function Navbar() {
                         <Col span={16}></Col>
                         <Col span={4}>
                             <Menu mode="horizontal" style={{backgroundColor:"rgba(255, 255, 255, 0)"}} theme="dark">
-                                <Menu.Item>Home</Menu.Item>
-                                <Menu.Item>Login</Menu.Item>
+                                {/* <Menu.Item>props.content</Menu.Item>
+                                <Menu.Item>Login</Menu.Item> */}
+                                {props.contents.map(content=>( <Menu.Item>{content.name}</Menu.Item>) )}
                             </Menu>
                         </Col>
                     </Row>
@@ -23,4 +24,4 @@ function Navbar() {
     )
 }
 
-export default Navbar
+export default Navbar;

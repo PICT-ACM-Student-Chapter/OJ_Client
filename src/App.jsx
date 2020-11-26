@@ -1,11 +1,17 @@
+import React from 'react'
 import './App.less';
-import Navbar from './components/Navbars/Navbar';
-import Contests from './pages/Contests';
+import ContestDetail from './pages/ContestDetailPage/contestdetailpage.component'
+import ContestInstructions from './pages/Instructions.component'
 function App() {
   return (
-    <div className="App" style={{backgroundColor:"black"}}>
-      <Navbar></Navbar>
-      <Contests></Contests>
+    <div className="App" style={{backgroundColor:"black" }}>
+      {/* <Navbar></Navbar>
+      <Login></Login> */}
+      <ContestDetail/>
+      {/* <ContestInstructions/>       */}
+
+
+
     </div>
   );
 }
