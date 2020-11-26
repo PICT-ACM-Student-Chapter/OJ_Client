@@ -7,6 +7,7 @@ import { Card } from "antd";
 import { Link } from "react-router-dom";
 import svg from "../../login.svg";
 import "./css/LoginRegister.css";
+axios.defaults.baseURL = process.env.REACT_APP_BASE_URL;
 const layout = {
   labelCol: {
     span: 8,
@@ -23,12 +24,27 @@ const tailLayout = {
 };
 
 function Login() {
+  const [form] = Form.useForm();
+  // const handleChange = (e) => {
+  //   console.log(e);
+  //   console.log(user);
+  //   // const [name, value] = e.target;
+  //   // setUser({ ...user, [name]: value });
+  // };
   const [feedback, setFeedback] = useState({
     message: "",
     type: 1,
     show: false,
   });
+
+  //called on unsuccessful submit
+  const onFinishFailed = (errorInfo) => {
+    console.log("Failed:", errorInfo);
+  };
+
+  //called on successfull submit
   const onFinish = (values) => {
+    form.resetFields();
     setFeedback({ message: "Loading...", type: 1, show: true });
 
     if (localStorage.getItem("token")) {
@@ -48,20 +64,18 @@ function Login() {
           });
         })
         .catch((e) => {
-          setFeedback({ message: "Login Failed!", type: 3, show: true });
+          // setFeedback({ message: "Login Failed!", type: 3, show: true });
+          setFeedback({ message: e.response.data.detail, type: 3, show: true });
+
           values = {
             username: "",
             password: "",
           };
           console.log("Login Failed");
 
-          console.log(e);
+          console.log(e.response.data);
         });
     }
-  };
-
-  const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
   };
 
   return (
@@ -87,17 +101,14 @@ function Login() {
             border: 0,
             marginTop: "auto",
             marginBottom: "auto",
-
             maxWidth: "500px",
           }}
           className="form-card"
         >
           <Form
             {...layout}
+            form={form}
             name="basic"
-            initialValues={{
-              remember: true,
-            }}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
             style={{
@@ -105,6 +116,7 @@ function Login() {
               justifyContent: "center",
               maxWidth: "500px",
             }}
+            initialValues={{ remember: true, username: "", password: "" }}
           >
             <Form.Item
               // label="Username"

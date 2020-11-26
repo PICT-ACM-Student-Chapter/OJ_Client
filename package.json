@@ -20,7 +20,7 @@
     "web-vitals": "^0.2.4"
   },
   "scripts": {
-    "start": "env-cmd -f ./.env nodemon -w ./antd.customize.less --exec \"craco start\"",
+    "start": "nodemon -w ./antd.customize.less --exec \"craco start\"",
     "build": "craco build",
     "test": "craco test",
     "eject": "react-scripts eject"
@@ -43,8 +43,5 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {
-    "dotenv": "^8.2.0",
-    "env-cmd": "^10.1.0"
-  }
+  "devDependencies": {}
 }

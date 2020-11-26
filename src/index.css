@@ -7,6 +7,17 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: black;
 }
+/* .root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+footer {
+  margin-top: auto;
+  padding: 2em;
+  text-align: center;
+} */
+
 h2 {
   color: white;
 }

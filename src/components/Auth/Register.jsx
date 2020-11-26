@@ -23,12 +23,14 @@ const tailLayout = {
 };
 
 function Register() {
+  const [form] = Form.useForm();
   const [feedback, setFeedback] = useState({
     message: "",
     type: 1,
     show: false,
   });
   const onFinish = (values) => {
+    form.resetFields();
     setFeedback({ message: "Loading...", type: 1, show: true });
     console.log("Success:", values);
     if (values.password !== values.confirm_password) {
@@ -96,9 +98,15 @@ function Register() {
         >
           <Form
             {...layout}
+            form={form}
             name="basic"
             initialValues={{
-              remember: true,
+              username: "",
+              password: "",
+              email: "",
+              first_name: "",
+              last_name: "",
+              confirm_password: "",
             }}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
@@ -111,7 +119,6 @@ function Register() {
           >
             <Form.Item
               className="form-item"
-              // label="Username"
               style={{
                 width: "100%",
               }}
@@ -126,7 +133,6 @@ function Register() {
               <Input
                 placeHolder="username"
                 style={{
-                  // width: "150%",
                   height: "3em",
                   margin: 0,
                   maxWidth: "500px",
@@ -135,7 +141,6 @@ function Register() {
             </Form.Item>
             <Form.Item
               className="form-item"
-              // label="Username"
               style={{
                 width: "100%",
               }}
@@ -150,7 +155,6 @@ function Register() {
               <Input
                 placeHolder="first Name"
                 style={{
-                  // width: "150%",
                   height: "3em",
                   margin: 0,
                   maxWidth: "500px",
@@ -173,7 +177,6 @@ function Register() {
               <Input
                 placeHolder="last Name"
                 style={{
-                  // width: "150%",
                   height: "3em",
                   margin: 0,
                   maxWidth: "500px",
@@ -182,7 +185,6 @@ function Register() {
             </Form.Item>
             <Form.Item
               className="form-item"
-              // label="Username"
               style={{
                 width: "100%",
               }}
@@ -197,65 +199,15 @@ function Register() {
               <Input
                 placeHolder="email"
                 style={{
-                  // width: "150%",
                   height: "3em",
                   margin: 0,
                   maxWidth: "500px",
                 }}
               />
             </Form.Item>
-            {/* <Form.Item
-              className="form-item"
-              // label="Username"
-              style={{
-                width: "100%",
-              }}
-              name="phone number"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your phone number!",
-                },
-              ]}
-            >
-              <Input
-                placeHolder="phone number"
-                style={{
-                  // width: "150%",
-                  height: "3em",
-                  margin: 0,
-                  maxWidth: "500px",
-                }}
-              />
-            </Form.Item> */}
 
-            {/* <Form.Item
-              className="form-item"
-              // label="Username"
-              style={{
-                width: "100%",
-              }}
-              name="college"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your college!",
-                },
-              ]}
-            >
-              <Input
-                placeHolder="college"
-                style={{
-                  // width: "150%",
-                  height: "3em",
-                  margin: 0,
-                  maxWidth: "500px",
-                }}
-              />
-            </Form.Item> */}
             <Form.Item
               className="form-item"
-              // label="Password"
               style={{
                 width: "100%",
               }}
@@ -272,13 +224,11 @@ function Register() {
                 style={{
                   height: "3em",
                   margin: 0,
-                  // width: "150%",
                 }}
               />
             </Form.Item>
             <Form.Item
               className="form-item"
-              // label="Password"
               style={{
                 width: "100%",
               }}
@@ -295,7 +245,6 @@ function Register() {
                 style={{
                   height: "3em",
                   margin: 0,
-                  // width: "150%",
                 }}
               />
             </Form.Item>
@@ -311,7 +260,6 @@ function Register() {
                 htmlType="submit"
                 style={{
                   margin: "auto",
-                  // width: "100%",
                   marginLeft: "-50%",
                   marginBottom: "0",
                 }}
