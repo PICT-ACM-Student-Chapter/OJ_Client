@@ -12,7 +12,7 @@ function QuestionCard (props){
           { props.questions.map(question => <div className='cardtitle'><h2>{question.name}</h2> <Button style={{color:"white"}} type="primary" ghost> Solve Challenge </Button> </div>)}
           { props.questions.map(question => <div className='cardcontent'><p>MaxScore:{question.score}</p>  </div>)}
 
-             {/* <div className='cardcontent'> <p>Max Score:{question.score}</p>  </div> )}  */}
+         
          </Card>
 
    </div>

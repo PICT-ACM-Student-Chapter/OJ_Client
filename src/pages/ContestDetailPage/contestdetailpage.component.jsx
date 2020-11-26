@@ -23,16 +23,16 @@ function ContestDetail  () {
   
 
    
-    axios({method:"post",url:" https://api.onlinejudge.ml/auth/login" 
-      ,data:{username:"admin" ,password:"admin@123"}})
-      .then(res => {
-        //console.log(res);
-        localStorage.setItem('token',res.data.access)
+    // axios({method:"post",url:" https://api.onlinejudge.ml/auth/login" 
+    //   ,data:{username:"admin" ,password:"admin@123"}})
+    //   .then(res => {
+    //     //console.log(res);
+    //     localStorage.setItem('token',res.data.access)
 
-      })
-      .catch(error =>{
-        console.log(error)
-      })
+    //   })
+    //   .catch(error =>{
+    //     console.log(error)
+    //   })
 
 
     
