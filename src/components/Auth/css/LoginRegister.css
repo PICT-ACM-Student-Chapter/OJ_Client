@@ -1,0 +1,126 @@
+.login-register-page {
+    display: flex;
+    background-color: #141414;
+    height: 94vh;
+}
+
+.login-register {
+    display: flex;
+    width: 100%;
+    justify-content: space-evenly;
+}
+
+.svg-card {
+    width: 45%;
+    display: flex;
+    flex-direction: column;
+    padding: 1em;
+    align-items: center;
+}
+
+.svg-card h1 {
+    color: #019183;
+}
+
+.svg-card img {
+    margin: 2em 0;
+    width: 100%;
+    min-width: 300px;
+}
+
+.form-card {
+    /* padding: 2em;
+    width: 40%;
+    background-color: #019183;
+    display: flex;
+    align-items: center;
+    border-radius: 1%; */
+    min-width: 300px;
+}
+
+.login {
+    margin-top: auto;
+    margin-bottom: auto;
+    height: fit-content;
+    border-radius: 1%;
+    max-width: 500px;
+    min-width: 300px;
+}
+
+.form-card:hover {
+    box-shadow: aquamarine 0 0 3px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    margin-left: 10%;
+}
+
+.form-card input {
+    height: 2em;
+    padding: 1em;
+    margin-bottom: 1em;
+    border: 0;
+    border-radius: 2%;
+}
+
+.form-card input:focus {
+    border-radius: 0;
+    border-color: aquamarine;
+}
+
+.form-card button {
+    background-color: #000000;
+    border: #000000;
+    color: aquamarine;
+    border-radius: 2%;
+    cursor: pointer;
+}
+
+.form-card button:hover {
+    color: #000000;
+    background-color: aquamarine;
+}
+
+.form-item input {
+    width: 150%;
+    height: "3em";
+    margin: 0;
+    max-width: "500px";
+}
+
+.ant-input-affix-wrapper.ant-input-password {
+    width: 150%;
+}
+
+@media (max-width: 575px) {
+    .form-item input {
+        width: 100%;
+    }
+
+    .ant-input-affix-wrapper.ant-input-password {
+        width: 100%;
+    }
+
+    .form-item button {
+        /* border: aqua 2px solid; */
+        left: -10%;
+    }
+}
+
+@media (max-width: 1300px) {
+    .login-register {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+.link {
+    color: aquamarine;
+}
+
+.link:hover {
+    color: #000000;
+}
