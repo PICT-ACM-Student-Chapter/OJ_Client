@@ -1,6 +1,7 @@
 import React from 'react'
-import { List, Card, Row } from 'antd'
+import {Card, List, Row} from 'antd'
 import Meta from 'antd/lib/card/Meta';
+
 function Contests() {
     const cardStyle = {
         margin: '1.4em',
@@ -34,22 +35,27 @@ function Contests() {
                 margin: '1em 2em 1em 2em'
             }}>
                 <Row>
-                    <h1 style={{ marginLeft: '1em' }}>Contests</h1>
+                    <h1 style={{marginLeft: '1em'}}>Contests</h1>
 
                 </Row>
                 <hr></hr>
                 <List
-                    grid={{ gutter: 16, column: 5 }}
+                    grid={{gutter: 16, column: 5}}
                     dataSource={data}
                     renderItem={item => (
                         <List.Item>
                             <Card
                                 hoverable
-                                cover={<img src="GSOC.png" style={{ maxWidth: '150px', marginLeft: 'auto', marginRight: 'auto',paddingTop:'1em'}}></img>}
+                                cover={<img src="GSOC.png" style={{
+                                    maxWidth: '150px',
+                                    marginLeft: 'auto',
+                                    marginRight: 'auto',
+                                    paddingTop: '1em'
+                                }}></img>}
                                 style={cardStyle}>
                                 <Meta title={<h1>{item.title}</h1>}></Meta>
                                 <hr></hr>
-                                <h3>Contest at 14th Feb based in Python</h3> 
+                                <h3>Contest at 14th Feb based in Python</h3>
                             </Card>
                         </List.Item>
                     )}
