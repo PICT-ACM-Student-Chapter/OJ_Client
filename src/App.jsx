@@ -1,22 +1,17 @@
 import React from 'react'
 import './App.less';
 import Navbar from './components/Navbars/Navbar';
-import Contests from './pages/Contests';
-import Login from "./components/Auth/Login";
-import Register from "./components/Auth/Register";
-
-import ContestDetail from './pages/ContestDetailPage/contestdetail.page.'
-import ContestInstructions from './pages/Instructions.page'
+import Routes from './routes';
+import { BrowserRouter as Router} from 'react-router-dom';
 
 function App() {
     return (
-        <div className="App" style={{backgroundColor: "black"}}>
-            <Navbar/>
-            <Login/>
-            <Register/>
-            <ContestInstructions/>
-            <ContestDetail/>
-            <Contests/>
+        <div className="App" style={{ backgroundColor: "black" }}>
+            <Router>
+                <Navbar />
+                <Routes></Routes>
+            </Router>
+
         </div>
     );
 }

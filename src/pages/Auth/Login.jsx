@@ -5,6 +5,8 @@ import {Button, Card, Checkbox, Form, Input} from "antd";
 import axios from "axios";
 import svg from "../../login.svg";
 import "./css/LoginRegister.css";
+import { Link } from "react-router-dom";
+import { UserOutlined, LockOutlined } from '@ant-design/icons';
 
 axios.defaults.baseURL = process.env.REACT_APP_BASE_URL;
 const layout = {
@@ -91,7 +93,7 @@ function Login() {
                     <img src={svg} width="100%" alt="login"/>
                 </div>
                 <Card
-                    title="Login For Pulzion 21"
+                    title={<h1>Login</h1>}
                     style={{
                         width: "40%",
                         height: "fit-content",
@@ -101,6 +103,7 @@ function Login() {
                         marginTop: "auto",
                         marginBottom: "auto",
                         maxWidth: "500px",
+                        borderRadius:'30px',
                     }}
                     className="form-card"
                 >
@@ -120,9 +123,6 @@ function Login() {
                         <Form.Item
                             // label="Username"
                             className="form-item"
-                            style={{
-                                width: "100%",
-                            }}
                             name="username"
                             rules={[
                                 {
@@ -132,12 +132,14 @@ function Login() {
                             ]}
                         >
                             <Input
-                                placeHolder="username"
+                                placeHolder="Username"
+                                prefix={<UserOutlined />}
                                 style={{
-                                    // width: "150%",
+                                     width: "150%",
                                     height: "3em",
                                     margin: 0,
                                     maxWidth: "500px",
+                                    borderRadius:"10px"
                                 }}
                             />
                         </Form.Item>
@@ -145,9 +147,6 @@ function Login() {
                         <Form.Item
                             // label="Password"
                             className="form-item"
-                            style={{
-                                width: "100%",
-                            }}
                             name="password"
                             rules={[
                                 {
@@ -157,11 +156,13 @@ function Login() {
                             ]}
                         >
                             <Input.Password
-                                placeHolder="password"
+                                placeHolder="Password"
+                                prefix={<LockOutlined/>}
                                 style={{
                                     height: "3em",
                                     margin: 0,
-                                    // width: "150%",
+                                    width: "150%",
+                                    borderRadius:"10px"
                                 }}
                             />
                         </Form.Item>
@@ -182,13 +183,15 @@ function Login() {
                             style={{padding: "0"}}
                         >
                             <Button
+                                size="large"
                                 type="primary"
                                 htmlType="submit"
                                 style={{
                                     margin: "auto",
-                                    // width: "100%",
+                                    width: "50%",
                                     marginLeft: "-50%",
                                     marginBottom: "0",
+                                    borderRadius:"10px"
                                 }}
                             >
                                 Submit
@@ -197,10 +200,7 @@ function Login() {
                     </Form>
                     <p>
                         Don't have an account ?{" "}
-                        {"// eslint-disable-next-line"}
-                        <a href="#" className="link">
-                            Register
-                        </a>
+                        <Link to="/register" style={{color:"white"}}>Register</Link>
                     </p>
                 </Card>
             </div>
