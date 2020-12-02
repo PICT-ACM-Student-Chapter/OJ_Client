@@ -1,13 +1,17 @@
-import React from 'react'
-import {Card, List, Row} from 'antd'
+import React, {useEffect, useState} from 'react'
+import {Button, Divider, Card, List, Row,Typography} from 'antd'
 import Meta from 'antd/lib/card/Meta';
+import ProSkeleton from '@ant-design/pro-skeleton';
+const { Title, Paragraph, Text, Link } = Typography;
 
 function Contests() {
-    const cardStyle = {
-        margin: '1.4em',
-        backgroundColor: '#090909',
-        border: '0px',
-    }
+    const [isLoading, setIsLoading] = useState(true)
+    useEffect(() => {
+        // Update the document title using the browser API
+        setTimeout(()=>{
+            setIsLoading(false)
+        },2000)
+    },[]);
     const data = [
         {
             title: 'GSOC',
@@ -29,38 +33,38 @@ function Contests() {
         },
     ];
     return (
+        isLoading?
+        <ProSkeleton  />
+:
         <div>
-            <br></br>
-            <Card style={{
-                margin: '1em 2em 1em 2em'
-            }}>
-                <Row>
-                    <h1 style={{marginLeft: '1em'}}>Contests</h1>
+            <Title>Contests</Title>
+            <Divider />
 
-                </Row>
-                <hr></hr>
-                <List
-                    grid={{gutter: 16, column: 5}}
-                    dataSource={data}
-                    renderItem={item => (
-                        <List.Item>
-                            <Card
-                                hoverable
-                                cover={<img src="GSOC.png" style={{
-                                    maxWidth: '150px',
-                                    marginLeft: 'auto',
-                                    marginRight: 'auto',
-                                    paddingTop: '1em'
-                                }}></img>}
-                                style={cardStyle}>
-                                <Meta title={<h1>{item.title}</h1>}></Meta>
-                                <hr></hr>
-                                <h3>Contest at 14th Feb based in Python</h3>
-                            </Card>
-                        </List.Item>
-                    )}
-                />
-            </Card>
+            <List
+                grid={{
+                    gutter: 16,
+                    xs: 1,
+                    sm: 2,
+                    md: 3,
+                    lg: 3,
+                    xl: 4,
+                    xxl: 6,
+                }}
+                dataSource={data}
+                renderItem={item => (
+                    <List.Item>
+                        <Card
+                            hoverable
+                            style={{ width: 240 }}
+                            cover={<img alt="example" src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png" />}
+                        >
+                            <Meta title={item.title}/>
+                            <Divider/>
+                            <Button type="primary">Start Now</Button>
+                        </Card>
+                    </List.Item>
+                )}
+            />
 
 
         </div>

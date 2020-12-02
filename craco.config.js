@@ -1,21 +1,11 @@
-const TerserPlugin = require('terser-webpack-plugin');
 const CracoAntDesignPlugin = require("craco-antd");
+const CracoLessPlugin = require("craco-less");
+
 module.exports = {
     plugins: [
         {
             plugin: CracoAntDesignPlugin
-        }
-    ],
-    optimization: {
-        minimizer: [
-            new TerserPlugin({
-                sourceMap: false, // Must be set to true if using source-maps in production
-                terserOptions: {
-                    compress: {
-                        drop_console: true, // << this needs only to remove console.log //
-                    },
-                },
-            }),
-        ],
-    },
+        },
+        { plugin: CracoLessPlugin }
+    ]
 };

@@ -4,6 +4,9 @@
   "private": true,
   "dependencies": {
     "-": "0.0.1",
+    "@ant-design/icons": "^4.3.0",
+    "@ant-design/pro-layout": "^6.5.16",
+    "@ant-design/pro-skeleton": "^1.0.0-beta.2",
     "@craco/craco": "^5.8.0",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
@@ -12,11 +15,16 @@
     "axios": "^0.21.0",
     "classnames": "^2.2.6",
     "craco-antd": "^1.18.1",
+    "craco-less": "^1.17.1",
     "g": "^2.0.1",
     "nodemon": "^2.0.6",
+    "postcss": "^8.1.10",
+    "query-string": "^6.13.7",
     "react": "^16.14.0",
+    "react-css-theme-switcher": "^0.1.6",
     "react-dom": "^16.14.0",
     "react-markdown": "^5.0.3",
+    "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.0",
     "web-vitals": "^0.2.4"
@@ -45,5 +53,14 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "autoprefixer": "^10.0.4",
+    "gulp": "^4.0.2",
+    "gulp-csso": "^4.0.1",
+    "gulp-debug": "^4.0.0",
+    "gulp-less": "^4.0.1",
+    "gulp-postcss": "^9.0.0",
+    "less-plugin-npm-import": "^2.1.0",
+    "react-snap": "^1.23.0"
+  }
 }

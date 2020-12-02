@@ -1,12 +1,14 @@
 import React, {useState} from "react";
 import Feedback from "./Feedback";
 import {Button, Card, Checkbox, Form, Input} from "antd";
-// import svg from "../../undraw_Login_re_4vu2.svg";
 import axios from "axios";
-import svg from "../../login.svg";
+import svg from "../../assets/img/login.svg";
 import "./css/LoginRegister.css";
-import { Link } from "react-router-dom";
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import {Link} from "react-router-dom";
+import {LockOutlined, UserOutlined} from '@ant-design/icons';
+import {useHistory} from "react-router";
+
+const queryString = require('query-string');
 
 axios.defaults.baseURL = process.env.REACT_APP_BASE_URL;
 const layout = {
@@ -25,13 +27,8 @@ const tailLayout = {
 };
 
 function Login() {
+    const history = useHistory();
     const [form] = Form.useForm();
-    // const handleChange = (e) => {
-    //   console.log(e);
-    //   console.log(user);
-    //   // const [name, value] = e.target;
-    //   // setUser({ ...user, [name]: value });
-    // };
     const [feedback, setFeedback] = useState({
         message: "",
         type: 1,
@@ -45,6 +42,7 @@ function Login() {
 
     //called on successfull submit
     const onFinish = (values) => {
+
         form.resetFields();
         setFeedback({message: "Loading...", type: 1, show: true});
 
@@ -63,6 +61,13 @@ function Login() {
                         type: 2,
                         show: true,
                     });
+                })
+                .then(() => {
+                    const qs = queryString.parse(history.location.search);
+                    if(qs.redirect){
+                        history.push(qs.redirect)
+                    }else
+                    history.push('/contests')
                 })
                 .catch((e) => {
                     // setFeedback({ message: "Login Failed!", type: 3, show: true });
@@ -89,7 +94,7 @@ function Login() {
                 }}
             >
                 <div className="svg-card ">
-                    <h1>Pulzion21 OJ Login</h1>
+                    <h1>PASC OJ</h1>
                     <img src={svg} width="100%" alt="login"/>
                 </div>
                 <Card
@@ -103,7 +108,7 @@ function Login() {
                         marginTop: "auto",
                         marginBottom: "auto",
                         maxWidth: "500px",
-                        borderRadius:'30px',
+                        borderRadius: '30px',
                     }}
                     className="form-card"
                 >
@@ -133,13 +138,13 @@ function Login() {
                         >
                             <Input
                                 placeHolder="Username"
-                                prefix={<UserOutlined />}
+                                prefix={<UserOutlined/>}
                                 style={{
-                                     width: "150%",
+                                    width: "150%",
                                     height: "3em",
                                     margin: 0,
                                     maxWidth: "500px",
-                                    borderRadius:"10px"
+                                    borderRadius: "10px"
                                 }}
                             />
                         </Form.Item>
@@ -162,7 +167,7 @@ function Login() {
                                     height: "3em",
                                     margin: 0,
                                     width: "150%",
-                                    borderRadius:"10px"
+                                    borderRadius: "10px"
                                 }}
                             />
                         </Form.Item>
@@ -191,7 +196,7 @@ function Login() {
                                     width: "50%",
                                     marginLeft: "-50%",
                                     marginBottom: "0",
-                                    borderRadius:"10px"
+                                    borderRadius: "10px"
                                 }}
                             >
                                 Submit
@@ -200,7 +205,7 @@ function Login() {
                     </Form>
                     <p>
                         Don't have an account ?{" "}
-                        <Link to="/register" style={{color:"white"}}>Register</Link>
+                        <Link to="/register" style={{color: "white"}}>Register</Link>
                     </p>
                 </Card>
             </div>

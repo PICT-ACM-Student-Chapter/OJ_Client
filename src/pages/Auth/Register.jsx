@@ -3,7 +3,7 @@ import {Button, Card, Form, Input, message} from "antd";
 import Feedback from "./Feedback";
 // import svg from "../../undraw_Login_re_4vu2.svg";
 import axios from "axios";
-import svg from "../../signup.svg";
+import svg from "../../assets/img/signup.svg";
 import "./css/LoginRegister.css";
 
 //for setting baseURL to backend
