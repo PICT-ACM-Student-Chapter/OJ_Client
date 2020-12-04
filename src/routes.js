@@ -3,9 +3,9 @@ import {Route, Switch} from 'react-router-dom';
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
 import Contests from './pages/Contests.page';
-import ProLayout, { DefaultFooter } from '@ant-design/pro-layout';
+import ProLayout, {DefaultFooter} from '@ant-design/pro-layout';
 import GlobalHeaderRight from "./components/Header/RightContent.component";
-import { GithubOutlined } from '@ant-design/icons';
+import {GithubOutlined} from '@ant-design/icons';
 
 const defaultFooterDom = (
     <DefaultFooter
@@ -19,8 +19,8 @@ const defaultFooterDom = (
             },
             {
                 key: 'github',
-                title: <GithubOutlined />,
-                href: 'https://github.com/ant-design/ant-design-pro',
+                title: <GithubOutlined/>,
+                href: 'https://github.com/PICT-ACM-Student-Chapter',
                 blankTarget: true,
             },
             {
@@ -45,7 +45,7 @@ export class Routes extends Component {
                     layout="top"
                     fixedHeader="true"
                     rightContentRender={() => <GlobalHeaderRight/>}
-                    footerRender = {() => defaultFooterDom}
+                    footerRender={() => defaultFooterDom}
 
                 >
                     <Route path="/contests" component={Contests}/>

@@ -1,20 +1,27 @@
 import React from "react";
 import "./App.less";
-import Navbar from "./components/Navbars/Navbar";
 import Routes from "./routes";
-import { BrowserRouter as Router } from "react-router-dom";
-import ProLayout, {DefaultFooter} from '@ant-design/pro-layout';
+import axios from 'axios';
+
+import {BrowserRouter as Router} from "react-router-dom";
+import createAuthRefreshInterceptor from 'axios-auth-refresh';
+
+import refreshAuthLogic from "./utils/utils";
+
 
 function App() {
-  return (
-    <div className="App">
-      <Router>
-        {/* <Navbar /> */}
-       
-          <Routes/>
-      </Router>
-    </div>
-  );
+
+    createAuthRefreshInterceptor(axios, refreshAuthLogic);
+
+    return (
+        <div className="App">
+            <Router>
+                {/* <Navbar /> */}
+
+                <Routes/>
+            </Router>
+        </div>
+    );
 }
 
 export default App;

@@ -13,6 +13,7 @@
     "@testing-library/user-event": "^12.1.10",
     "antd": "^4.8.2",
     "axios": "^0.21.0",
+    "axios-auth-refresh": "^3.0.0",
     "classnames": "^2.2.6",
     "craco-antd": "^1.18.1",
     "craco-less": "^1.17.1",
