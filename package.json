@@ -8,6 +8,7 @@
     "@ant-design/pro-layout": "^6.5.16",
     "@ant-design/pro-skeleton": "^1.0.0-beta.2",
     "@craco/craco": "^5.8.0",
+    "@monaco-editor/react": "^3.7.1",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
@@ -21,16 +22,18 @@
     "postcss": "^8.1.10",
     "query-string": "^6.13.7",
     "react": "^16.14.0",
+    "react-codemirror2": "^7.2.1",
     "react-css-theme-switcher": "^0.1.6",
     "react-dom": "^16.14.0",
     "react-markdown": "^5.0.3",
+    "react-monaco-editor": "^0.40.0",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.0",
     "web-vitals": "^0.2.4"
   },
   "scripts": {
-    "start": "nodemon -w ./antd.customize.less --exec \"craco start\"",
+    "start": "craco start",
     "build": "craco build",
     "test": "craco test",
     "eject": "react-scripts eject"
@@ -61,6 +64,7 @@
     "gulp-less": "^4.0.1",
     "gulp-postcss": "^9.0.0",
     "less-plugin-npm-import": "^2.1.0",
+    "monaco-editor-webpack-plugin": "^2.0.0",
     "react-snap": "^1.23.0"
   }
 }
