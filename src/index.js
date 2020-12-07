@@ -13,7 +13,7 @@ const themes = {
 console.log(process.env);
 ReactDOM.render(
     <React.StrictMode>
-        <ThemeSwitcherProvider themeMap={themes} defaultTheme="light">
+        <ThemeSwitcherProvider themeMap={themes} defaultTheme={localStorage.getItem('theme') || 'light'}>
             <App/>
         </ThemeSwitcherProvider>
     </React.StrictMode>,

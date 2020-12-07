@@ -1,19 +1,26 @@
 import {Avatar, Badge, Dropdown, Menu, Space} from 'antd';
 import {BellOutlined, LogoutOutlined, RetweetOutlined, SettingOutlined, UserOutlined} from '@ant-design/icons';
-import React from "react";
+import React, {useContext} from "react";
 import { useThemeSwitcher } from 'react-css-theme-switcher';
+import ThemeContext from "../../context/ThemeContext";
 
 
 
 const GlobalHeaderRight = (props) => {
     const { switcher, themes, currentTheme, status } = useThemeSwitcher();
-    const [isDarkMode, setIsDarkMode] = React.useState(false);
+    const theme = useContext(ThemeContext)
+
 
     const toggleDarkMode = () => {
-        setIsDarkMode(previous => {
-            switcher({ theme: previous ? themes.light : themes.dark });
-            return !previous;
-        });
+        if(theme.theme === 'light'){
+            //make it dark
+            theme.setTheme('dark')
+            switcher({theme: themes.dark})
+        }else{
+            //make it light
+            theme.setTheme('light')
+            switcher({theme: themes.light})
+        }
     };
 
     return (
@@ -40,7 +47,6 @@ const GlobalHeaderRight = (props) => {
                 </Menu>
             )}>
                 <Space>
-
 
                     <Avatar size='medium' style={{backgroundColor: '#87d068',cursor: 'pointer'}} icon={<UserOutlined/>}/>
                     <span style={{color: 'white'}}>Admin</span>

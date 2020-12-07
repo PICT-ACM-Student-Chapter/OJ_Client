@@ -50,7 +50,6 @@ export class Routes extends Component {
                     rightContentRender={() => <GlobalHeaderRight/>}
                     footerRender = {
                         () => {
-                            console.log(this.props.history.location)
                             return this.defaultFooterDom
                         }}
 
