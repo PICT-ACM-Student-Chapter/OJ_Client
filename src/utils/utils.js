@@ -8,7 +8,7 @@ const refreshAuthLogic = failedRequest => axios.post(process.env.REACT_APP_BASE_
         failedRequest.response.config.headers['Authorization'] = 'Bearer ' + tokenRefreshResponse.data.access;
         return Promise.resolve();
     })
-    .catch( error => {
+    .catch(error => {
         console.log(error.response)
     });
 

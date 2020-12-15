@@ -111,7 +111,7 @@ function LeaderBoard() {
     ]
     return (
         <div>
-            <Table bordered title={() => "Leader Board"} dataSource={data} columns={columns} >
+            <Table bordered title={() => "Leader Board"} dataSource={data} columns={columns}>
 
             </Table>
         </div>

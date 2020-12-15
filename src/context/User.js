@@ -9,15 +9,10 @@ class UserProvider extends Component {
     };
 
 
-
-
-
     // Method to update state
     setUser = (user) => {
         this.setState({user});
     };
-
-
 
 
     dispose = () => {
@@ -28,11 +23,10 @@ class UserProvider extends Component {
     }
 
 
-
     render() {
         const {children} = this.props;
-        const {user, } = this.state;
-        const {setUser, } = this;
+        const {user,} = this.state;
+        const {setUser,} = this;
 
         return (
             <UserContext.Provider

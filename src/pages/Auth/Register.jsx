@@ -101,7 +101,7 @@ function Register() {
                         marginTop: "auto",
                         marginBottom: "auto",
                         maxWidth: "500px",
-                        borderRadius:'30px',
+                        borderRadius: '30px',
                     }}
                     className="form-card"
                 >
@@ -145,7 +145,7 @@ function Register() {
                                     height: "3em",
                                     margin: 0,
                                     maxWidth: "500px",
-                                    borderRadius:"10px"
+                                    borderRadius: "10px"
                                 }}
                             />
                         </Form.Item>
@@ -168,7 +168,7 @@ function Register() {
                                     height: "3em",
                                     margin: 0,
                                     maxWidth: "500px",
-                                    borderRadius:"10px"
+                                    borderRadius: "10px"
                                 }}
                             />
                         </Form.Item>
@@ -191,7 +191,7 @@ function Register() {
                                     height: "3em",
                                     margin: 0,
                                     maxWidth: "500px",
-                                    borderRadius:"10px"
+                                    borderRadius: "10px"
                                 }}
                             />
                         </Form.Item>
@@ -214,7 +214,7 @@ function Register() {
                                     height: "3em",
                                     margin: 0,
                                     maxWidth: "500px",
-                                    borderRadius:"10px"
+                                    borderRadius: "10px"
                                 }}
                             />
                         </Form.Item>
@@ -237,7 +237,7 @@ function Register() {
                                 style={{
                                     height: "3em",
                                     margin: 0,
-                                    borderRadius:"10px"
+                                    borderRadius: "10px"
                                 }}
                             />
                         </Form.Item>
@@ -259,7 +259,7 @@ function Register() {
                                 style={{
                                     height: "3em",
                                     margin: 0,
-                                    borderRadius:"10px"
+                                    borderRadius: "10px"
                                 }}
                             />
                         </Form.Item>
@@ -277,8 +277,8 @@ function Register() {
                                     margin: "auto",
                                     marginLeft: "-50%",
                                     marginBottom: "0",
-                                    width:'50%',
-                                    borderRadius:"10px"
+                                    width: '50%',
+                                    borderRadius: "10px"
                                 }}
                             >
                                 Sign-In

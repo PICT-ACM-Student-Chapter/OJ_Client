@@ -1,16 +1,17 @@
-.question-card{
+.question-card {
     font-size: 1rem !important;
     max-height: 89vh;
     overflow-y: scroll;
     padding: 10px !important;
 }
-.test-case-card{
+
+.test-case-card {
     font-size: 1rem !important;
 
 }
 
 
-.button-group-card > .ant-card-body{
+.button-group-card > .ant-card-body {
     padding: 10px !important;
 }
 
@@ -62,9 +63,11 @@
     border-left: 8px solid rgba(200, 200, 200, 1);
     border-right: 8px solid rgba(200, 200, 200, 1);
 }
+
 .Resizer.disabled {
     cursor: not-allowed;
 }
+
 .Resizer.disabled:hover {
     border-color: transparent;
 }

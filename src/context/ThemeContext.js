@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 
 const ThemeContext = React.createContext()
 
@@ -7,33 +7,33 @@ class ThemeProvider extends Component {
 
     // Context state
     state = {
-       theme: 'light'
+        theme: 'light'
     }
 
     //check if theme exists in local storage
     componentDidMount() {
-        if(localStorage.getItem('theme')){
-            if(localStorage.getItem('theme') === 'dark'){
+        if (localStorage.getItem('theme')) {
+            if (localStorage.getItem('theme') === 'dark') {
                 this.setState({theme: 'dark'})
             }
-        }
-        else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
             // dark mode
             this.setState({
-                theme: 'dark'})
+                theme: 'dark'
+            })
         }
     }
 
     // Method to update state
     setTheme = (theme) => {
         this.setState(() => ({theme: theme}))
-        localStorage.setItem('theme',theme)
+        localStorage.setItem('theme', theme)
     }
 
     render() {
-        const { children } = this.props
-        const { theme } = this.state
-        const { setTheme } = this
+        const {children} = this.props
+        const {theme} = this.state
+        const {setTheme} = this
 
         return (
             <ThemeContext.Provider
@@ -50,4 +50,4 @@ class ThemeProvider extends Component {
 
 export default ThemeContext
 
-export { ThemeProvider }
+export {ThemeProvider}

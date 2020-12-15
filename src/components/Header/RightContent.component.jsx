@@ -1,22 +1,21 @@
-import {Avatar, Badge, Dropdown, Menu, Space} from 'antd';
-import {BellOutlined, LogoutOutlined, RetweetOutlined, SettingOutlined, UserOutlined} from '@ant-design/icons';
+import {Avatar, Dropdown, Menu, Space} from 'antd';
+import {LogoutOutlined, RetweetOutlined, SettingOutlined, UserOutlined} from '@ant-design/icons';
 import React, {useContext} from "react";
-import { useThemeSwitcher } from 'react-css-theme-switcher';
+import {useThemeSwitcher} from 'react-css-theme-switcher';
 import ThemeContext from "../../context/ThemeContext";
 
 
-
 const GlobalHeaderRight = (props) => {
-    const { switcher, themes, currentTheme, status } = useThemeSwitcher();
+    const {switcher, themes} = useThemeSwitcher();
     const theme = useContext(ThemeContext)
 
 
     const toggleDarkMode = () => {
-        if(theme.theme === 'light'){
+        if (theme.theme === 'light') {
             //make it dark
             theme.setTheme('dark')
             switcher({theme: themes.dark})
-        }else{
+        } else {
             //make it light
             theme.setTheme('light')
             switcher({theme: themes.light})
@@ -25,14 +24,14 @@ const GlobalHeaderRight = (props) => {
 
     return (
         <div>
-            <Dropdown  overlay={()=>(
+            <Dropdown overlay={() => (
                 <Menu selectedKeys={[]}>
                     <Menu.Item key="center">
                         <UserOutlined/>
                         Profile
                     </Menu.Item>
                     <Menu.Item key="theme" onClick={toggleDarkMode}>
-                        <RetweetOutlined />
+                        <RetweetOutlined/>
                         Toggle Theme
                     </Menu.Item>
                     <Menu.Item key="settings">
@@ -48,7 +47,8 @@ const GlobalHeaderRight = (props) => {
             )}>
                 <Space>
 
-                    <Avatar size='medium' style={{backgroundColor: '#87d068',cursor: 'pointer'}} icon={<UserOutlined/>}/>
+                    <Avatar size='medium' style={{backgroundColor: '#87d068', cursor: 'pointer'}}
+                            icon={<UserOutlined/>}/>
                     <span style={{color: 'white'}}>Admin</span>
                 </Space>
             </Dropdown></div>

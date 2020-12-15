@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import Feedback from "./Feedback";
-import {Button, Card, Checkbox, Form, Input, message} from "antd";
+import {Button, Card, Checkbox, Form, Input} from "antd";
 import axios from "axios";
 import svg from "../../assets/img/login.svg";
 import "./css/LoginRegister.css";
@@ -64,10 +64,10 @@ function Login() {
                 })
                 .then(() => {
                     const qs = queryString.parse(history.location.search);
-                    if(qs.redirect){
+                    if (qs.redirect) {
                         history.push(qs.redirect)
-                    }else
-                    history.push('/contests')
+                    } else
+                        history.push('/contests')
                 })
                 .catch((e) => {
                     // setFeedback({ message: "Login Failed!", type: 3, show: true });

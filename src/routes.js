@@ -5,17 +5,16 @@ import Register from './pages/Auth/Register';
 import Contests from './pages/Contests.page';
 import ProLayout, {DefaultFooter} from '@ant-design/pro-layout';
 import GlobalHeaderRight from "./components/Header/RightContent.component";
-import { GithubOutlined } from '@ant-design/icons';
+import {GithubOutlined} from '@ant-design/icons';
 import QuestionDetail from "./pages/QuestionDetail/QuestionDetail.component";
 import LeaderBoard from "./pages/Leaderboard/LeaderBoard.page";
-
-
+import ConstestDetail from "./pages/ContestDetailPage/ContestDetail.page"
 
 
 export class Routes extends Component {
 
 
-    defaultFooterDom = ()=> (
+    defaultFooterDom = () => (
         <DefaultFooter
             copyright={`${new Date().getFullYear()} PICT ACM Student Chapter`}
             links={[
@@ -27,7 +26,7 @@ export class Routes extends Component {
                 },
                 {
                     key: 'github',
-                    title: <GithubOutlined />,
+                    title: <GithubOutlined/>,
                     href: 'https://github.com/ant-design/ant-design-pro',
                     blankTarget: true,
                 },
@@ -55,6 +54,7 @@ export class Routes extends Component {
                     footerRender={() => this.defaultFooterDom}
                 >
                     <Route exact path="/contests/:contestId/:questionId" component={QuestionDetail}/>
+                    <Route exact path="/contests/:contestId" component={ConstestDetail}/>
                     <Route exact path="/contests" component={Contests}/>
                     <Route path="/leaderboard" component={LeaderBoard}/>
                 </ProLayout>

@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react'
-import {useParams} from "react-router";
+// import {useParams} from "react-router";
 import {Button, Card, Col, Input, Row, Select, Skeleton, Space, Spin, Typography} from "antd";
 import Editor from "@monaco-editor/react";
 import ThemeContext from "../../context/ThemeContext";
@@ -47,7 +47,7 @@ You may assume the two numbers do not contain any leading zero, except the numbe
 }
 
 function QuestionDetail() {
-    const {contestId, questionId} = useParams()
+    // const {contestId, questionId} = useParams()
     const theme = useContext(ThemeContext)
     const [isTerminalOpen, setTerminalOpen] = useState(false);
     const [activeTab, setActiveTab] = useState('input')
@@ -79,7 +79,6 @@ function QuestionDetail() {
 
     useEffect(() => {
         //check if contestID and questionId are valid and user is authorised
-        console.log(theme)
     }, [])
 
     return (
@@ -115,7 +114,8 @@ function QuestionDetail() {
                                             <Col xs={24} sm={24} md={24} lg={12} xl={12}>
                                                 <Card className='test-case-card' type="inner"
                                                       title={<Typography.Title level={4}>Input</Typography.Title>}
-                                                      extra={<a href="#">Copy</a>}>
+                                                      // extra={<a href="#">Copy</a>}
+                                                    >
                                                     <pre>{input}</pre>
                                                 </Card>
                                             </Col>
@@ -123,7 +123,8 @@ function QuestionDetail() {
 
                                                 <Card className='test-case-card' type="inner"
                                                       title={<Typography.Title level={4}>Output</Typography.Title>}
-                                                      extra={<a href="#">Copy</a>}>
+                                                      // extra={<a href="#">Copy</a>}
+                                                    >
                                                     <pre>{output}</pre>
                                                 </Card>
                                             </Col>
@@ -175,7 +176,13 @@ function QuestionDetail() {
                                 </Space>
                             </Card>}
                             {isTerminalOpen &&
-                            <Card style={{marginTop: '16px', marginBottom: '0px', height: '40vh', position: 'relative', top: '40vh'}} tabList={tabList}
+                            <Card style={{
+                                marginTop: '16px',
+                                marginBottom: '0px',
+                                height: '40vh',
+                                position: 'relative',
+                                top: '40vh'
+                            }} tabList={tabList}
                                   className='button-group-card' onTabChange={setActiveTab} activeTabKey={activeTab}
                                   extra={
                                       <Space style={{position: 'absolute', right: 16, zIndex: 10}}>
@@ -190,7 +197,8 @@ function QuestionDetail() {
                                 }
                                 {activeTab === 'output' && <div style={{margin: '20px'}}>
                                     {outputLoading && <Skeleton active/>}
-                                    {!outputLoading && <pre style={{color: (isOutputError ? 'red' : 'default')}}>{output}</pre>}
+                                    {!outputLoading &&
+                                    <pre style={{color: (isOutputError ? 'red' : 'default')}}>{output}</pre>}
                                 </div>}
                             </Card>}
                         </div>

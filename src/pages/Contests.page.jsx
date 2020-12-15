@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react'
-import {Button, Divider, Card, List, Row,Typography} from 'antd'
+import {Button, Card, Divider, List, Typography} from 'antd'
 import Meta from 'antd/lib/card/Meta';
 import ProSkeleton from '@ant-design/pro-skeleton';
 import axios from 'axios';
-const { Title, Paragraph, Text, Link } = Typography;
+
+const {Title} = Typography;
 
 function Contests() {
     const [isLoading, setIsLoading] = useState(true)
@@ -14,10 +15,10 @@ function Contests() {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
         })
-        setTimeout(()=>{
+        setTimeout(() => {
             setIsLoading(false)
-        },2000)
-    },[]);
+        }, 2000)
+    }, []);
     const data = [
         {
             title: 'GSOC',
@@ -39,41 +40,42 @@ function Contests() {
         },
     ];
     return (
-        isLoading?
-        <ProSkeleton  />
-:
-        <div>
-            <Title>Contests</Title>
-            <Divider />
+        isLoading ?
+            <ProSkeleton/>
+            :
+            <div>
+                <Title>Contests</Title>
+                <Divider/>
 
-            <List
-                grid={{
-                    gutter: 16,
-                    xs: 1,
-                    sm: 2,
-                    md: 3,
-                    lg: 3,
-                    xl: 4,
-                    xxl: 6,
-                }}
-                dataSource={data}
-                renderItem={item => (
-                    <List.Item>
-                        <Card
-                            hoverable
-                            style={{ width: 240 }}
-                            cover={<img alt="example" src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png" />}
-                        >
-                            <Meta title={item.title}/>
-                            <Divider/>
-                            <Button type="primary">Start Now</Button>
-                        </Card>
-                    </List.Item>
-                )}
-            />
+                <List
+                    grid={{
+                        gutter: 16,
+                        xs: 1,
+                        sm: 2,
+                        md: 3,
+                        lg: 3,
+                        xl: 4,
+                        xxl: 6,
+                    }}
+                    dataSource={data}
+                    renderItem={item => (
+                        <List.Item>
+                            <Card
+                                hoverable
+                                style={{width: 240}}
+                                cover={<img alt="example"
+                                            src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"/>}
+                            >
+                                <Meta title={item.title}/>
+                                <Divider/>
+                                <Button type="primary">Start Now</Button>
+                            </Card>
+                        </List.Item>
+                    )}
+                />
 
 
-        </div>
+            </div>
     )
 }
 

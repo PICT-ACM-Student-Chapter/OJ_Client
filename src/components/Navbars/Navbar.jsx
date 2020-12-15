@@ -1,7 +1,7 @@
 import {Col, Menu, Row} from 'antd'
 import Layout, {Header} from 'antd/lib/layout/layout'
 import React from 'react'
-import { Link } from 'react-router-dom'
+import {Link} from 'react-router-dom'
 
 function Navbar(props) {
 
