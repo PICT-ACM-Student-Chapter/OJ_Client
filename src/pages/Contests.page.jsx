@@ -2,12 +2,18 @@ import React, {useEffect, useState} from 'react'
 import {Button, Divider, Card, List, Row,Typography} from 'antd'
 import Meta from 'antd/lib/card/Meta';
 import ProSkeleton from '@ant-design/pro-skeleton';
+import axios from 'axios';
 const { Title, Paragraph, Text, Link } = Typography;
 
 function Contests() {
     const [isLoading, setIsLoading] = useState(true)
     useEffect(() => {
         // Update the document title using the browser API
+        axios.get(`${process.env.REACT_APP_BASE_URL}/contests`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        })
         setTimeout(()=>{
             setIsLoading(false)
         },2000)

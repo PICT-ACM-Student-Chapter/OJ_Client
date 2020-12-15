@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import Feedback from "./Feedback";
-import {Button, Card, Checkbox, Form, Input} from "antd";
+import {Button, Card, Checkbox, Form, Input, message} from "antd";
 import axios from "axios";
 import svg from "../../assets/img/login.svg";
 import "./css/LoginRegister.css";
@@ -8,7 +8,7 @@ import {Link} from "react-router-dom";
 import {LockOutlined, UserOutlined} from '@ant-design/icons';
 import {useHistory} from "react-router";
 
-const queryString = require('query-string');
+import queryString from "query-string";
 
 axios.defaults.baseURL = process.env.REACT_APP_BASE_URL;
 const layout = {
@@ -51,7 +51,7 @@ function Login() {
         } else {
             const {username, password} = values;
             axios
-                .post("/auth/login", {username, password})
+                .post("/auth/jwt/create", {username, password})
                 .then((res) => {
                     localStorage.setItem("token", res.data.access);
                     localStorage.setItem("refresh-token", res.data.refresh);

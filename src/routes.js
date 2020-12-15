@@ -3,11 +3,14 @@ import {Route, Switch} from 'react-router-dom';
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
 import Contests from './pages/Contests.page';
-import ProLayout, { DefaultFooter } from '@ant-design/pro-layout';
+import ProLayout, {DefaultFooter} from '@ant-design/pro-layout';
 import GlobalHeaderRight from "./components/Header/RightContent.component";
 import { GithubOutlined } from '@ant-design/icons';
 import QuestionDetail from "./pages/QuestionDetail/QuestionDetail.component";
 import LeaderBoard from "./pages/Leaderboard/LeaderBoard.page";
+
+
+
 
 export class Routes extends Component {
 
@@ -49,11 +52,7 @@ export class Routes extends Component {
                     layout="top"
                     fixedHeader="true"
                     rightContentRender={() => <GlobalHeaderRight/>}
-                    footerRender = {
-                        () => {
-                            return this.defaultFooterDom
-                        }}
-
+                    footerRender={() => defaultFooterDom}
                 >
                     <Route exact path="/contests/:contestId/:questionId" component={QuestionDetail}/>
                     <Route exact path="/contests" component={Contests}/>
