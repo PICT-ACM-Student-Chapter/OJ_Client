@@ -1,22 +1,22 @@
-import { Table } from 'antd'
+import {Table} from 'antd'
 import React from 'react'
 
 function LeaderBoard() {
-    const data=[
+    const data = [
         {
-            rank:1,
-            name:"ABC",
-            score:100,
+            rank: 1,
+            name: "ABC",
+            score: 100,
         },
         {
-            rank:2,
-            name:"DEF",
-            score:75,
+            rank: 2,
+            name: "DEF",
+            score: 75,
         },
         {
-            rank:3,
-            name:"XYZ",
-            score:50,
+            rank: 3,
+            name: "XYZ",
+            score: 50,
         }
 
     ]
@@ -36,7 +36,7 @@ function LeaderBoard() {
     ]
     return (
         <div>
-            <Table bordered title={()=>"Leader Board"} dataSource={data} columns={columns} scroll={{y:240}}>
+            <Table bordered title={() => "Leader Board"} dataSource={data} columns={columns} scroll={{y: 240}}>
 
             </Table>
         </div>
