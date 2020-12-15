@@ -1,4 +1,5 @@
 # React App for Online Judge
+[![Netlify Status](https://api.netlify.com/api/v1/badges/055ae047-fa35-42db-a7b9-b55be8743512/deploy-status)](https://app.netlify.com/sites/fervent-bhabha-03f267/deploys)
 
 🔥 Online Judge Platform of PICT ACM Student Chapter
 
