@@ -52,7 +52,7 @@ export class Routes extends Component {
                     layout="top"
                     fixedHeader="true"
                     rightContentRender={() => <GlobalHeaderRight/>}
-                    footerRender={() => defaultFooterDom}
+                    footerRender={() => this.defaultFooterDom}
                 >
                     <Route exact path="/contests/:contestId/:questionId" component={QuestionDetail}/>
                     <Route exact path="/contests" component={Contests}/>
