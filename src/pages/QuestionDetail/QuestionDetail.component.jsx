@@ -1,12 +1,19 @@
 import React, {useContext, useEffect, useState} from 'react'
 // import {useParams} from "react-router";
-import {Button, Card, Col, Input, Row, Select, Skeleton, Space, Spin, Typography} from "antd";
+import {Button, Card, Col, Input, Popconfirm, Row, Select, Skeleton, Space, Spin, Tag, Typography} from "antd";
 import Editor from "@monaco-editor/react";
 import ThemeContext from "../../context/ThemeContext";
 import ReactMarkdown from 'react-markdown'
 import './QuestionDetail.style.css'
 import {Helmet} from "react-helmet";
-import {LeftOutlined} from "@ant-design/icons";
+import {
+    CaretRightOutlined,
+    CheckCircleOutlined,
+    ClockCircleOutlined,
+    CloseCircleOutlined,
+    DownOutlined,
+    LeftOutlined, UpOutlined
+} from "@ant-design/icons";
 import SplitPane from "react-split-pane";
 
 const {Option} = Select;
@@ -46,14 +53,25 @@ You may assume the two numbers do not contain any leading zero, except the numbe
     ]
 }
 
+const submitResponse = {
+    verdicts: [
+        {status: 'AC'},
+        {status: 'RTE'},
+        {status: 'TLE'},
+        {status: 'IN_QUEUE'},
+    ]
+}
+
 function QuestionDetail() {
     // const {contestId, questionId} = useParams()
     const theme = useContext(ThemeContext)
     const [isTerminalOpen, setTerminalOpen] = useState(false);
     const [activeTab, setActiveTab] = useState('input')
-    const [outputLoading, setOutputLoading] = useState(true);
-    const [output, setOutput] = useState('');
-    const [isOutputError, setIsOutputError] = useState(false);
+    const [outputLoading, setOutputLoading] = useState(false);
+    const [output, setOutput] = useState({});
+    const [submissionLoading, setSubmissionLoading] = useState(false);
+    const [submission, setSubmission] = useState({});
+    const [testCases, setTestCases] = useState([]);
 
 
     const tabList = [
@@ -63,23 +81,61 @@ function QuestionDetail() {
         }, {
             key: 'output',
             tab: 'Output'
+        }, {
+            key: 'submit',
+            tab: 'Submission'
         }
     ]
 
     const handleRun = () => {
         setActiveTab('output')
         setOutputLoading(true)
-        setIsOutputError(false)
         setTimeout(() => {
             setOutputLoading(false)
-            setOutput("Error")
-            setIsOutputError(true)
+            setOutput({
+                stderr: `./main.c: In function ‘main’:
+./main.c:6:1: error: expected ‘;’ before ‘}’ token
+ }
+ ^`,
+                stdout: 'Hello OJ',
+                status: 'AC',
+                exec_time: '1.04s'
+            })
         }, 2000)
+    }
+
+    const handleSubmit = () => {
+        setActiveTab('submit')
+        setSubmissionLoading(true)
+        setTimeout(()=>{
+            setSubmissionLoading(false)
+            setTestCases([{}, {}, {}, {}])
+            setTimeout(()=>{
+                setTestCases(submitResponse.verdicts)
+            }, 1000)
+        }, 700)
+    }
+
+    function isOutputError() {
+        return output.status !== 'AC'
     }
 
     useEffect(() => {
         //check if contestID and questionId are valid and user is authorised
     }, [])
+
+    const statusColor = {
+        'AC': 'success',
+        'CTE': 'danger',
+        'RTE': 'danger'
+    }
+
+    const testCaseStatusColor = {
+        'AC': 'green',
+        'CTE': 'red',
+        'RTE': 'red',
+        'TLE': 'orange'
+    }
 
     return (
         <div>
@@ -114,8 +170,8 @@ function QuestionDetail() {
                                             <Col xs={24} sm={24} md={24} lg={12} xl={12}>
                                                 <Card className='test-case-card' type="inner"
                                                       title={<Typography.Title level={4}>Input</Typography.Title>}
-                                                      // extra={<a href="#">Copy</a>}
-                                                    >
+                                                    // extra={<a href="#">Copy</a>}
+                                                >
                                                     <pre>{input}</pre>
                                                 </Card>
                                             </Col>
@@ -123,8 +179,8 @@ function QuestionDetail() {
 
                                                 <Card className='test-case-card' type="inner"
                                                       title={<Typography.Title level={4}>Output</Typography.Title>}
-                                                      // extra={<a href="#">Copy</a>}
-                                                    >
+                                                    // extra={<a href="#">Copy</a>}
+                                                >
                                                     <pre>{output}</pre>
                                                 </Card>
                                             </Col>
@@ -153,7 +209,7 @@ function QuestionDetail() {
                     <div style={{position: 'relative', height: '88vh'}}>
                         <div style={{width: '100%', position: 'absolute'}}>
                             <Card width={'100%'} className={'editor-card'}
-                                  style={{height: '72vh'}}>
+                                  style={{height: '71vh'}}>
                                 <Editor
                                     loading={<Spin size={'large'}/>}
                                     language="cpp"
@@ -166,14 +222,18 @@ function QuestionDetail() {
                         </div>
                         <div>
                             {!isTerminalOpen &&
-                            <Card style={{marginTop: '16px', marginBottom: '0px', position: 'relative', top: '74vh'}}
-                                  className='button-group-card'>
-                                <Space>
-                                    <Button onClick={_ => {
-                                        setTerminalOpen(!isTerminalOpen)
-                                        setActiveTab('input')
-                                    }} success>Run</Button>
-                                </Space>
+                            <Card style={{marginTop: '16px', marginBottom: '0px', position: 'relative', top: '73vh'}}
+                                  className='button-group-card' hoverable
+                                  onClick={_ => {
+                                      setTerminalOpen(!isTerminalOpen)
+                                      setActiveTab('input')
+                                  }}
+                                  extra={<Space>
+                                      <Button shape={'circle'} icon={<UpOutlined/>}/>
+                                  </Space>}
+                                  title={'Run and Submit'}
+                            >
+
                             </Card>}
                             {isTerminalOpen &&
                             <Card style={{
@@ -186,8 +246,18 @@ function QuestionDetail() {
                                   className='button-group-card' onTabChange={setActiveTab} activeTabKey={activeTab}
                                   extra={
                                       <Space style={{position: 'absolute', right: 16, zIndex: 10}}>
-                                          <Button onClick={handleRun} success>RUN</Button>
-                                          <Button onClick={_ => setTerminalOpen(!isTerminalOpen)} danger>Close</Button>
+                                          <Button onClick={handleRun}><CaretRightOutlined/>Run</Button>
+                                          <Popconfirm
+                                              placement="topRight"
+                                              title={'Are you sure you want to submit?'}
+                                              onConfirm={handleSubmit}
+                                              okText="Yes"
+                                              cancelText="No"
+                                          >
+                                              <Button type={'primary'}>Submit</Button>
+                                          </Popconfirm>
+                                          <Button onClick={_ => setTerminalOpen(!isTerminalOpen)} shape={'circle'}
+                                                  icon={<DownOutlined/>}/>
                                       </Space>
                                   }>
                                 {activeTab === 'input' &&
@@ -196,9 +266,51 @@ function QuestionDetail() {
                                 </div>
                                 }
                                 {activeTab === 'output' && <div style={{margin: '20px'}}>
+                                    {!output.status && <div style={{textAlign: 'center', marginTop: '5%'}}><Typography.Title disabled level={4}>Please run the code to see the output</Typography.Title> </div>}
                                     {outputLoading && <Skeleton active/>}
-                                    {!outputLoading &&
-                                    <pre style={{color: (isOutputError ? 'red' : 'default')}}>{output}</pre>}
+                                    {output.status && !outputLoading && <div>
+                                        <Space style={{fontSize: '1rem', marginBottom: '1rem'}}>
+                                            <Typography.Text
+                                                type={statusColor[output.status] || 'warning'}>{output.status || ''}&nbsp;&nbsp;</Typography.Text>
+                                            <Typography.Text
+                                                type={'secondary'}>Runtime: {output.exec_time || '-- s'}</Typography.Text>
+                                        </Space>
+                                        <Card style={{minHeight: '12rem'}}>
+                                            {!isOutputError() && <pre>{output.stdout}</pre>}
+                                            {isOutputError() && <pre style={{color: '#a61d24'}}>{output.stderr}</pre>}
+                                        </Card>
+                                    </div>}
+                                </div>}
+                                {activeTab === 'submit' && <div style={{margin: '20px'}}>
+                                    {!testCases.length > 0 && <div style={{textAlign: 'center', marginTop: '5%'}}><Typography.Title disabled level={4}>Please submit the solution first</Typography.Title> </div>}
+                                    {submissionLoading && <Skeleton active/>}
+                                    {testCases.length > 0 && !submissionLoading && <div>
+                                        <Row gutter={[32, 32]} justify="center" style={{justifyContent: "center"}}>
+                                            {testCases.map((tc, i) => (
+                                                <Col key={tc.id} span={8}>
+                                                    <Card style={{height: '5.7rem'}}>
+                                                        <Skeleton loading={!tc.status || tc.status === 'IN_QUEUE'} round avatar
+                                                                  paragraph={{rows: 0}} title={{width: '10rem'}} active>
+                                                            <Card.Meta title={`Testcase #${i + 1}`}
+                                                                       description={<Tag
+                                                                           color={testCaseStatusColor[tc.status]}>{tc.status}</Tag>}
+                                                                       avatar={<>
+                                                                           {tc.status === 'AC' && <Typography.Title level={2}
+                                                                               type={'success'}><CheckCircleOutlined/></Typography.Title>}
+                                                                           {(tc.status === 'CTE' || tc.status === 'RTE') &&
+                                                                           <Typography.Title level={2}
+                                                                               type={'danger'}><CloseCircleOutlined/></Typography.Title>}
+                                                                           {tc.status === 'TLE' && <Typography.Title level={2}
+                                                                               type={'warning'}><ClockCircleOutlined/></Typography.Title>}
+                                                                       </>
+                                                                       }
+                                                            />
+                                                        </Skeleton>
+                                                    </Card>
+                                                </Col>
+                                            ))}
+                                        </Row>
+                                    </div>}
                                 </div>}
                             </Card>}
                         </div>
