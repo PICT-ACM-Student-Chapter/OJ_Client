@@ -2,29 +2,28 @@ import {Table, Tag} from 'antd'
 import React, {useEffect, useState} from 'react'
 import axios from "axios";
 
-function LeaderBoard(props) {
+const defaultCols = [
+    {
+        title: 'Rank',
+        dataIndex: 'rank',
+    },
+    {
+        title: 'Name',
+        dataIndex: 'name',
+    },
+    {
+        title: 'Score',
+        dataIndex: 'score',
+    },
+    {
+        title: 'Penalty',
+        dataIndex: 'penalty',
+    }]
 
-    const [leaderBoard, setLeaderBoard] = useState([])
+function LeaderBoard(props) {
     const [loading, setLoading] = useState(true)
-    const [questions, setQuestions] = useState([])
     const [data, setData] = useState([])
-    const [column, setColumn] = useState([
-        {
-            title: 'Rank',
-            dataIndex: 'rank',
-        },
-        {
-            title: 'Name',
-            dataIndex: 'name',
-        },
-        {
-            title: 'Score',
-            dataIndex: 'score',
-        },
-        {
-            title: 'Penalty',
-            dataIndex: 'penalty',
-        }])
+    const [column, setColumn] = useState([defaultCols])
 
     useEffect(() => {
         getLeaderBoard();
@@ -32,12 +31,6 @@ function LeaderBoard(props) {
 
         // eslint-disable-next-line
     }, []);
-
-    useEffect(() => {
-
-        generateData()
-        // eslint-disable-next-line
-    }, [questions]);
 
 
     const getLeaderBoard = () => {
@@ -50,8 +43,8 @@ function LeaderBoard(props) {
                 }
             })
             .then(res => {
-                setLeaderBoard(res.data.results)
                 setLoading(false)
+                generateData(res.data.results)
             })
             .catch(e => {
                 console.log(e.data)
@@ -67,11 +60,8 @@ function LeaderBoard(props) {
                 }
             })
             .then(res => {
-                return setQuestions(res.data.questions)
-
+                generateColumns(res.data.questions)
             }).then(() => {
-            generateData()
-
             setLoading(false)
         })
             .catch(e => {
@@ -80,58 +70,70 @@ function LeaderBoard(props) {
     }
 
 
-    //TODO: SetColumn not working
-    const generateData = () => {
-
-        if (questions.length > 0) {
+    const generateColumns = (questions) => {
+            // col = a copy of defaultCols
+            let col = [...defaultCols];
 
             questions.sort((a, b) => parseInt(a.order) - parseInt(b.order))
             console.log(questions.length)
 
-            questions.map((que, i) => {
+            questions.forEach((que, i) => {
 
                 console.log(que)
-                //Set Coloumn for leaderboard table
-                column.push({
+                //Set Column for leaderboard table
+                col.push({
                     title: `${que.question.name}`,
-                    dataIndex: 'question',
-                    key: 'question',
-                    render: question => (
-                        <>
+                    dataIndex: `question${que.question.id}`,
+                    key: `question${i}`,
+                    render: question => {
+                        console.log(question)
+                        if(question)
+                            return (
+                                <>
 
-                            <Tag color='geekblue'>
-                                Score: {question[i].score}
-                            </Tag>
-                            <br/>
-                            <br/>
-                            <Tag color='volcano'>
-                                Penalty: {question[i].penalty}
-                            </Tag>
+                                    <Tag color='geekblue'>
+                                        Score: {question.score}
+                                    </Tag>
+                                    <br/>
+                                    <br/>
+                                    <Tag color='volcano'>
+                                        Penalty: {question.penalty || 0}
+                                    </Tag>
 
-                        </>
-                    )
+                                </>
+                            )
+                        return ''
+                    },
                 })
-                setColumn(column)
 
-
-                // if (i === (questions.length - 1)) {
-                //
-                //     console.log("asdas",column)
-                //     setColumn(column)
-                //
-                // }
-                //Create leaderboard data
-                // leaderBoard.map(user=>{
-                //
-                //
-                //
-                // })
-
+                if (i === (questions.length - 1)) {
+                    console.log(col)
+                    setColumn(col)
+                }
             })
 
+    }
 
+    const generateData = (leaderBoard) => {
+        //Create leaderboard data
+
+        const lb = leaderBoard.map(row=>{
+            const base = {
+                name: row.user_id.username,
+                score: row.total_score,
+                penalty: row.total_penalty,
+            }
+            for(let i of row.questions){
+                base[`question${i.que_id}`] = {score: i.score, pealty: i.penalty}
+            }
+            return base
+        })
+        lb.sort((a, b) => ((a.score === b.score) ? (b.score - a.score) : (a.penalty - b.penalty)))
+
+        for(let i=0;i<lb.length;i++){
+            lb[i].rank = i+1;
         }
-
+        setData(lb)
     }
 
 
@@ -244,9 +246,7 @@ function LeaderBoard(props) {
     // ]
     return (
         <div>
-            <Table bordered title={() => "Leader Board"} dataSource={data} columns={column}>
-
-            </Table>
+            <Table bordered title={() => "Leader Board"} dataSource={data} columns={column}/>
         </div>
     )
 }
