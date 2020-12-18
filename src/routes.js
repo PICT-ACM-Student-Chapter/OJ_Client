@@ -56,7 +56,7 @@ export class Routes extends Component {
                     <Route exact path="/contests/:contestId/:questionId" component={QuestionDetail}/>
                     <Route exact path="/contests/:contestId" component={ConstestDetail}/>
                     <Route exact path="/contests" component={Contests}/>
-                    <Route path="/leaderboard" component={LeaderBoard}/>
+                    <Route path="/leaderboard/:contestId" component={LeaderBoard}/>
                 </ProLayout>
 
             </Switch>
