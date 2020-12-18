@@ -1,6 +1,20 @@
 import React, {useContext, useEffect, useState} from 'react'
 // import {useParams} from "react-router";
-import {Button, Card, Col, Input, Popconfirm, Row, Select, Skeleton, Space, Spin, Tag, Typography} from "antd";
+import {
+    Button,
+    Card,
+    Col,
+    Input,
+    Popconfirm,
+    Progress,
+    Row,
+    Select,
+    Skeleton,
+    Space,
+    Spin,
+    Tag,
+    Typography
+} from "antd";
 import Editor from "@monaco-editor/react";
 import ThemeContext from "../../context/ThemeContext";
 import ReactMarkdown from 'react-markdown'
@@ -59,6 +73,14 @@ const submitResponse = {
         {status: 'RTE'},
         {status: 'TLE'},
         {status: 'IN_QUEUE'},
+        {status: 'AC'},
+        {status: 'RTE'},
+        {status: 'TLE'},
+        {status: 'IN_QUEUE'},
+        {status: 'AC'},
+        {status: 'RTE'},
+        {status: 'TLE'},
+        {status: 'IN_QUEUE'},
     ]
 }
 
@@ -72,6 +94,7 @@ function QuestionDetail() {
     const [submissionLoading, setSubmissionLoading] = useState(false);
     const [submission, setSubmission] = useState({});
     const [testCases, setTestCases] = useState([]);
+    const [passedTestCases, setPassedTestCases] = useState(0);
 
 
     const tabList = [
@@ -107,11 +130,13 @@ function QuestionDetail() {
     const handleSubmit = () => {
         setActiveTab('submit')
         setSubmissionLoading(true)
+        setPassedTestCases(0)
         setTimeout(()=>{
             setSubmissionLoading(false)
-            setTestCases([{}, {}, {}, {}])
+            setTestCases([{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}])
             setTimeout(()=>{
                 setTestCases(submitResponse.verdicts)
+                setPassedTestCases(3)
             }, 1000)
         }, 700)
     }
@@ -261,12 +286,12 @@ function QuestionDetail() {
                                       </Space>
                                   }>
                                 {activeTab === 'input' &&
-                                <div style={{margin: '20px'}}>
+                                <div style={{margin: '20px', overflow: 'scroll', height: '31vh'}}>
                                     <Input.TextArea size={'large'} autoSize={{minRows: 5, maxRows: 8}}/>
                                 </div>
                                 }
-                                {activeTab === 'output' && <div style={{margin: '20px'}}>
-                                    {!output.status && <div style={{textAlign: 'center', marginTop: '5%'}}><Typography.Title disabled level={4}>Please run the code to see the output</Typography.Title> </div>}
+                                {activeTab === 'output' && <div style={{margin: '20px', overflow: 'scroll', height: '31vh'}}>
+                                    {!output.status && !outputLoading && <div style={{textAlign: 'center', marginTop: '5%'}}><Typography.Title disabled level={4}>Please run the code to see the output</Typography.Title> </div>}
                                     {outputLoading && <Skeleton active/>}
                                     {output.status && !outputLoading && <div>
                                         <Space style={{fontSize: '1rem', marginBottom: '1rem'}}>
@@ -281,10 +306,13 @@ function QuestionDetail() {
                                         </Card>
                                     </div>}
                                 </div>}
-                                {activeTab === 'submit' && <div style={{margin: '20px'}}>
-                                    {!testCases.length > 0 && <div style={{textAlign: 'center', marginTop: '5%'}}><Typography.Title disabled level={4}>Please submit the solution first</Typography.Title> </div>}
+                                {activeTab === 'submit' && <div style={{margin: '20px', overflow: 'scroll', height: '31vh'}}>
+                                    {!testCases.length > 0 && !submissionLoading && <div style={{textAlign: 'center', marginTop: '5%'}}><Typography.Title disabled level={4}>Please submit the solution first</Typography.Title> </div>}
                                     {submissionLoading && <Skeleton active/>}
                                     {testCases.length > 0 && !submissionLoading && <div>
+                                        <Progress success={{percent: Math.round(passedTestCases / testCases.length * 100, 2)}} percent={75} strokeColor={'grey'} status={"active"} />
+                                        <Typography.Link>{passedTestCases} of {testCases.length} Test Cases passed</Typography.Link>
+                                        <br/><br/>
                                         <Row gutter={[32, 32]} justify="center" style={{justifyContent: "center"}}>
                                             {testCases.map((tc, i) => (
                                                 <Col key={tc.id} span={8}>
