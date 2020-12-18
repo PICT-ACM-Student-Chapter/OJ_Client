@@ -1,6 +1,15 @@
 import {Table, Tag, Typography} from 'antd'
 import React, {useEffect, useState} from 'react'
 import axios from "axios";
+import SubmitComponent from "../../components/QuestionPage/Submit.component";
+
+const statusColor = {
+    'AC': 'green',
+    'CTE': 'red',
+    'RTE': 'red',
+    'TLE': 'orange',
+    'WA': 'red'
+}
 
 const columns = [
     {
@@ -11,7 +20,7 @@ const columns = [
     },
     {
         title: <Typography.Title level={5}>Submission Time</Typography.Title>,
-        dataIndex: 'timestamp',
+        dataIndex: 'created_at',
         width: '20rem',
         align: 'center'
     },
@@ -19,7 +28,19 @@ const columns = [
         title: <Typography.Title level={5}>Status</Typography.Title>,
         dataIndex: 'status',
         width: '12rem',
-        align: 'center'
+        align: 'center',
+        key: 'status',
+        render: status => {
+            console.log(status)
+            return (
+                <>
+
+                    <Tag color={statusColor[status]}>
+                        {status}
+                    </Tag>
+                </>
+            )
+        },
     },
     {
         title: <Typography.Title level={5}>Score</Typography.Title>,
@@ -28,13 +49,90 @@ const columns = [
         align: 'center'
     }]
 
+const submitResponse = [
+    {
+        id: 1,
+        status: 'AC',
+        score: 80,
+        created_at: new Date(),
+        verdicts: [
+            {status: 'AC'},
+            {status: 'RTE'},
+            {status: 'TLE'},
+            {status: 'IN_QUEUE'},
+            {status: 'AC'},
+            {status: 'RTE'},
+            {status: 'TLE'},
+            {status: 'IN_QUEUE'},
+            {status: 'AC'},
+            {status: 'RTE'},
+            {status: 'TLE'},
+            {status: 'IN_QUEUE'},
+        ]
+    }, {
+        id: 2,
+        status: 'TLE',
+        score: 0,
+        created_at: new Date(),
+        verdicts: [
+            {status: 'AC'},
+            {status: 'RTE'},
+            {status: 'TLE'},
+            {status: 'IN_QUEUE'},
+            {status: 'AC'},
+            {status: 'RTE'},
+            {status: 'TLE'},
+            {status: 'IN_QUEUE'},
+            {status: 'AC'},
+            {status: 'RTE'},
+            {status: 'TLE'},
+            {status: 'IN_QUEUE'},
+        ]
+    }, {
+        id: 3,
+        status: 'WA',
+        score: 0,
+        created_at: new Date(),
+        verdicts: [
+            {status: 'AC'},
+            {status: 'RTE'},
+            {status: 'TLE'},
+            {status: 'IN_QUEUE'},
+            {status: 'AC'},
+            {status: 'RTE'},
+            {status: 'TLE'},
+            {status: 'IN_QUEUE'},
+            {status: 'AC'},
+            {status: 'RTE'},
+            {status: 'TLE'},
+            {status: 'IN_QUEUE'},
+        ]
+    }, {
+        id: 4,
+        status: 'AC',
+        score: 70,
+        created_at: new Date(),
+        verdicts: [
+            {status: 'AC'},
+            {status: 'RTE'},
+            {status: 'TLE'},
+
+        ]
+    },
+
+]
+
+
+//TODO: Change Hard Coded Values
 function Submissions(props) {
     const [loading, setLoading] = useState(true)
     const [data, setData] = useState([])
+    const [submissions, setSubmissions] = useState([])
 
     useEffect(() => {
         getSubmissions();
-
+        setSubmissions(submitResponse)
+        generateData(submitResponse)
         // eslint-disable-next-line
     }, []);
 
@@ -50,7 +148,9 @@ function Submissions(props) {
             })
             .then(res => {
                 setLoading(false)
-                generateData(res.data.results)
+                // setSubmissions(res.data.results)
+                // generateData(res.data.results)
+
             })
             .catch(e => {
                 console.log(e.data)
@@ -58,37 +158,53 @@ function Submissions(props) {
     }
 
 
-    const generateData = (leaderBoard) => {
-        //Create leaderboard data
+    const generateData = (submissions) => {
 
-        const lb = leaderBoard.map(row => {
-            const base = {
-                name: row.user_id.username,
-                score: row.total_score,
-                penalty: row.total_penalty,
+        const sub = submissions.map((row, i) => {
+            return {
+                num: i + 1,
+                created_at: new Date(row.created_at).toLocaleTimeString() + " - " + new Date(row.created_at).toDateString(),
+                status: row.status,
+                score: row.score,
+                key: row.id
             }
-            for (let i of row.questions) {
-                base[`question${i.que_id}`] = {score: i.score, pealty: i.penalty}
-            }
-            return base
         })
-        lb.sort((a, b) => ((a.score === b.score) ? (b.score - a.score) : (a.penalty - b.penalty)))
+        sub.sort((a, b) => (b.created_at - a.created_at))
 
-        for (let i = 0; i < lb.length; i++) {
-            lb[i].rank = i + 1;
-        }
-        setData(lb)
+        setData(sub)
     }
 
+
+    const expandedRowRender = (record) => {
+
+        let passedTestCases = 0;
+
+        let testcases = []
+
+        submissions.forEach(submission => {
+
+            if (submission.id === record.key) {
+                submission.verdicts.forEach(testcase => {
+                    if (testcase.status === 'AC') {
+                        passedTestCases++;
+                    }
+                })
+                testcases = submission.verdicts
+            }
+
+        })
+
+        return <SubmitComponent testCases={testcases} submissionLoading={false} passedTestCases={passedTestCases}/>
+    }
 
     return (
         <div>
             <Typography.Title>Submissions</Typography.Title>
             <Typography.Title type={'secondary'} level={4}>{'Question name here'}</Typography.Title>
-            <br/>
-            <Typography.Text>Your score: 256/680 | Rank: 5</Typography.Text>
             <br/><br/><br/>
-            <Table bordered dataSource={data} columns={columns} loading={loading} pagination={false}/>
+            <Table bordered dataSource={data} columns={columns} loading={loading}
+                   pagination={false} expandable={{expandedRowRender}}
+            />
         </div>
     )
 }
