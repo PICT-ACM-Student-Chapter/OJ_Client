@@ -1,7 +1,10 @@
-import {Table, Tag, Typography} from 'antd'
+import {Button, Space, Table, Tag, Typography} from 'antd'
 import React, {useEffect, useState} from 'react'
 import axios from "axios";
 import SubmitComponent from "../../components/QuestionPage/Submit.component";
+import Modal from "antd/es/modal/Modal";
+import {Prism as SyntaxHighlighter} from 'react-syntax-highlighter';
+import {darcula} from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 const statusColor = {
     'AC': 'green',
@@ -11,43 +14,6 @@ const statusColor = {
     'WA': 'red'
 }
 
-const columns = [
-    {
-        title: <Typography.Title level={5}>#</Typography.Title>,
-        dataIndex: 'num',
-        width: '5rem',
-        align: 'center'
-    },
-    {
-        title: <Typography.Title level={5}>Submission Time</Typography.Title>,
-        dataIndex: 'created_at',
-        width: '20rem',
-        align: 'center'
-    },
-    {
-        title: <Typography.Title level={5}>Status</Typography.Title>,
-        dataIndex: 'status',
-        width: '12rem',
-        align: 'center',
-        key: 'status',
-        render: status => {
-            console.log(status)
-            return (
-                <>
-
-                    <Tag color={statusColor[status]}>
-                        {status}
-                    </Tag>
-                </>
-            )
-        },
-    },
-    {
-        title: <Typography.Title level={5}>Score</Typography.Title>,
-        dataIndex: 'score',
-        width: '12rem',
-        align: 'center'
-    }]
 
 const submitResponse = [
     {
@@ -55,6 +21,7 @@ const submitResponse = [
         status: 'AC',
         score: 80,
         created_at: new Date(),
+        code: 'This is testing code 1',
         verdicts: [
             {status: 'AC'},
             {status: 'RTE'},
@@ -74,6 +41,7 @@ const submitResponse = [
         status: 'TLE',
         score: 0,
         created_at: new Date(),
+        code: 'This is testing code 2',
         verdicts: [
             {status: 'AC'},
             {status: 'RTE'},
@@ -93,6 +61,7 @@ const submitResponse = [
         status: 'WA',
         score: 0,
         created_at: new Date(),
+        code: 'This is testing code 3',
         verdicts: [
             {status: 'AC'},
             {status: 'RTE'},
@@ -112,6 +81,7 @@ const submitResponse = [
         status: 'AC',
         score: 70,
         created_at: new Date(),
+        code: 'This is testing code 4',
         verdicts: [
             {status: 'AC'},
             {status: 'RTE'},
@@ -128,6 +98,8 @@ function Submissions(props) {
     const [loading, setLoading] = useState(true)
     const [data, setData] = useState([])
     const [submissions, setSubmissions] = useState([])
+    const [visible, setVisible] = useState(false);
+    const [code, setCode] = useState(null)
 
     useEffect(() => {
         getSubmissions();
@@ -136,6 +108,63 @@ function Submissions(props) {
         // eslint-disable-next-line
     }, []);
 
+    const onClickView = (record) => {
+        console.log(record)
+        setCode(record.code)
+        setVisible(true)
+    }
+
+
+    const columns = [
+        {
+            title: <Typography.Title level={5}>#</Typography.Title>,
+            dataIndex: 'num',
+            width: '5rem',
+            align: 'center'
+        },
+        {
+            title: <Typography.Title level={5}>Submission Time</Typography.Title>,
+            dataIndex: 'created_at',
+            width: '20rem',
+            align: 'center'
+        },
+        {
+            title: <Typography.Title level={5}>Status</Typography.Title>,
+            dataIndex: 'status',
+            width: '12rem',
+            align: 'center',
+            key: 'status',
+            render: status => {
+                console.log(status)
+                return (
+                    <>
+
+                        <Tag color={statusColor[status]}>
+                            {status}
+                        </Tag>
+                    </>
+                )
+            },
+        },
+        {
+            title: <Typography.Title level={5}>Score</Typography.Title>,
+            dataIndex: 'score',
+            width: '12rem',
+            align: 'center'
+        },
+        {
+            title: <Typography.Title level={5}>Code</Typography.Title>,
+            width: '12rem',
+            align: 'center',
+            key: 'action',
+            render: (text, record) => (
+                <Space size="middle">
+                    <Button onClick={() => onClickView(record)}>View Code</Button>
+                </Space>
+            ),
+        },
+
+    ]
 
     const getSubmissions = () => {
         setLoading(true)
@@ -166,6 +195,7 @@ function Submissions(props) {
                 created_at: new Date(row.created_at).toLocaleTimeString() + " - " + new Date(row.created_at).toDateString(),
                 status: row.status,
                 score: row.score,
+                code: row.code,
                 key: row.id
             }
         })
@@ -202,9 +232,21 @@ function Submissions(props) {
             <Typography.Title>Submissions</Typography.Title>
             <Typography.Title type={'secondary'} level={4}>{'Question name here'}</Typography.Title>
             <br/><br/><br/>
-            <Table bordered dataSource={data} columns={columns} loading={loading}
+            <Table bordered dataSource={data} columns={columns} loading={false}
                    pagination={false} expandable={{expandedRowRender}}
             />
+            <Modal
+                title="Submitted Code"
+                centered
+                visible={visible}
+                onOk={() => setVisible(false)}
+                onCancel={() => setVisible(false)}
+                width={1000}
+            >
+                <SyntaxHighlighter language="cpp" style={darcula}>
+                    {code}
+                </SyntaxHighlighter>
+            </Modal>
         </div>
     )
 }
