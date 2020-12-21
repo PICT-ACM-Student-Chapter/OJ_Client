@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react'
 import {Button, Card, Col, Row, Select, Skeleton, Space, Spin, Typography} from "antd";
-import Editor from "@monaco-editor/react";
+import Editor, {monaco} from "@monaco-editor/react";
 import ThemeContext from "../../context/ThemeContext";
 import ReactMarkdown from 'react-markdown'
 import './QuestionDetail.style.css'
@@ -12,12 +12,19 @@ import axios from "axios";
 
 const {Option} = Select;
 
+const monacoLanguages = {
+    'cpp': 'cpp',
+    'Python3': 'py3'
+}
+
 function QuestionDetail(props) {
     const theme = useContext(ThemeContext)
     const [editor, setEditor] = useState(null);
     const [loading, setLoading] = useState(true);
     const [tcsLoading, setTCsLoading] = useState(true);
     const [question, setQuestion] = useState({})
+    const [languages, setLanguages] = useState([])
+    const [currentLanguage, setCurrentLanguage] = useState({})
 
     useEffect(() => {
         (async function(){
@@ -42,11 +49,27 @@ function QuestionDetail(props) {
             setQuestion(res.data)
             setTCsLoading(false)
 
+            const resLanguages = await axios.get(`${process.env.REACT_APP_BASE_URL}/languages`)
+            setLanguages(resLanguages.data.results)
+
         })()
     }, [])
 
+    useEffect(()=>{
+        // if (editor)
+        //     editor.setModelLanguage(editor.getModel(), monacoLanguages[currentLanguage]);
+    }, [currentLanguage, editor])
+
     function getCode(){
         return editor.getModel().getValue()
+    }
+
+    function handleSelectLanguage(v){
+        for(let i of languages){
+            if(v === i.id){
+                setCurrentLanguage(i)
+            }
+        }
     }
 
     return (
@@ -112,13 +135,8 @@ function QuestionDetail(props) {
                 <div>
                     <Card style={{marginBottom: '16px', position: 'relative'}} className='button-group-card'>
 
-                        <Select style={{width: 120}} size='large' defaultValue="lucy">
-                            <Option value="jack">Jack</Option>
-                            <Option value="lucy">Lucy</Option>
-                            <Option value="disabled" disabled>
-                                Disabled
-                            </Option>
-                            <Option value="Yiminghe">yiminghe</Option>
+                        <Select style={{width: 120}} size='large' value={currentLanguage.id} onChange={handleSelectLanguage}>
+                            {languages.map(lang=><Option value={lang.id}>{lang.name}</Option>)}
                         </Select>
                     </Card>
                     <div style={{position: 'relative', height: '88vh'}}>
@@ -127,7 +145,7 @@ function QuestionDetail(props) {
                                   style={{height: '71vh'}}>
                                 <Editor
                                     loading={<Spin size={'large'}/>}
-                                    language="cpp"
+                                    language={monacoLanguages[currentLanguage.name]}
                                     theme={theme.theme}
                                     editorDidMount={(_, e)=>setEditor(e)}
                                     options={{
@@ -136,7 +154,7 @@ function QuestionDetail(props) {
                                 />
                             </Card>
                         </div>
-                        <RunSubmit match={props.match} getCode={getCode}/>
+                        <RunSubmit match={props.match} getCode={getCode} getLang={_=>currentLanguage}/>
                     </div>
                 </div>
             </SplitPane>

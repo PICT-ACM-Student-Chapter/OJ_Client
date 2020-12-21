@@ -88,7 +88,7 @@ export default function RunSubmit(props) {
         setOutputLoading(true)
 
         const data = {
-            lang_id: 1,
+            lang_id: props.getLang().id,
             code: b64Encode(props.getCode()),
             stdin: b64Encode(input)
         }
@@ -97,11 +97,14 @@ export default function RunSubmit(props) {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
         }
+        try {
+            const res = await axios.post(`${process.env.REACT_APP_BASE_URL}/run`, data, reqConfig)
+            const subId = res.data.id
 
-        const res = await axios.post(`${process.env.REACT_APP_BASE_URL}/run`, data, reqConfig)
-        const subId = res.data.id
-
-        checkRun(subId)
+            checkRun(subId)
+        }catch(e){
+            setOutputLoading(false)
+        }
     }
 
 
@@ -110,7 +113,7 @@ export default function RunSubmit(props) {
         setSubmissionLoading(true)
 
         const data = {
-            lang_id: 1,
+            lang_id: props.getLang().id,
             code: b64Encode(props.getCode())
         }
         const reqConfig = {
@@ -119,18 +122,22 @@ export default function RunSubmit(props) {
             }
         }
 
-        const res = await axios.post(`${process.env.REACT_APP_BASE_URL}/contests/${props.match.params.contestId}/questions/${props.match.params.questionId}/submit`, data, reqConfig)
+        try {
+            const res = await axios.post(`${process.env.REACT_APP_BASE_URL}/contests/${props.match.params.contestId}/questions/${props.match.params.questionId}/submit`, data, reqConfig)
 
-        console.log(res.data)
+            console.log(res.data)
 
-        setSubmissionLoading(false)
+            setSubmissionLoading(false)
 
-        if (res.status !== 201)
-            return
+            if (res.status !== 201)
+                return
 
-        const subId = res.data.id
-        setTestCases(res.data.verdicts)
-        checkSubmit(subId)
+            const subId = res.data.id
+            setTestCases(res.data.verdicts)
+            checkSubmit(subId)
+        } catch (e) {
+            setSubmissionLoading(false)
+        }
     }
 
     return (
