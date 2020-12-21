@@ -1,6 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react'
-// import {useParams} from "react-router";
-import {Button, Card, Col, Row, Select, Space, Spin, Typography} from "antd";
+import {Button, Card, Col, Row, Select, Skeleton, Space, Spin, Typography} from "antd";
 import Editor from "@monaco-editor/react";
 import ThemeContext from "../../context/ThemeContext";
 import ReactMarkdown from 'react-markdown'
@@ -9,58 +8,42 @@ import {Helmet} from "react-helmet";
 import {LeftOutlined} from "@ant-design/icons";
 import SplitPane from "react-split-pane";
 import RunSubmit from "../../components/QuestionPage/RunSubmit.component";
+import axios from "axios";
 
 const {Option} = Select;
-
-//-------------- Hardcoded API responses for testing ------------------
-
-const question = {
-    name: 'Level Nodes',
-    description: `You are given two **non-empty** linked lists representing two non-negative integers. The digits are stored in **reverse order**, and each of their nodes contains a single digit. Add the two numbers and return the sum as a linked list.
-
-You may assume the two numbers do not contain any leading zero, except the number 0 itself.
-
-![Tux, the Linux mascot](https://assets.leetcode.com/uploads/2020/10/02/addtwonumber1.jpg)
-`,
-    input_format: '\n' +
-        'The first line consists of a single integer  _N_  denoting the number of nodes in the tree. Each of the next  n−1  lines consists of 2 integers  _a_  and  _b_  denoting an undirected edge between node  _a_  and node  _b_. The next line consists of a single integer  _x_.',
-    output_format: 'You need to print a single integers denoting the number of nodes on level x.\n' +
-        '\n',
-    constraints: '',
-    test_cases: [
-        {
-            id: 1,
-            input: '4 3\n' +
-                '3 3\n' +
-                '5 5\n' +
-                '6 6\n' +
-                '1 1\n' +
-                '5 2 7',
-            output: '30'
-        },
-        {
-            id: 2,
-            input: '3 3\n' +
-                '2 2\n' +
-                '3 4\n' +
-                '4 6\n' +
-                '1 10 100\n',
-            output: '102'
-        }
-    ]
-}
-
-//-------------- Hardcoded API responses for testing ends ---------------
-
 
 function QuestionDetail(props) {
     const theme = useContext(ThemeContext)
     const [editor, setEditor] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [tcsLoading, setTCsLoading] = useState(true);
+    const [question, setQuestion] = useState({})
 
     useEffect(() => {
-        //check if contestID and questionId are valid and user is authorised
+        (async function(){
+            const reqConfig = {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            }
 
-    }, [editor])
+            const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/questions/${props.match.params.questionId}`, reqConfig)
+            console.log(res.data)
+
+            setQuestion(res.data)
+            setLoading(false)
+            for (let i of res.data.test_cases){
+                const inpRes = await axios.get(i.input)
+                i.input = inpRes.data
+                const outRes = await axios.get(i.output)
+                i.output = outRes.data
+            }
+
+            setQuestion(res.data)
+            setTCsLoading(false)
+
+        })()
+    }, [])
 
     function getCode(){
         return editor.getModel().getValue()
@@ -70,7 +53,7 @@ function QuestionDetail(props) {
         <div>
             <Helmet>
                 <meta charSet="utf-8"/>
-                <title>{`${question.name} - PASC OJ`}</title>
+                <title>{`${loading ? 'Loading Question...' : question.name} - PASC OJ`}</title>
                 <link rel="canonical" href="http://mysite.com/example"/>
             </Helmet>
             <SplitPane split={'vertical'} defaultSize={'50%'} minSize={400} maxSize={-400}
@@ -79,9 +62,11 @@ function QuestionDetail(props) {
                     <Card className='question-card'>
                         <Space>
                             <Button icon={<LeftOutlined/>}>Back</Button>
-                            <Typography.Title>{question.name}</Typography.Title>
-
+                            <Typography.Title>{question.name || ''}</Typography.Title>
                         </Space>
+                        <br/><br/>
+                        <Skeleton loading={loading} paragraph={{rows: 20}} active />
+                        {!loading && <div>
                         <ReactMarkdown>{question.description}</ReactMarkdown>
                         <br/><br/>
                         <Typography.Title level={3}>Input Format</Typography.Title>
@@ -93,11 +78,11 @@ function QuestionDetail(props) {
                         <br/>
                         <Typography.Title level={3}>Sample Testcase(s)</Typography.Title>
                         {
-                            question.test_cases.map(({input, output, id}) => (
+                            question.test_cases && question.test_cases.map(({input, output, id}) => (
                                     <div key={id}>
                                         <Row gutter={16}>
                                             <Col xs={24} sm={24} md={24} lg={12} xl={12}>
-                                                <Card className='test-case-card' type="inner"
+                                                <Card className='test-case-card' type="inner" loading={tcsLoading}
                                                       title={<Typography.Title level={4}>Input</Typography.Title>}
                                                     // extra={<a href="#">Copy</a>}
                                                 >
@@ -106,7 +91,7 @@ function QuestionDetail(props) {
                                             </Col>
                                             <Col xs={24} sm={24} md={24} lg={12} xl={12}>
 
-                                                <Card className='test-case-card' type="inner"
+                                                <Card className='test-case-card' type="inner" loading={tcsLoading}
                                                       title={<Typography.Title level={4}>Output</Typography.Title>}
                                                     // extra={<a href="#">Copy</a>}
                                                 >
@@ -119,6 +104,7 @@ function QuestionDetail(props) {
                                 )
                             )
                         }
+                        </div>}
 
 
                     </Card>
