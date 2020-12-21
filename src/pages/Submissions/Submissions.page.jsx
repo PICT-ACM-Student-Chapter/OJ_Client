@@ -102,6 +102,7 @@ function Submissions(props) {
     const [code, setCode] = useState(null)
 
     useEffect(() => {
+        console.log(loading)
         getSubmissions();
         setSubmissions(submitResponse)
         generateData(submitResponse)

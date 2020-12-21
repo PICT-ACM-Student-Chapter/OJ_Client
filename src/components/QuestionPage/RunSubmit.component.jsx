@@ -47,7 +47,7 @@ export default function RunSubmit(props) {
     const [outputLoading, setOutputLoading] = useState(false);
     const [output, setOutput] = useState({});
     const [submissionLoading, setSubmissionLoading] = useState(false);
-    const [submission, setSubmission] = useState({});
+    // const [submission, setSubmission] = useState({});
     const [testCases, setTestCases] = useState([]);
     const [passedTestCases, setPassedTestCases] = useState(0);
 
