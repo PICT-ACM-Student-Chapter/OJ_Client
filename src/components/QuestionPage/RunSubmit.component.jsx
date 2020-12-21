@@ -21,7 +21,9 @@ export default function RunSubmit(props) {
     const [output, setOutput] = useState({});
 
     const [submissionLoading, setSubmissionLoading] = useState(false);
-    // const [submission, setSubmission] = useState({});
+
+    // eslint-disable-next-line
+    const [submission, setSubmission] = useState({});
     const [testCases, setTestCases] = useState([]);
 
 
@@ -67,11 +69,9 @@ export default function RunSubmit(props) {
         setSubmission(res.data)
         setTestCases(res.data.verdicts)
 
-        let passed = 0, totalJudged = 0;
+        let totalJudged = 0;
         for (let i of res.data.verdicts) {
             if (i.status !== 'IN_QUEUE') {
-                if (i.status === 'AC')
-                    passed++;
                 totalJudged++;
             }
         }
