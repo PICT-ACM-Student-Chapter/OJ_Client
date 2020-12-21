@@ -10,7 +10,6 @@ const themes = {
     light: `${process.env.PUBLIC_URL}/light-theme.css`,
 };
 
-console.log(process.env);
 ReactDOM.render(
     <React.StrictMode>
         <ThemeSwitcherProvider themeMap={themes} defaultTheme={localStorage.getItem('theme') || 'light'}>

@@ -35,10 +35,16 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+const parseDate = (api_date)=>{
+    const date = new Date(api_date)
+    const dateString = `${date.toDateString()} ${date.toLocaleTimeString()}`
+    return dateString
+}
 export {
     refreshAuthLogic,
     b64Decode,
     b64Encode,
-    sleep
+    sleep,
+    parseDate
 }
 
