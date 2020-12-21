@@ -9,6 +9,7 @@ import {GithubOutlined} from '@ant-design/icons';
 import QuestionDetail from "./pages/QuestionDetail/QuestionDetail.component";
 import LeaderBoard from "./pages/Leaderboard/LeaderBoard.page";
 import ConstestDetail from "./pages/ContestDetailPage/ContestDetail.page"
+import Submissions from "./pages/Submissions/Submissions.page";
 
 
 export class Routes extends Component {
@@ -54,9 +55,10 @@ export class Routes extends Component {
                     footerRender={() => this.defaultFooterDom}
                 >
                     <Route exact path="/contests/:contestId/:questionId" component={QuestionDetail}/>
+                    <Route exact path="/contests/:contestId/:questionId/submissions" component={Submissions}/>
                     <Route exact path="/contests/:contestId" component={ConstestDetail}/>
                     <Route exact path="/contests" component={Contests}/>
-                    <Route path="/leaderboard" component={LeaderBoard}/>
+                    <Route path="/leaderboard/:contestId" component={LeaderBoard}/>
                 </ProLayout>
 
             </Switch>

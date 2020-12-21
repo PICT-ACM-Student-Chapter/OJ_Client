@@ -1,6 +1,6 @@
-import React, {useContext, useEffect, useState} from 'react'
+import React, {useContext, useEffect} from 'react'
 // import {useParams} from "react-router";
-import {Button, Card, Col, Input, Row, Select, Skeleton, Space, Spin, Typography} from "antd";
+import {Button, Card, Col, Row, Select, Space, Spin, Typography} from "antd";
 import Editor from "@monaco-editor/react";
 import ThemeContext from "../../context/ThemeContext";
 import ReactMarkdown from 'react-markdown'
@@ -8,8 +8,12 @@ import './QuestionDetail.style.css'
 import {Helmet} from "react-helmet";
 import {LeftOutlined} from "@ant-design/icons";
 import SplitPane from "react-split-pane";
+import RunSubmit from "../../components/QuestionPage/RunSubmit.component";
 
 const {Option} = Select;
+
+//-------------- Hardcoded API responses for testing ------------------
+
 const question = {
     name: 'Level Nodes',
     description: `You are given two **non-empty** linked lists representing two non-negative integers. The digits are stored in **reverse order**, and each of their nodes contains a single digit. Add the two numbers and return the sum as a linked list.
@@ -46,36 +50,11 @@ You may assume the two numbers do not contain any leading zero, except the numbe
     ]
 }
 
+//-------------- Hardcoded API responses for testing ends ---------------
+
+
 function QuestionDetail() {
-    // const {contestId, questionId} = useParams()
     const theme = useContext(ThemeContext)
-    const [isTerminalOpen, setTerminalOpen] = useState(false);
-    const [activeTab, setActiveTab] = useState('input')
-    const [outputLoading, setOutputLoading] = useState(true);
-    const [output, setOutput] = useState('');
-    const [isOutputError, setIsOutputError] = useState(false);
-
-
-    const tabList = [
-        {
-            key: 'input',
-            tab: 'Input'
-        }, {
-            key: 'output',
-            tab: 'Output'
-        }
-    ]
-
-    const handleRun = () => {
-        setActiveTab('output')
-        setOutputLoading(true)
-        setIsOutputError(false)
-        setTimeout(() => {
-            setOutputLoading(false)
-            setOutput("Error")
-            setIsOutputError(true)
-        }, 2000)
-    }
 
     useEffect(() => {
         //check if contestID and questionId are valid and user is authorised
@@ -114,8 +93,8 @@ function QuestionDetail() {
                                             <Col xs={24} sm={24} md={24} lg={12} xl={12}>
                                                 <Card className='test-case-card' type="inner"
                                                       title={<Typography.Title level={4}>Input</Typography.Title>}
-                                                      // extra={<a href="#">Copy</a>}
-                                                    >
+                                                    // extra={<a href="#">Copy</a>}
+                                                >
                                                     <pre>{input}</pre>
                                                 </Card>
                                             </Col>
@@ -123,8 +102,8 @@ function QuestionDetail() {
 
                                                 <Card className='test-case-card' type="inner"
                                                       title={<Typography.Title level={4}>Output</Typography.Title>}
-                                                      // extra={<a href="#">Copy</a>}
-                                                    >
+                                                    // extra={<a href="#">Copy</a>}
+                                                >
                                                     <pre>{output}</pre>
                                                 </Card>
                                             </Col>
@@ -153,7 +132,7 @@ function QuestionDetail() {
                     <div style={{position: 'relative', height: '88vh'}}>
                         <div style={{width: '100%', position: 'absolute'}}>
                             <Card width={'100%'} className={'editor-card'}
-                                  style={{height: '72vh'}}>
+                                  style={{height: '71vh'}}>
                                 <Editor
                                     loading={<Spin size={'large'}/>}
                                     language="cpp"
@@ -164,44 +143,7 @@ function QuestionDetail() {
                                 />
                             </Card>
                         </div>
-                        <div>
-                            {!isTerminalOpen &&
-                            <Card style={{marginTop: '16px', marginBottom: '0px', position: 'relative', top: '74vh'}}
-                                  className='button-group-card'>
-                                <Space>
-                                    <Button onClick={_ => {
-                                        setTerminalOpen(!isTerminalOpen)
-                                        setActiveTab('input')
-                                    }} success>Run</Button>
-                                </Space>
-                            </Card>}
-                            {isTerminalOpen &&
-                            <Card style={{
-                                marginTop: '16px',
-                                marginBottom: '0px',
-                                height: '40vh',
-                                position: 'relative',
-                                top: '40vh'
-                            }} tabList={tabList}
-                                  className='button-group-card' onTabChange={setActiveTab} activeTabKey={activeTab}
-                                  extra={
-                                      <Space style={{position: 'absolute', right: 16, zIndex: 10}}>
-                                          <Button onClick={handleRun} success>RUN</Button>
-                                          <Button onClick={_ => setTerminalOpen(!isTerminalOpen)} danger>Close</Button>
-                                      </Space>
-                                  }>
-                                {activeTab === 'input' &&
-                                <div style={{margin: '20px'}}>
-                                    <Input.TextArea size={'large'} autoSize={{minRows: 5, maxRows: 8}}/>
-                                </div>
-                                }
-                                {activeTab === 'output' && <div style={{margin: '20px'}}>
-                                    {outputLoading && <Skeleton active/>}
-                                    {!outputLoading &&
-                                    <pre style={{color: (isOutputError ? 'red' : 'default')}}>{output}</pre>}
-                                </div>}
-                            </Card>}
-                        </div>
+                        <RunSubmit/>
                     </div>
                 </div>
             </SplitPane>
