@@ -19,8 +19,8 @@ jobs:
           node-version: 12.x
       - name: Install and Deploy
         run: |
-          npm install
-          npm run build --if-present
+          yarn install
+          yarn run build --if-present
 
       - name: Deploy to netlify
         uses: netlify/actions/cli@master
