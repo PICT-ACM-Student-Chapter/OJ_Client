@@ -6,7 +6,7 @@ import {BrowserRouter as Router} from "react-router-dom";
 import {ThemeProvider} from './context/ThemeContext'
 import createAuthRefreshInterceptor from 'axios-auth-refresh';
 
-import refreshAuthLogic from "./utils/utils";
+import {refreshAuthLogic} from "./utils/utils";
 
 
 function App() {

@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 // import {useParams} from "react-router";
 import {Button, Card, Col, Row, Select, Space, Spin, Typography} from "antd";
 import Editor from "@monaco-editor/react";
@@ -53,12 +53,18 @@ You may assume the two numbers do not contain any leading zero, except the numbe
 //-------------- Hardcoded API responses for testing ends ---------------
 
 
-function QuestionDetail() {
+function QuestionDetail(props) {
     const theme = useContext(ThemeContext)
+    const [editor, setEditor] = useState(null);
 
     useEffect(() => {
         //check if contestID and questionId are valid and user is authorised
-    }, [])
+
+    }, [editor])
+
+    function getCode(){
+        return editor.getModel().getValue()
+    }
 
     return (
         <div>
@@ -137,13 +143,14 @@ function QuestionDetail() {
                                     loading={<Spin size={'large'}/>}
                                     language="cpp"
                                     theme={theme.theme}
+                                    editorDidMount={(_, e)=>setEditor(e)}
                                     options={{
                                         fontSize: 16,
                                     }}
                                 />
                             </Card>
                         </div>
-                        <RunSubmit/>
+                        <RunSubmit match={props.match} getCode={getCode}/>
                     </div>
                 </div>
             </SplitPane>

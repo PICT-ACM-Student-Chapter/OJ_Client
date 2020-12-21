@@ -1,5 +1,6 @@
 import React from 'react'
 import {Card, Skeleton, Space, Typography} from "antd";
+import {b64Decode} from "../../utils/utils";
 
 function isOutputError(output) {
     return output.status !== 'AC'
@@ -24,11 +25,11 @@ export default function RunOutputComponent(props) {
                 <Typography.Text
                     type={statusColor[output.status] || 'warning'}>{output.status || ''}&nbsp;&nbsp;</Typography.Text>
                 <Typography.Text
-                    type={'secondary'}>Runtime: {output.exec_time || '-- s'}</Typography.Text>
+                    type={'secondary'}>Runtime: {`${output.exec_time || '--'} s`}</Typography.Text>
             </Space>
             <Card style={{minHeight: '12rem'}}>
-                {!isOutputError(output) && <pre>{output.stdout}</pre>}
-                {isOutputError(output) && <pre style={{color: '#a61d24'}}>{output.stderr}</pre>}
+                {!isOutputError(output) && <pre>{b64Decode(output.stdout)}</pre>}
+                {isOutputError(output) && <pre style={{color: '#a61d24'}}>{b64Decode(output.stderr)}</pre>}
             </Card>
         </div>}
     </div>
