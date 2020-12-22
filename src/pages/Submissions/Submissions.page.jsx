@@ -16,85 +16,6 @@ const statusColor = {
 }
 
 
-const submitResponse = [
-    {
-        id: 1,
-        status: 'AC',
-        score: 80,
-        created_at: new Date(),
-        code: 'This is testing code 1',
-        verdicts: [
-            {status: 'AC'},
-            {status: 'RTE'},
-            {status: 'TLE'},
-            {status: 'IN_QUEUE'},
-            {status: 'AC'},
-            {status: 'RTE'},
-            {status: 'TLE'},
-            {status: 'IN_QUEUE'},
-            {status: 'AC'},
-            {status: 'RTE'},
-            {status: 'TLE'},
-            {status: 'IN_QUEUE'},
-        ]
-    }, {
-        id: 2,
-        status: 'TLE',
-        score: 0,
-        created_at: new Date(),
-        code: 'This is testing code 2',
-        verdicts: [
-            {status: 'AC'},
-            {status: 'RTE'},
-            {status: 'TLE'},
-            {status: 'IN_QUEUE'},
-            {status: 'AC'},
-            {status: 'RTE'},
-            {status: 'TLE'},
-            {status: 'IN_QUEUE'},
-            {status: 'AC'},
-            {status: 'RTE'},
-            {status: 'TLE'},
-            {status: 'IN_QUEUE'},
-        ]
-    }, {
-        id: 3,
-        status: 'WA',
-        score: 0,
-        created_at: new Date(),
-        code: 'This is testing code 3',
-        verdicts: [
-            {status: 'AC'},
-            {status: 'RTE'},
-            {status: 'TLE'},
-            {status: 'IN_QUEUE'},
-            {status: 'AC'},
-            {status: 'RTE'},
-            {status: 'TLE'},
-            {status: 'IN_QUEUE'},
-            {status: 'AC'},
-            {status: 'RTE'},
-            {status: 'TLE'},
-            {status: 'IN_QUEUE'},
-        ]
-    }, {
-        id: 4,
-        status: 'AC',
-        score: 70,
-        created_at: new Date(),
-        code: 'This is testing code 4',
-        verdicts: [
-            {status: 'AC'},
-            {status: 'RTE'},
-            {status: 'TLE'},
-
-        ]
-    },
-
-]
-
-
-//TODO: Change Hard Coded Values
 function Submissions(props) {
     const [loading, setLoading] = useState(true)
     const [data, setData] = useState([])
@@ -105,8 +26,8 @@ function Submissions(props) {
     useEffect(() => {
         console.log(loading)
         getSubmissions();
-        setSubmissions(submitResponse)
-        generateData(submitResponse)
+        // setSubmissions(submitResponse)
+        // generateData(submitResponse)
         // eslint-disable-next-line
     }, []);
 
@@ -179,8 +100,8 @@ function Submissions(props) {
             })
             .then(res => {
                 setLoading(false)
-                // setSubmissions(res.data.results)
-                // generateData(res.data.results)
+                setSubmissions(res.data.results)
+                generateData(res.data.results)
 
             })
             .catch(e => {
@@ -254,3 +175,83 @@ function Submissions(props) {
 }
 
 export default Submissions
+
+
+
+
+// const submitResponse = [
+//     {
+//         id: 1,
+//         status: 'AC',
+//         score: 80,
+//         created_at: new Date(),
+//         code: 'This is testing code 1',
+//         verdicts: [
+//             {status: 'AC'},
+//             {status: 'RTE'},
+//             {status: 'TLE'},
+//             {status: 'IN_QUEUE'},
+//             {status: 'AC'},
+//             {status: 'RTE'},
+//             {status: 'TLE'},
+//             {status: 'IN_QUEUE'},
+//             {status: 'AC'},
+//             {status: 'RTE'},
+//             {status: 'TLE'},
+//             {status: 'IN_QUEUE'},
+//         ]
+//     }, {
+//         id: 2,
+//         status: 'TLE',
+//         score: 0,
+//         created_at: new Date(),
+//         code: 'This is testing code 2',
+//         verdicts: [
+//             {status: 'AC'},
+//             {status: 'RTE'},
+//             {status: 'TLE'},
+//             {status: 'IN_QUEUE'},
+//             {status: 'AC'},
+//             {status: 'RTE'},
+//             {status: 'TLE'},
+//             {status: 'IN_QUEUE'},
+//             {status: 'AC'},
+//             {status: 'RTE'},
+//             {status: 'TLE'},
+//             {status: 'IN_QUEUE'},
+//         ]
+//     }, {
+//         id: 3,
+//         status: 'WA',
+//         score: 0,
+//         created_at: new Date(),
+//         code: 'This is testing code 3',
+//         verdicts: [
+//             {status: 'AC'},
+//             {status: 'RTE'},
+//             {status: 'TLE'},
+//             {status: 'IN_QUEUE'},
+//             {status: 'AC'},
+//             {status: 'RTE'},
+//             {status: 'TLE'},
+//             {status: 'IN_QUEUE'},
+//             {status: 'AC'},
+//             {status: 'RTE'},
+//             {status: 'TLE'},
+//             {status: 'IN_QUEUE'},
+//         ]
+//     }, {
+//         id: 4,
+//         status: 'AC',
+//         score: 70,
+//         created_at: new Date(),
+//         code: 'This is testing code 4',
+//         verdicts: [
+//             {status: 'AC'},
+//             {status: 'RTE'},
+//             {status: 'TLE'},
+//
+//         ]
+//     },
+//
+// ]

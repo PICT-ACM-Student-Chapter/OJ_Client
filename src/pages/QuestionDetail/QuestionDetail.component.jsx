@@ -53,6 +53,7 @@ function QuestionDetail(props) {
             setLanguages(resLanguages.data.results)
 
         })()
+        // eslint-disable-next-line
     }, [])
 
     useEffect(()=>{
