@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react'
 import {Button, Card, Col, Row, Select, Skeleton, Space, Spin, Typography} from "antd";
-import Editor, {monaco} from "@monaco-editor/react";
+import Editor from "@monaco-editor/react";
 import ThemeContext from "../../context/ThemeContext";
 import ReactMarkdown from 'react-markdown'
 import './QuestionDetail.style.css'
@@ -12,11 +12,6 @@ import axios from "axios";
 
 const {Option} = Select;
 
-const monacoLanguages = {
-    'cpp': 'cpp',
-    'Python3': 'py3'
-}
-
 function QuestionDetail(props) {
     const theme = useContext(ThemeContext)
     const [editor, setEditor] = useState(null);
@@ -25,6 +20,7 @@ function QuestionDetail(props) {
     const [question, setQuestion] = useState({})
     const [languages, setLanguages] = useState([])
     const [currentLanguage, setCurrentLanguage] = useState({})
+    let savedCodes = JSON.parse(localStorage.getItem(`codes${props.match.params.questionId}`) || '{}')
 
     useEffect(() => {
         (async function(){
@@ -52,14 +48,35 @@ function QuestionDetail(props) {
             const resLanguages = await axios.get(`${process.env.REACT_APP_BASE_URL}/languages`)
             setLanguages(resLanguages.data.results)
 
+            if(localStorage.getItem('preferredLanguage')){
+                for(let i of resLanguages.data.results)
+                    if(i.id === localStorage.getItem('preferredLanguage'))
+                        setCurrentLanguage(i)
+            } else
+                setCurrentLanguage(resLanguages.data.results[0])
+            console.log('imhere')
+
         })()
-        // eslint-disable-next-line
-    }, [])
+    }, [props.match.params.questionId])
 
     useEffect(()=>{
-        // if (editor)
-        //     editor.setModelLanguage(editor.getModel(), monacoLanguages[currentLanguage]);
-    }, [currentLanguage, editor])
+        if(currentLanguage.id)
+            localStorage.setItem('preferredLanguage', currentLanguage.id)
+    }, [currentLanguage])
+
+    function handleEditorMount(_, e){
+        setEditor(e)
+        e.getModel().onDidChangeContent(_ => {
+            savedCodes[currentLanguage.id] = e.getModel().getValue()
+            localStorage.setItem(`codes${props.match.params.questionId}`, JSON.stringify(savedCodes))
+        })
+    }
+
+    useEffect(()=>{
+        if(editor) {
+            editor.getModel().setValue(savedCodes[currentLanguage.id] || '')
+        }
+    }, [currentLanguage, editor, savedCodes])
 
     function getCode(){
         return editor.getModel().getValue()
@@ -145,10 +162,10 @@ function QuestionDetail(props) {
                             <Card width={'100%'} className={'editor-card'}
                                   style={{height: '71vh'}}>
                                 <Editor
-                                    loading={<Spin size={'large'}/>}
-                                    language={monacoLanguages[currentLanguage.name]}
+                                    loading={<Spin size={'large'} tip={'Loading Editor'}/>}
+                                    language={currentLanguage.monaco_lang_code}
                                     theme={theme.theme}
-                                    editorDidMount={(_, e)=>setEditor(e)}
+                                    editorDidMount={handleEditorMount}
                                     options={{
                                         fontSize: 16,
                                     }}

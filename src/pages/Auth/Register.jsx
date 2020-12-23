@@ -51,7 +51,7 @@ function Register() {
                 email,
             };
             axios
-                .post("/auth/register", data)
+                .post("/auth/users", data)
                 .then((res) => {
                     form.resetFields();
                     console.log(res);

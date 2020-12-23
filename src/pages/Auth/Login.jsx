@@ -51,7 +51,7 @@ function Login() {
         } else {
             const {username, password} = values;
             axios
-                .post("/auth/jwt/create/", {username, password})
+                .post("/auth/jwt/create", {username, password})
                 .then((res) => {
                     localStorage.setItem("token", res.data.access);
                     localStorage.setItem("refresh-token", res.data.refresh);
