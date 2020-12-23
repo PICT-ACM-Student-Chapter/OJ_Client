@@ -50,12 +50,11 @@ function QuestionDetail(props) {
 
             if(localStorage.getItem('preferredLanguage')){
                 for(let i of resLanguages.data.results)
-                    if(i.id === localStorage.getItem('preferredLanguage'))
+                    if(i.id === parseInt(localStorage.getItem('preferredLanguage'))) {
                         setCurrentLanguage(i)
+                    }
             } else
                 setCurrentLanguage(resLanguages.data.results[0])
-            console.log('imhere')
-
         })()
     }, [props.match.params.questionId])
 
@@ -102,7 +101,7 @@ function QuestionDetail(props) {
                 <div>
                     <Card className='question-card'>
                         <Space>
-                            <Button icon={<LeftOutlined/>}>Back</Button>
+                            <Button icon={<LeftOutlined/>} onClick={_=>props.history.push(`/contests/${props.match.params.contestId}`)}>Back</Button>
                             <Typography.Title>{question.name || ''}</Typography.Title>
                         </Space>
                         <br/><br/>
