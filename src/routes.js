@@ -36,7 +36,7 @@ const Routes = () => {
                     <Route exact path="/contests/:contestId" component={ContestDetail}/>
                     <Route exact path="/contests" component={Contests}/>
                     <Route exact path="/leaderboard/:contestId" component={LeaderBoard}/>
-                    {/*<Route  component={Error404}/>*/}
+                    <Route  component={Error404}/>
                 </Switch>
             </ProLayout>
         </>
