@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {Button, Card, Col, Row, Space, Statistic, Tabs, Tag, Typography} from 'antd';
+import {Button, Card, Col, Divider, Row, Space, Statistic, Tabs, Tag, Typography} from 'antd';
 import {HourglassOutlined} from '@ant-design/icons'
 import axios from "axios";
 import {useParams} from "react-router";
@@ -8,6 +8,7 @@ import gfm from 'remark-gfm'
 import ProSkeleton from '@ant-design/pro-skeleton';
 import {Link} from "react-router-dom";
 import StartContestComponent from "../../components/ContestDetailPage/StartContest.component";
+import MiniLeaderBoard from "../../components/ContestDetailPage/MiniLeaderBoard";
 
 const {TabPane} = Tabs;
 const {Countdown} = Statistic;
@@ -66,74 +67,74 @@ const ContestDetail = (props) => {
                         </Card>
                     </Col>
                 </Row>
-                <Row>
-                        {/*<Button type="primary" size='large' onClick={() => {*/}
-                        {/*    props.history.push(`/leaderboard/${contestId}`)*/}
-                        {/*}}>*/}
-                        {/*    Leaderboard*/}
-                        {/*</Button>*/}
+                <br/>
+                    {/*<Button type="primary" size='large' onClick={() => {*/}
+                    {/*    props.history.push(`/leaderboard/${contestId}`)*/}
+                    {/*}}>*/}
+                    {/*    Leaderboard*/}
+                    {/*</Button>*/}
 
-                </Row>
                 {!started && <StartContestComponent contest={contest} startContest={startContest}/>}
                 {started && <><Row gutter={32}>
-                        <Col xs={24} sm={24} md={24} lg={16} xl={16}>
+                    <Col xs={23} sm={23} md={23} lg={15} xl={15}>
 
-                            <Tabs size='large' type="card">
-                                <TabPane tab="Questions" key="1" style={{'padding': '4%'}}>
+                        <Tabs size='large' type="card">
+                            <TabPane tab="Questions" key="1" style={{'padding': '4%'}}>
 
-                                    {contest.questions.map((ques) => (
-                                        <Row key={ques.question.id} align="middle" justify="center">
-                                            <Col span={24}>
-                                                <Card bordered={false}>
-                                                    <Row align="middle">
-                                                        <Col lg={12} onClick={() => {
-                                                            props.history.push(`/contests/${contestId}/${ques.question.id}`)
-                                                        }}>
-                                                            <h2><Link
-                                                                to={`/contests/${contestId}/${ques.question.id}`}> {ques.question.name}</Link>
-                                                            </h2>
-                                                        </Col>
-                                                        <Col lg={12} align={'right'}>
-                                                            <Space size={'middle'}>
-                                                                <Tag color='blue'
-                                                                     style={{'fontSize': 'larger', padding: '0.4rem'}}>
-                                                                    Score: {ques.question.score}
-                                                                </Tag>
-                                                                <Link
-                                                                    to={`/contests/${contestId}/${ques.question.id}`}>
-                                                                    <Button size='large' type={'primary'}>
-                                                                        Solve
-                                                                    </Button>
-                                                                </Link>
-                                                                <Link
-                                                                    to={`/contests/${contestId}/${ques.question.id}/submissions`}>
-                                                                    <Button size='large'>
-                                                                        My Submissions
-                                                                    </Button>
-                                                                </Link>
-                                                            </Space>
-                                                        </Col>
-                                                    </Row>
-                                                </Card>
-                                            </Col>
-                                            <br/>
-                                        </Row>
-                                    ))}
-
-
-                                </TabPane>
-                                <TabPane tab="Instructions" key="2" style={{'padding': '4%'}}>
-                                    <h2><ReactMarkdown plugins={[gfm]} children={contest.instructions}/></h2>
-
-                                </TabPane>
-                            </Tabs>
-                        </Col>
-                        <Col xs={24} sm={24} md={24} lg={8} xl={8}>
-                            <Title level={2}>Something goes here</Title>
+                                {contest.questions.map((ques) => (
+                                    <Row key={ques.question.id} align="middle" justify="center">
+                                        <Col span={24}>
+                                            <Card bordered={false}>
+                                                <Row align="middle">
+                                                    <Col lg={12} onClick={() => {
+                                                        props.history.push(`/contests/${contestId}/${ques.question.id}`)
+                                                    }}>
+                                                        <h2><Link
+                                                            to={`/contests/${contestId}/${ques.question.id}`}> {ques.question.name}</Link>
+                                                        </h2>
+                                                    </Col>
+                                                    <Col lg={12} align={'right'}>
+                                                        <Space size={'middle'}>
+                                                            <Tag color='blue'
+                                                                 style={{'fontSize': 'larger', padding: '0.4rem'}}>
+                                                                Score: {ques.question.score}
+                                                            </Tag>
+                                                            <Link
+                                                                to={`/contests/${contestId}/${ques.question.id}`}>
+                                                                <Button size='large' type={'primary'}>
+                                                                    Solve
+                                                                </Button>
+                                                            </Link>
+                                                            <Link
+                                                                to={`/contests/${contestId}/${ques.question.id}/submissions?name=${ques.question.name}`}>
+                                                                <Button size='large'>
+                                                                    My Submissions
+                                                                </Button>
+                                                            </Link>
+                                                        </Space>
+                                                    </Col>
+                                                </Row>
+                                            </Card>
+                                        </Col>
+                                        <br/>
+                                    </Row>
+                                ))}
 
 
-                        </Col>
-                    </Row></>}
+                            </TabPane>
+                            <TabPane tab="Instructions" key="2" style={{'padding': '4%'}}>
+                                <h2><ReactMarkdown plugins={[gfm]} children={contest.instructions}/></h2>
+
+                            </TabPane>
+                        </Tabs>
+                    </Col>
+                    <Col lg={1}>
+                        <Divider type="vertical" style={{height:"100%"}}/>
+                    </Col>
+                    <Col xs={24} sm={24} md={24} lg={8} xl={8}>
+                        <MiniLeaderBoard match={props.match}/>
+                    </Col>
+                </Row></>}
             </div>
     )
 }

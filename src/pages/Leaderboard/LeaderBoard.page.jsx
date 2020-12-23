@@ -152,9 +152,9 @@ function LeaderBoard(props) {
 
 
     return (
-        <div>
+        <div style={{padding:"2% 4%"}}>
             <Typography.Title>Leaderboard</Typography.Title>
-            <Typography.Title type={'secondary'} level={4}>{contest.name || ''}</Typography.Title>
+            <Typography.Title type={'secondary'} level={3}>{contest.name || ''}</Typography.Title>
             <br/>
             <Typography.Text>Your score: 256/680 | Rank: 5</Typography.Text>
             <br/><br/><br/>

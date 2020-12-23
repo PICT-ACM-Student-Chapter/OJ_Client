@@ -3,18 +3,33 @@ import React, {useEffect, useState} from 'react'
 import axios from "axios";
 import SubmitComponent from "../../components/QuestionPage/Submit.component";
 import Modal from "antd/es/modal/Modal";
-import {Prism as SyntaxHighlighter} from 'react-syntax-highlighter';
-import {darcula} from 'react-syntax-highlighter/dist/esm/styles/prism';
+import SyntaxHighlighter from 'react-syntax-highlighter';
+import {vs, vs2015} from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import {b64Decode, parseDate} from "../../utils/utils";
+import {useLocation} from "react-router";
 
 const statusColor = {
     'AC': 'green',
     'CTE': 'red',
     'RTE': 'red',
     'TLE': 'orange',
-    'WA': 'red'
+    'WA': 'red',
+    'PA': 'lime',
+    'CE': 'red'
 }
 
+const theme = () => {
+    if (localStorage.getItem('theme') === 'dark') {
+        return vs2015
+    } else {
+        return vs
+    }
+}
+
+
+function useQuery() {
+    return new URLSearchParams(useLocation().search);
+}
 
 function Submissions(props) {
     const [loading, setLoading] = useState(true)
@@ -22,6 +37,15 @@ function Submissions(props) {
     const [submissions, setSubmissions] = useState([])
     const [visible, setVisible] = useState(false);
     const [code, setCode] = useState(null)
+    const [lang, setLang] = useState([])
+    const [codeLang, setCodeLang] = useState({})
+
+    useEffect(() => {
+        getLanguages();
+        // setSubmissions(submitResponse)
+        // generateData(submitResponse)
+        // eslint-disable-next-line
+    }, []);
 
     useEffect(() => {
         console.log(loading)
@@ -29,11 +53,12 @@ function Submissions(props) {
         // setSubmissions(submitResponse)
         // generateData(submitResponse)
         // eslint-disable-next-line
-    }, []);
+    }, [lang]);
 
     const onClickView = (record) => {
         console.log(record)
         setCode(record.code)
+        setCodeLang(record.lang)
         setVisible(true)
     }
 
@@ -76,6 +101,22 @@ function Submissions(props) {
             align: 'center'
         },
         {
+            title: <Typography.Title level={5}>Language</Typography.Title>,
+            dataIndex: 'lang',
+            width: '12rem',
+            align: 'center',
+            key: 'lang',
+            render: lang => {
+                return (
+                    <>
+                        <Tag color="volcano">
+                            {lang && lang.name}
+                        </Tag>
+                    </>
+                )
+            }
+        },
+        {
             title: <Typography.Title level={5}>Code</Typography.Title>,
             width: '12rem',
             align: 'center',
@@ -109,6 +150,22 @@ function Submissions(props) {
             })
     }
 
+    const getLanguages = async () => {
+        const resLanguages = await axios.get(`${process.env.REACT_APP_BASE_URL}/languages`)
+        setLang(resLanguages.data.results)
+    }
+
+    const getLangfromId = (id) => {
+        if (lang) {
+            for (let i of lang) {
+                if (i.id === id)
+                    return i
+            }
+        } else {
+            return {}
+        }
+
+    }
 
     const generateData = (submissions) => {
 
@@ -119,12 +176,14 @@ function Submissions(props) {
                 status: row.status,
                 score: row.score,
                 code: row.code,
+                lang: getLangfromId(row.lang_id),
                 key: row.id
             }
         })
         sub.sort((a, b) => (b.created_at - a.created_at))
 
         setData(sub)
+        setLoading(false)
     }
 
 
@@ -150,23 +209,32 @@ function Submissions(props) {
         return <SubmitComponent testCases={testcases} submissionLoading={false} passedTestCases={passedTestCases}/>
     }
 
+    let query = useQuery();
+
+
     return (
-        <div>
+        <div style={{padding: "2% 4%"}}>
             <Typography.Title>Submissions</Typography.Title>
-            <Typography.Title type={'secondary'} level={4}>{'Question name here'}</Typography.Title>
+            <Typography.Title type={'secondary'} level={3}>{query.get("name") || ""}</Typography.Title>
             <br/><br/><br/>
             <Table bordered dataSource={data} columns={columns} loading={false}
                    pagination={false} expandable={{expandedRowRender}}
             />
             <Modal
-                title="Submitted Code"
+                title={
+                    <div>
+                        <Typography.Title level={3}>Submitted Code</Typography.Title>
+                        <Typography.Title type={'secondary'} level={4}>{codeLang.name}</Typography.Title>
+
+                    </div>
+                }
                 centered
                 visible={visible}
                 onOk={() => setVisible(false)}
                 onCancel={() => setVisible(false)}
                 width={1000}
             >
-                <SyntaxHighlighter language="cpp" style={darcula}>
+                <SyntaxHighlighter language={codeLang.monaco_lang_code} style={theme()}>
                     {b64Decode(code)}
                 </SyntaxHighlighter>
             </Modal>
@@ -175,8 +243,6 @@ function Submissions(props) {
 }
 
 export default Submissions
-
-
 
 
 // const submitResponse = [
