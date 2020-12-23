@@ -23,7 +23,7 @@ function QuestionDetail(props) {
     let savedCodes = JSON.parse(localStorage.getItem(`codes${props.match.params.questionId}`) || '{}')
 
     useEffect(() => {
-        (async function(){
+        (async function () {
             const reqConfig = {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -35,7 +35,7 @@ function QuestionDetail(props) {
 
             setQuestion(res.data)
             setLoading(false)
-            for (let i of res.data.test_cases){
+            for (let i of res.data.test_cases) {
                 const inpRes = await axios.get(i.input)
                 i.input = inpRes.data
                 const outRes = await axios.get(i.output)
@@ -48,9 +48,9 @@ function QuestionDetail(props) {
             const resLanguages = await axios.get(`${process.env.REACT_APP_BASE_URL}/languages`)
             setLanguages(resLanguages.data.results)
 
-            if(localStorage.getItem('preferredLanguage')){
-                for(let i of resLanguages.data.results)
-                    if(i.id === parseInt(localStorage.getItem('preferredLanguage'))) {
+            if (localStorage.getItem('preferredLanguage')) {
+                for (let i of resLanguages.data.results)
+                    if (i.id === parseInt(localStorage.getItem('preferredLanguage'))) {
                         setCurrentLanguage(i)
                     }
             } else
@@ -58,32 +58,34 @@ function QuestionDetail(props) {
         })()
     }, [props.match.params.questionId])
 
-    useEffect(()=>{
-        if(currentLanguage.id)
+    useEffect(() => {
+        if (currentLanguage.id)
             localStorage.setItem('preferredLanguage', currentLanguage.id)
     }, [currentLanguage])
 
-    function handleEditorMount(_, e){
+    function handleEditorMount(_, e) {
         setEditor(e)
+        console.log(e)
         e.getModel().onDidChangeContent(_ => {
-            savedCodes[currentLanguage.id] = e.getModel().getValue()
+            savedCodes[parseInt(localStorage.getItem("preferredLanguage"))] = e.getModel().getValue()
             localStorage.setItem(`codes${props.match.params.questionId}`, JSON.stringify(savedCodes))
         })
     }
 
-    useEffect(()=>{
-        if(editor) {
+
+    useEffect(() => {
+        if (editor) {
             editor.getModel().setValue(savedCodes[currentLanguage.id] || '')
         }
     }, [currentLanguage, editor, savedCodes])
 
-    function getCode(){
+    function getCode() {
         return editor.getModel().getValue()
     }
 
-    function handleSelectLanguage(v){
-        for(let i of languages){
-            if(v === i.id){
+    function handleSelectLanguage(v) {
+        for (let i of languages) {
+            if (v === i.id) {
                 setCurrentLanguage(i)
             }
         }
@@ -101,49 +103,50 @@ function QuestionDetail(props) {
                 <div>
                     <Card className='question-card'>
                         <Space>
-                            <Button icon={<LeftOutlined/>} onClick={_=>props.history.push(`/contests/${props.match.params.contestId}`)}>Back</Button>
+                            <Button icon={<LeftOutlined/>}
+                                    onClick={_ => props.history.push(`/contests/${props.match.params.contestId}`)}>Back</Button>
                             <Typography.Title>{question.name || ''}</Typography.Title>
                         </Space>
                         <br/><br/>
-                        <Skeleton loading={loading} paragraph={{rows: 20}} active />
+                        <Skeleton loading={loading} paragraph={{rows: 20}} active/>
                         {!loading && <div>
-                        <ReactMarkdown>{question.description}</ReactMarkdown>
-                        <br/><br/>
-                        <Typography.Title level={3}>Input Format</Typography.Title>
-                        <ReactMarkdown>{question.input_format}</ReactMarkdown>
-                        <Typography.Title level={3}>Output Format</Typography.Title>
-                        <ReactMarkdown>{question.output_format}</ReactMarkdown>
-                        <Typography.Title level={3}>Constraints</Typography.Title>
-                        <ReactMarkdown>{question.output_format}</ReactMarkdown>
-                        <br/>
-                        <Typography.Title level={3}>Sample Testcase(s)</Typography.Title>
-                        {
-                            question.test_cases && question.test_cases.map(({input, output, id}) => (
-                                    <div key={id}>
-                                        <Row gutter={16}>
-                                            <Col xs={24} sm={24} md={24} lg={12} xl={12}>
-                                                <Card className='test-case-card' type="inner" loading={tcsLoading}
-                                                      title={<Typography.Title level={4}>Input</Typography.Title>}
-                                                    // extra={<a href="#">Copy</a>}
-                                                >
-                                                    <pre>{input}</pre>
-                                                </Card>
-                                            </Col>
-                                            <Col xs={24} sm={24} md={24} lg={12} xl={12}>
+                            <ReactMarkdown>{question.description}</ReactMarkdown>
+                            <br/><br/>
+                            <Typography.Title level={3}>Input Format</Typography.Title>
+                            <ReactMarkdown>{question.input_format}</ReactMarkdown>
+                            <Typography.Title level={3}>Output Format</Typography.Title>
+                            <ReactMarkdown>{question.output_format}</ReactMarkdown>
+                            <Typography.Title level={3}>Constraints</Typography.Title>
+                            <ReactMarkdown>{question.output_format}</ReactMarkdown>
+                            <br/>
+                            <Typography.Title level={3}>Sample Testcase(s)</Typography.Title>
+                            {
+                                question.test_cases && question.test_cases.map(({input, output, id}) => (
+                                        <div key={id}>
+                                            <Row gutter={16}>
+                                                <Col xs={24} sm={24} md={24} lg={12} xl={12}>
+                                                    <Card className='test-case-card' type="inner" loading={tcsLoading}
+                                                          title={<Typography.Title level={4}>Input</Typography.Title>}
+                                                        // extra={<a href="#">Copy</a>}
+                                                    >
+                                                        <pre>{input}</pre>
+                                                    </Card>
+                                                </Col>
+                                                <Col xs={24} sm={24} md={24} lg={12} xl={12}>
 
-                                                <Card className='test-case-card' type="inner" loading={tcsLoading}
-                                                      title={<Typography.Title level={4}>Output</Typography.Title>}
-                                                    // extra={<a href="#">Copy</a>}
-                                                >
-                                                    <pre>{output}</pre>
-                                                </Card>
-                                            </Col>
-                                        </Row>
-                                        <br/>
-                                    </div>
+                                                    <Card className='test-case-card' type="inner" loading={tcsLoading}
+                                                          title={<Typography.Title level={4}>Output</Typography.Title>}
+                                                        // extra={<a href="#">Copy</a>}
+                                                    >
+                                                        <pre>{output}</pre>
+                                                    </Card>
+                                                </Col>
+                                            </Row>
+                                            <br/>
+                                        </div>
+                                    )
                                 )
-                            )
-                        }
+                            }
                         </div>}
 
 
@@ -152,8 +155,9 @@ function QuestionDetail(props) {
                 <div>
                     <Card style={{marginBottom: '16px', position: 'relative'}} className='button-group-card'>
 
-                        <Select style={{width: 120}} size='large' value={currentLanguage.id} onChange={handleSelectLanguage}>
-                            {languages.map(lang=><Option value={lang.id}>{lang.name}</Option>)}
+                        <Select style={{width: 120}} size='large' value={currentLanguage.id}
+                                onChange={handleSelectLanguage}>
+                            {languages.map(lang => <Option value={lang.id}>{lang.name}</Option>)}
                         </Select>
                     </Card>
                     <div style={{position: 'relative', height: '88vh'}}>
@@ -171,7 +175,7 @@ function QuestionDetail(props) {
                                 />
                             </Card>
                         </div>
-                        <RunSubmit match={props.match} getCode={getCode} getLang={_=>currentLanguage}/>
+                        <RunSubmit match={props.match} getCode={getCode} getLang={_ => currentLanguage}/>
                     </div>
                 </div>
             </SplitPane>
