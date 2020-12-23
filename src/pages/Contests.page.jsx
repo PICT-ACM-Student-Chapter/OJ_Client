@@ -39,7 +39,7 @@ function Contests(props) {
 
                 <List
                     grid={{
-                        gutter: 16,
+                        gutter: 32,
                         xs: 1,
                         sm: 2,
                         md: 3,
@@ -52,8 +52,9 @@ function Contests(props) {
                     renderItem={item => (
                         <List.Item key={item.id}>
                             <Card
+                                type="inner"
                                 hoverable
-                                style={{width: 240}}
+                                style={{width: 280}}
                                 cover={<img alt="example"
                                             src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"/>}
                             >
