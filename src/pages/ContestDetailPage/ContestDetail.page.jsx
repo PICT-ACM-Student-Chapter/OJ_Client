@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {Button, Card, Col, Row, Statistic, Tabs, Tag, Typography} from 'antd';
+import {Button, Card, Col, Row, Space, Statistic, Tabs, Tag, Typography} from 'antd';
 import {HourglassOutlined} from '@ant-design/icons'
 import axios from "axios";
 import {useParams} from "react-router";
@@ -77,24 +77,32 @@ const ContestDetail = (props) => {
                                         <Col span={24}>
                                             <Card bordered={false}>
                                                 <Row align="middle">
-                                                    <Col lg={16} onClick={() => {
+                                                    <Col lg={12} onClick={() => {
                                                         props.history.push(`/contests/${contestId}/${ques.question.id}`)
                                                     }}>
                                                         <h2><Link
                                                             to={`/contests/${contestId}/${ques.question.id}`}> {ques.question.name}</Link>
                                                         </h2>
                                                     </Col>
-                                                    <Col lg={4}>
-                                                        <Tag color='blue' style={{'fontSize': 'larger'}}>
-                                                            Score: {ques.question.score}
-                                                        </Tag>
-                                                    </Col>
-                                                    <Col lg={4}>
-                                                        <Button size='large' onClick={() => {
-                                                            props.history.push(`/contests/${contestId}/${ques.question.id}/submissions`)
-                                                        }}>
-                                                            Submissions
-                                                        </Button>
+                                                    <Col lg={12} align={'right'}>
+                                                        <Space size={'middle'}>
+                                                            <Tag color='blue'
+                                                                 style={{'fontSize': 'larger', padding: '0.4rem'}}>
+                                                                Score: {ques.question.score}
+                                                            </Tag>
+                                                            <Link
+                                                                to={`/contests/${contestId}/${ques.question.id}`}>
+                                                                <Button size='large' type={'primary'}>
+                                                                    Solve
+                                                                </Button>
+                                                            </Link>
+                                                            <Link
+                                                                to={`/contests/${contestId}/${ques.question.id}/submissions`}>
+                                                                <Button size='large'>
+                                                                    My Submissions
+                                                                </Button>
+                                                            </Link>
+                                                        </Space>
                                                     </Col>
                                                 </Row>
                                             </Card>
