@@ -67,8 +67,10 @@ function QuestionDetail(props) {
         setEditor(e)
         console.log(e)
         e.getModel().onDidChangeContent(_ => {
-            savedCodes[parseInt(localStorage.getItem("preferredLanguage"))] = e.getModel().getValue()
-            localStorage.setItem(`codes${props.match.params.questionId}`, JSON.stringify(savedCodes))
+            if (e.getModel().getValue() !== "") {
+                savedCodes[parseInt(localStorage.getItem("preferredLanguage"))] = e.getModel().getValue()
+                localStorage.setItem(`codes${props.match.params.questionId}`, JSON.stringify(savedCodes))
+            }
         })
     }
 

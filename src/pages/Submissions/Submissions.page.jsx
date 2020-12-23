@@ -1,4 +1,4 @@
-import {Button, Space, Table, Tag, Typography} from 'antd'
+import {Button, Col, Row, Space, Table, Tag, Typography} from 'antd'
 import React, {useEffect, useState} from 'react'
 import axios from "axios";
 import SubmitComponent from "../../components/QuestionPage/Submit.component";
@@ -7,6 +7,7 @@ import SyntaxHighlighter from 'react-syntax-highlighter';
 import {vs, vs2015} from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import {b64Decode, parseDate} from "../../utils/utils";
 import {useLocation} from "react-router";
+import {ForkOutlined} from "@ant-design/icons";
 
 const statusColor = {
     'AC': 'green',
@@ -223,9 +224,23 @@ function Submissions(props) {
             <Modal
                 title={
                     <div>
-                        <Typography.Title level={3}>Submitted Code</Typography.Title>
-                        <Typography.Title type={'secondary'} level={4}>{codeLang.name}</Typography.Title>
-
+                        <Row>
+                            <Col span={14}>
+                                <Typography.Title level={3}>Submitted Code</Typography.Title>
+                                <Typography.Title type={'secondary'} level={4}>{codeLang.name}</Typography.Title>
+                            </Col>
+                            <Col span={10} align='right' style={{padding: '1.5rem 3rem'}}>
+                                <Button size='large' icon={<ForkOutlined/>} onClick={
+                                    () => {
+                                        let savedCode = JSON.parse(localStorage.getItem(`codes${props.match.params.questionId}`))
+                                        savedCode[codeLang.id] = b64Decode(code)
+                                        localStorage.setItem(`codes${props.match.params.questionId}`, JSON.stringify(savedCode))
+                                        localStorage.setItem('preferredLanguage', codeLang.id)
+                                        props.history.push(`/contests/${props.match.params.contestId}/${props.match.params.questionId}`)
+                                    }
+                                }>Open in Editor</Button>
+                            </Col>
+                        </Row>
                     </div>
                 }
                 centered
