@@ -1,17 +1,16 @@
 import React, {useEffect, useState} from 'react'
-import {Button, Card, Divider, List, Typography} from 'antd'
+import {Button, Card, Divider, Image, List, Row, Skeleton, Typography} from 'antd'
 import Meta from 'antd/lib/card/Meta';
-import ProSkeleton from '@ant-design/pro-skeleton';
 import axios from 'axios';
 import {parseDate} from "../utils/utils";
-import {ClockCircleOutlined, EnterOutlined} from '@ant-design/icons'
+import {ClockCircleOutlined, EnterOutlined, FileImageOutlined} from '@ant-design/icons'
 
 const {Title} = Typography;
 
 
 function Contests(props) {
     const [isLoading, setIsLoading] = useState(true)
-    const [data, setData] = useState([])
+    const [data, setData] = useState([{}, {}, {}, {}])
     useEffect(() => {
         // Update the document title using the browser API
         axios.get(`${process.env.REACT_APP_BASE_URL}/contests`, {
@@ -30,47 +29,62 @@ function Contests(props) {
     }, []);
 
     return (
-        isLoading ?
-            <ProSkeleton key={1}/>
-            :
-            <div key={2}>
-                <Title>Contests</Title>
-                <Divider/>
+        // isLoading ?
+        //     <ProSkeleton key={1}/>
+        //     :
+        <div key={2} style={{padding: '2% 4%'}}>
+            <Title>Contests</Title>
+            <Divider/>
 
-                <List
-                    grid={{
-                        gutter: 32,
-                        xs: 1,
-                        sm: 2,
-                        md: 3,
-                        lg: 3,
-                        xl: 4,
-                        xxl: 6,
-                    }}
-                    rowKey='id'
-                    dataSource={data}
-                    renderItem={item => (
-                        <List.Item key={item.id}>
-                            <Card
-                                type="inner"
-                                hoverable
-                                style={{width: 280}}
-                                cover={<img alt="example"
-                                            src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"/>}
-                            >
-                                <Meta title={item.contest_id.name}/>
+            <List
+                grid={{
+                    gutter: 256,
+                    xs: 1,
+                    sm: 2,
+                    md: 3,
+                    lg: 3,
+                    xl: 4,
+                    xxl: 6,
+                }}
+                style={{
+                    padding: '1% 2%'
+                }}
+                rowKey='id'
+                dataSource={data}
+                renderItem={item => (
+                    <List.Item key={item.id}>
+                        <Card
+                            type="inner"
+                            hoverable
+                            style={{width: 280, minHeight: '170px'}}
+                            cover={<Image alt="example"
+                                          src={"https://unsplash.com/photos/14HyRO75p24/download?force=true?magic=" + new Date()}
+                                          placeholder
+                            />}
+                        >
+                            <Skeleton loading={isLoading} />
+                            {!isLoading && <><Meta
+                                title={<Typography.Title level={4}>{item.contest_id.name}</Typography.Title>}
+                            />
+                                <br/>
                                 <p><ClockCircleOutlined/>&nbsp;
                                     <strong>Starts:</strong> {parseDate(item.contest_id.start_time)}
                                 </p>
                                 <p><ClockCircleOutlined/>&nbsp;
                                     <strong>Ends:</strong> {parseDate(item.contest_id.end_time)}</p>
                                 <Divider/>
-                                <Button onClick={()=>props.history.push('/contests/'+item.contest_id.id)} icon={<EnterOutlined />} type="primary">Enter</Button>
-                            </Card>
-                        </List.Item>
-                    )}
-                />
-            </div>
+                            </>}
+                                <Row align={'center'}>
+                                    <Button
+                                        disabled={isLoading || !isLoading && (new Date(item.contest_id.start_time) > new Date() || new Date(item.contest_id.end_time) < new Date())}
+                                        onClick={() => props.history.push('/contests/' + item.contest_id.id)}
+                                        icon={<EnterOutlined/>} type="primary">Enter</Button>
+                                </Row>
+                        </Card>
+                    </List.Item>
+                )}
+            />
+        </div>
     )
 }
 
