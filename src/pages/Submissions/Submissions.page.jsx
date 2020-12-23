@@ -5,7 +5,7 @@ import SubmitComponent from "../../components/QuestionPage/Submit.component";
 import Modal from "antd/es/modal/Modal";
 import {Prism as SyntaxHighlighter} from 'react-syntax-highlighter';
 import {darcula} from 'react-syntax-highlighter/dist/esm/styles/prism';
-import {parseDate} from "../../utils/utils";
+import {b64Decode, parseDate} from "../../utils/utils";
 
 const statusColor = {
     'AC': 'green',
@@ -167,7 +167,7 @@ function Submissions(props) {
                 width={1000}
             >
                 <SyntaxHighlighter language="cpp" style={darcula}>
-                    {code}
+                    {b64Decode(code)}
                 </SyntaxHighlighter>
             </Modal>
         </div>
