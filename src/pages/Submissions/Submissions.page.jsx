@@ -232,7 +232,7 @@ function Submissions(props) {
                             <Col span={10} align='right' style={{padding: '1.5rem 3rem'}}>
                                 <Button size='large' icon={<ForkOutlined/>} onClick={
                                     () => {
-                                        let savedCode = JSON.parse(localStorage.getItem(`codes${props.match.params.questionId}`))
+                                        let savedCode = JSON.parse(localStorage.getItem(`codes${props.match.params.questionId}`) || "{}")
                                         savedCode[codeLang.id] = b64Decode(code)
                                         localStorage.setItem(`codes${props.match.params.questionId}`, JSON.stringify(savedCode))
                                         localStorage.setItem('preferredLanguage', codeLang.id)
