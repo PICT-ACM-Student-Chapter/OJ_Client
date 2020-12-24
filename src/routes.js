@@ -17,11 +17,6 @@ import Home from "./pages/Home.page"
 const Routes = () => {
     return (
         <>
-            <Switch>
-                <Route exact path="/" component={Home}/>
-                <Route exact path="/login" component={Login}/>
-                <Route exact path="/register" component={Register}/>
-            </Switch>
             <ProLayout
                 title="PASC OJ"
                 logo="https://pict.acm.org/radiance/img/PASC-W2.png"
@@ -31,6 +26,9 @@ const Routes = () => {
                 footerRender={() => <Footer/>}
             >
                 <Switch>
+                    <Route exact path="/" component={Home}/>
+                    <Route exact path="/login" component={Login}/>
+                    <Route exact path="/register" component={Register}/>
                     <Route exact path="/contests/:contestId/:questionId" component={QuestionDetail}/>
                     <Route exact path="/contests/:contestId/:questionId/submissions" component={Submissions}/>
                     <Route exact path="/contests/:contestId" component={ContestDetail}/>
