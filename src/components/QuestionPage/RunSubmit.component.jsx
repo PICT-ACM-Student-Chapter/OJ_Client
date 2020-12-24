@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import {Button, Card, Input, Popconfirm, Space} from "antd";
 import {CaretRightOutlined, DownOutlined, LoadingOutlined, UpOutlined} from "@ant-design/icons";
 import RunOutputComponent from "./RunOutput.component";
@@ -26,6 +26,16 @@ export default function RunSubmit(props) {
     const [submission, setSubmission] = useState({});
     const [testCases, setTestCases] = useState([]);
 
+
+    useEffect(() => {
+
+        if(props.inputTC !== null){
+            setInput(props.inputTC)
+            setTerminalOpen(true)
+            props.funcInputTC()
+        }
+        // eslint-disable-next-line
+    }, [props.inputTC])
 
     const tabList = [
         {
@@ -102,7 +112,7 @@ export default function RunSubmit(props) {
             const subId = res.data.id
 
             checkRun(subId)
-        }catch(e){
+        } catch (e) {
             setOutputLoading(false)
         }
     }
@@ -193,7 +203,7 @@ export default function RunSubmit(props) {
                 {activeTab === 'output' &&
                 <RunOutputComponent output={output} outputLoading={outputLoading}/>}
                 {activeTab === 'submit' &&
-                <SubmitComponent testCases={testCases} submissionLoading={submissionLoading} />}
+                <SubmitComponent testCases={testCases} submissionLoading={submissionLoading}/>}
             </Card>}
         </div>
     )

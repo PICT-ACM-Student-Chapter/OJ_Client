@@ -20,6 +20,8 @@ function QuestionDetail(props) {
     const [question, setQuestion] = useState({})
     const [languages, setLanguages] = useState([])
     const [currentLanguage, setCurrentLanguage] = useState({})
+    const [inputTC, setInputTC] = useState(null)
+
     let savedCodes = JSON.parse(localStorage.getItem(`codes${props.match.params.questionId}`) || '{}')
 
     useEffect(() => {
@@ -92,6 +94,9 @@ function QuestionDetail(props) {
             }
         }
     }
+    const funcInputTC = () => {
+        setInputTC(null)
+    }
 
     return (
         <div>
@@ -129,7 +134,7 @@ function QuestionDetail(props) {
                                                 <Col xs={24} sm={24} md={24} lg={12} xl={12}>
                                                     <Card className='test-case-card' type="inner" loading={tcsLoading}
                                                           title={<Typography.Title level={4}>Input</Typography.Title>}
-                                                        // extra={<a href="#">Copy</a>}
+                                                        extra={<Button onClick={()=>{ setInputTC(input) }}> Use TestCase </Button>}
                                                     >
                                                         <pre>{input}</pre>
                                                     </Card>
@@ -177,7 +182,7 @@ function QuestionDetail(props) {
                                 />
                             </Card>
                         </div>
-                        <RunSubmit match={props.match} getCode={getCode} getLang={_ => currentLanguage}/>
+                        <RunSubmit match={props.match} getCode={getCode} getLang={_ => currentLanguage} inputTC={inputTC} funcInputTC={funcInputTC}/>
                     </div>
                 </div>
             </SplitPane>
