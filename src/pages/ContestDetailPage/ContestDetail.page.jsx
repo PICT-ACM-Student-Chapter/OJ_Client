@@ -9,6 +9,7 @@ import ProSkeleton from '@ant-design/pro-skeleton';
 import {Link} from "react-router-dom";
 import StartContestComponent from "../../components/ContestDetailPage/StartContest.component";
 import MiniLeaderBoard from "../../components/ContestDetailPage/MiniLeaderBoard";
+import '../../components/ContestDetailPage/ContestDetail.css'
 
 const {TabPane} = Tabs;
 const {Countdown} = Statistic;
@@ -123,7 +124,7 @@ const ContestDetail = (props) => {
 
                             </TabPane>
                             <TabPane tab="Instructions" key="2" style={{'padding': '4%'}}>
-                                <h2><ReactMarkdown plugins={[gfm]} children={contest.instructions}/></h2>
+                                <div style={{fontSize: 'medium'}} id={'instruction-wrapper'}><ReactMarkdown plugins={[gfm]} children={contest.instructions}/></div>
 
                             </TabPane>
                         </Tabs>
