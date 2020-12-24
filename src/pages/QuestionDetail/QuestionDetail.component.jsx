@@ -5,7 +5,7 @@ import ThemeContext from "../../context/ThemeContext";
 import ReactMarkdown from 'react-markdown'
 import './QuestionDetail.style.css'
 import {Helmet} from "react-helmet";
-import {LeftOutlined} from "@ant-design/icons";
+import {CaretRightOutlined, LeftOutlined, LoadingOutlined} from "@ant-design/icons";
 import SplitPane from "react-split-pane";
 import RunSubmit from "../../components/QuestionPage/RunSubmit.component";
 import axios from "axios";
@@ -94,6 +94,7 @@ function QuestionDetail(props) {
             }
         }
     }
+
     const funcInputTC = () => {
         setInputTC(null)
     }
@@ -134,7 +135,13 @@ function QuestionDetail(props) {
                                                 <Col xs={24} sm={24} md={24} lg={12} xl={12}>
                                                     <Card className='test-case-card' type="inner" loading={tcsLoading}
                                                           title={<Typography.Title level={4}>Input</Typography.Title>}
-                                                        extra={<Button onClick={()=>{ setInputTC(input) }}> Use TestCase </Button>}
+                                                          extra={<Button disabled={inputTC} onClick={() => {
+                                                              setInputTC(input)
+                                                          }}>
+                                                              {inputTC ? <LoadingOutlined/> : <CaretRightOutlined/>}
+                                                              Run
+                                                          </Button>
+                                                          }
                                                     >
                                                         <pre>{input}</pre>
                                                     </Card>
@@ -182,7 +189,8 @@ function QuestionDetail(props) {
                                 />
                             </Card>
                         </div>
-                        <RunSubmit match={props.match} getCode={getCode} getLang={_ => currentLanguage} inputTC={inputTC} funcInputTC={funcInputTC}/>
+                        <RunSubmit match={props.match} getCode={getCode} getLang={_ => currentLanguage}
+                                   inputTC={inputTC} funcInputTC={funcInputTC}/>
                     </div>
                 </div>
             </SplitPane>

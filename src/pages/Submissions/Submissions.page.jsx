@@ -75,7 +75,16 @@ function Submissions(props) {
             title: <Typography.Title level={5}>Submission Time</Typography.Title>,
             dataIndex: 'created_at',
             width: '20rem',
-            align: 'center'
+            align: 'center',
+            key: 'created_at',
+            render: date => {
+                console.log(date)
+                return (
+                    <>
+                        {parseDate(date)}
+                    </>
+                )
+            },
         },
         {
             title: <Typography.Title level={5}>Status</Typography.Title>,
@@ -173,7 +182,7 @@ function Submissions(props) {
         const sub = submissions.map((row, i) => {
             return {
                 num: i + 1,
-                created_at: parseDate(row.created_at),
+                created_at: row.created_at,
                 status: row.status,
                 score: row.score,
                 code: row.code,
@@ -181,7 +190,7 @@ function Submissions(props) {
                 key: row.id
             }
         })
-        sub.sort((a, b) => (b.created_at - a.created_at))
+        sub.sort((a, b) => (new Date(b.created_at) - new Date(a.created_at)))
 
         setData(sub)
         setLoading(false)

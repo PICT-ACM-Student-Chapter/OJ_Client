@@ -29,10 +29,11 @@ export default function RunSubmit(props) {
 
     useEffect(() => {
 
-        if(props.inputTC !== null){
+        if (props.inputTC !== null) {
             setInput(props.inputTC)
             setTerminalOpen(true)
-            props.funcInputTC()
+            handleRun(props.inputTC).then(() => {
+            })
         }
         // eslint-disable-next-line
     }, [props.inputTC])
@@ -63,6 +64,7 @@ export default function RunSubmit(props) {
             checkRun(id)
         } else {
             setOutputLoading(false)
+            props.funcInputTC()
             setOutput(res.data)
         }
     }
@@ -93,14 +95,14 @@ export default function RunSubmit(props) {
 
     }
 
-    const handleRun = async () => {
+    const handleRun = async (inputTC) => {
         setActiveTab('output')
         setOutputLoading(true)
 
         const data = {
             lang_id: props.getLang().id,
             code: b64Encode(props.getCode()),
-            stdin: b64Encode(input)
+            stdin: b64Encode(inputTC || input)
         }
         const reqConfig = {
             headers: {
@@ -177,7 +179,7 @@ export default function RunSubmit(props) {
                   className='button-group-card' onTabChange={setActiveTab} activeTabKey={activeTab}
                   extra={
                       <Space style={{position: 'absolute', right: 16, zIndex: 10}}>
-                          <Button disabled={outputLoading} onClick={handleRun}>
+                          <Button disabled={outputLoading} onClick={()=>handleRun(null)}>
                               {outputLoading ? <LoadingOutlined/> : <CaretRightOutlined/>}
                               Run
                           </Button>
