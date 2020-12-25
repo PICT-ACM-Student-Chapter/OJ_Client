@@ -62,80 +62,101 @@ const ContestDetail = (props) => {
                     <Col span={12}>
                         <Title>{contest.name}</Title>
                     </Col>
-                    <Col span={12} align={'right'}>
-                        <Card style={{width: '12rem'}} bodyStyle={{padding: '12px 24px'}}>
-                            <Countdown prefix={<HourglassOutlined/>} title="Time Left" value={contest.end_time}/>
-                        </Card>
+                    <Col span={12} align='right'>
+                        <Row align='right'>
+                            <Col span={16}>
+                                <Card style={{width: '12rem'}} bodyStyle={{padding: '12px 24px'}}>
+                                    <Countdown prefix={<HourglassOutlined/>} title="Time Left"
+                                               value={contest.end_time}/>
+                                </Card>
+                            </Col>
+                            <Col span={8}>
+                                <Card style={{width: '12rem'}} bodyStyle={{padding: '12px 24px'}}>
+                                    <Countdown prefix={<HourglassOutlined/>} title="Time Left"
+                                               value={contest.end_time}/>
+                                </Card>
+                            </Col>
+                        </Row>
                     </Col>
                 </Row>
                 <br/>
-                    {/*<Button type="primary" size='large' onClick={() => {*/}
-                    {/*    props.history.push(`/leaderboard/${contestId}`)*/}
-                    {/*}}>*/}
-                    {/*    Leaderboard*/}
-                    {/*</Button>*/}
+                {/*<Button type="primary" size='large' onClick={() => {*/
+                }
+                {/*    props.history.push(`/leaderboard/${contestId}`)*/
+                }
+                {/*}}>*/
+                }
+                {/*    Leaderboard*/
+                }
+                {/*</Button>*/
+                }
 
-                {!started && <StartContestComponent contest={contest} startContest={startContest}/>}
-                {started && <><Row gutter={32}>
-                    <Col xs={23} sm={23} md={23} lg={15} xl={15}>
+                {
+                    !started && <StartContestComponent contest={contest} startContest={startContest}/>
+                }
+                {
+                    started && <><Row gutter={32}>
+                        <Col xs={23} sm={23} md={23} lg={15} xl={15}>
 
-                        <Tabs size='large' type="card">
-                            <TabPane tab="Questions" key="1" style={{'padding': '4%'}}>
+                            <Tabs size='large' type="card">
+                                <TabPane tab="Questions" key="1" style={{'padding': '4%'}}>
 
-                                {contest.questions.map((ques) => (
-                                    <Row key={ques.question.id} align="middle" justify="center">
-                                        <Col span={24}>
-                                            <Card bordered={false}>
-                                                <Row align="middle">
-                                                    <Col lg={12} onClick={() => {
-                                                        props.history.push(`/contests/${contestId}/${ques.question.id}`)
-                                                    }}>
-                                                        <h2><Link
-                                                            to={`/contests/${contestId}/${ques.question.id}`}> {ques.question.name}</Link>
-                                                        </h2>
-                                                    </Col>
-                                                    <Col lg={12} align={'right'}>
-                                                        <Space size={'middle'}>
-                                                            <Tag color='blue'
-                                                                 style={{'fontSize': 'larger', padding: '0.4rem'}}>
-                                                                Score: {ques.question.score}
-                                                            </Tag>
-                                                            <Link
-                                                                to={`/contests/${contestId}/${ques.question.id}`}>
-                                                                <Button size='large' type={'primary'}>
-                                                                    Solve
-                                                                </Button>
-                                                            </Link>
-                                                            <Link
-                                                                to={`/contests/${contestId}/${ques.question.id}/submissions?name=${ques.question.name}`}>
-                                                                <Button size='large'>
-                                                                    My Submissions
-                                                                </Button>
-                                                            </Link>
-                                                        </Space>
-                                                    </Col>
-                                                </Row>
-                                            </Card>
-                                        </Col>
-                                        <br/>
-                                    </Row>
-                                ))}
+                                    {contest.questions.map((ques) => (
+                                        <Row key={ques.question.id} align="middle" justify="center">
+                                            <Col span={24}>
+                                                <Card bordered={false}>
+                                                    <Row align="middle">
+                                                        <Col lg={12} onClick={() => {
+                                                            props.history.push(`/contests/${contestId}/${ques.question.id}`)
+                                                        }}>
+                                                            <h2><Link
+                                                                to={`/contests/${contestId}/${ques.question.id}`}> {ques.question.name}</Link>
+                                                            </h2>
+                                                        </Col>
+                                                        <Col lg={12} align={'right'}>
+                                                            <Space size={'middle'}>
+                                                                <Tag color='blue'
+                                                                     style={{'fontSize': 'larger', padding: '0.4rem'}}>
+                                                                    Score: {ques.question.score}
+                                                                </Tag>
+                                                                <Link
+                                                                    to={`/contests/${contestId}/${ques.question.id}`}>
+                                                                    <Button size='large' type={'primary'}>
+                                                                        Solve
+                                                                    </Button>
+                                                                </Link>
+                                                                <Link
+                                                                    to={`/contests/${contestId}/${ques.question.id}/submissions?name=${ques.question.name}`}>
+                                                                    <Button size='large'>
+                                                                        My Submissions
+                                                                    </Button>
+                                                                </Link>
+                                                            </Space>
+                                                        </Col>
+                                                    </Row>
+                                                </Card>
+                                            </Col>
+                                            <br/>
+                                        </Row>
+                                    ))}
 
 
-                            </TabPane>
-                            <TabPane tab="Instructions" key="2" style={{'padding': '4%'}}>
-                                <div style={{fontSize: 'medium'}} id={'instruction-wrapper'}><ReactMarkdown plugins={[gfm]} children={contest.instructions}/></div>
+                                </TabPane>
+                                <TabPane tab="Instructions" key="2" style={{'padding': '4%'}}>
+                                    <div style={{fontSize: 'medium'}} id={'instruction-wrapper'}><ReactMarkdown
+                                        plugins={[gfm]} children={contest.instructions}/></div>
 
-                            </TabPane>
-                        </Tabs>
-                    </Col>
-                    <Col lg={1}>
-                        <Divider type="vertical" style={{height:"100%"}}/>
-                    </Col>
-                    <Col xs={24} sm={24} md={24} lg={8} xl={8}>
-                        <MiniLeaderBoard match={props.match}/>
-                    </Col>
-                </Row></>}
+                                </TabPane>
+                            </Tabs>
+                        </Col>
+                        <Col lg={1}>
+                            <Divider type="vertical" style={{height: "100%"}}/>
+                        </Col>
+                        <Col xs={24} sm={24} md={24} lg={8} xl={8}>
+                            <MiniLeaderBoard match={props.match}/>
+                        </Col>
+                    </Row></>
+                }
             </div>
     )
 }
@@ -144,7 +165,8 @@ const ContestDetail = (props) => {
 export default ContestDetail
 
 
-// const children = {
+// const children =
+// {
 //     guide: `# React App for Online Judge
 // [![Netlify Status](https://api.netlify.com/api/v1/badges/055ae047-fa35-42db-a7b9-b55be8743512/deploy-status)](https://app.netlify.com/sites/fervent-bhabha-03f267/deploys)
 //

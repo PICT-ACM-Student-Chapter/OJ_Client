@@ -1,0 +1,21 @@
+.login-form {
+    position: relative;
+    max-width: 300px;
+    padding: 20px;
+    left: 50%;
+    top: 50vh;
+    transform: translate(-50%, -50%);
+}
+.login-form-forgot {
+    float: right;
+}
+.login-form-button {
+    width: 100%;
+}
+
+.login-container{
+    background-image: url('https://gw.alipayobjects.com/zos/rmsportal/TVYTbAXWheQpRcWDaDMu.svg');
+    background-repeat: no-repeat;
+    background-position: center 110px;
+    background-size: 100%;
+}

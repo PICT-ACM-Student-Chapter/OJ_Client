@@ -4,6 +4,7 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import {ThemeSwitcherProvider} from "react-css-theme-switcher";
+import {UserProvider} from "./context/User";
 
 const themes = {
     dark: `${process.env.PUBLIC_URL}/dark-theme.css`,
@@ -12,9 +13,11 @@ const themes = {
 
 ReactDOM.render(
     <React.StrictMode>
-        <ThemeSwitcherProvider themeMap={themes} defaultTheme={localStorage.getItem('theme') || 'light'}>
-            <App/>
-        </ThemeSwitcherProvider>
+        <UserProvider>
+            <ThemeSwitcherProvider themeMap={themes} defaultTheme={localStorage.getItem('theme') || 'light'}>
+                <App/>
+            </ThemeSwitcherProvider>
+        </UserProvider>
     </React.StrictMode>,
     document.getElementById("root")
 );

@@ -1,63 +1,115 @@
 import {Avatar, Dropdown, Menu, Space} from 'antd';
 import {LogoutOutlined, RetweetOutlined, SettingOutlined, UserOutlined} from '@ant-design/icons';
-import React, {useContext} from "react";
+import React, {useContext, useEffect} from "react";
 import {useThemeSwitcher} from 'react-css-theme-switcher';
 import ThemeContext from "../../context/ThemeContext";
 import {useHistory} from "react-router";
+import createAuthRefreshInterceptor from "axios-auth-refresh";
+import axios from "axios";
+import {refreshAuthLogic} from "../../utils/utils";
+
 
 const GlobalHeaderRight = (props) => {
-    const {switcher, themes} = useThemeSwitcher();
-    const theme = useContext(ThemeContext)
-    const history = useHistory()
+        const {switcher, themes} = useThemeSwitcher();
+        const theme = useContext(ThemeContext)
+        const history = useHistory()
 
 
-    const toggleDarkMode = () => {
-        if (theme.theme === 'light') {
-            //make it dark
-            theme.setTheme('dark')
-            switcher({theme: themes.dark})
-        } else {
-            //make it light
-            theme.setTheme('light')
-            switcher({theme: themes.light})
-        }
-    };
-    const path = history.location.pathname
-    console.log(path)
-    if (path === '/' || path === '/login')
-        return <div/>
-    else
-        return (
-            <div>
-                <Dropdown overlay={() => (
-                    <Menu selectedKeys={[]}>
-                        <Menu.Item key="center">
-                            <UserOutlined/>
-                            Profile
-                        </Menu.Item>
-                        <Menu.Item key="theme" onClick={toggleDarkMode}>
-                            <RetweetOutlined/>
-                            Toggle Theme
-                        </Menu.Item>
-                        <Menu.Item key="settings">
-                            <SettingOutlined/>
-                            Account Settings
-                        </Menu.Item>
-                        <Menu.Divider/>
-                        <Menu.Item key="logout">
-                            <LogoutOutlined/>
-                            Logout
-                        </Menu.Item>
-                    </Menu>
-                )}>
-                    <Space>
+        useEffect(() => {
+                const pathLogin = history.location.pathname
+                if (pathLogin === '/' || pathLogin === '/login') {
+                    console.log(pathLogin, "--------Line 21 header---------")
 
-                        <Avatar size='medium' style={{backgroundColor: '#87d068', cursor: 'pointer'}}
-                                icon={<UserOutlined/>}/>
-                        <span style={{color: 'white'}}>Admin</span>
-                    </Space>
-                </Dropdown></div>
-        );
-};
+                } else {
+                    axios.post(process.env.REACT_APP_BASE_URL + '/auth/jwt/verify', {"token": (localStorage.getItem('refresh-token'))})
+                        .catch(err => {
+                            console.log(err, '==================Line 14==================')
+                            localStorage.setItem('refresh-token', null)
+                            localStorage.setItem('token', null)
+                            const path = history.location.pathname
+                            history.push(`/login?redirect=${path}`)
+
+                            return
+                        })
+                }
+
+                createAuthRefreshInterceptor(axios, (failedRequest) => {
+                    //If refresh-token null
+                    if (localStorage.getItem('refresh-token') === null) {
+                        const path = history.location.pathname
+                        history.push(`/login?redirect=${path}`)
+                        return
+                    } else {
+                        axios.post(process.env.REACT_APP_BASE_URL + '/auth/jwt/verify', {"token": (localStorage.getItem('refresh-token'))})
+                            .catch(err => {
+                                console.log(err, '==================Line 14==================')
+                                localStorage.setItem('refresh-token', null)
+                                localStorage.setItem('token', null)
+                                const path = history.location.pathname
+                                history.push(`/login?redirect=${path}`)
+
+                                return
+                            })
+                    }
+
+
+                    return refreshAuthLogic(failedRequest)
+
+                })
+
+                // eslint-disable-next-line
+            }, []
+        )
+
+
+        const toggleDarkMode = () => {
+            if (theme.theme === 'light') {
+                //make it dark
+                theme.setTheme('dark')
+                switcher({theme: themes.dark})
+            } else {
+                //make it light
+                theme.setTheme('light')
+                switcher({theme: themes.light})
+            }
+        };
+        const path = history.location.pathname
+// console.log(path)
+        if (path === '/' || path === '/login')
+            return <div/>
+        else
+            return (
+                <div>
+                    <Dropdown overlay={() => (
+                        <Menu selectedKeys={[]}>
+                            <Menu.Item key="center">
+                                <UserOutlined/>
+                                Profile
+                            </Menu.Item>
+                            <Menu.Item key="theme" onClick={toggleDarkMode}>
+                                <RetweetOutlined/>
+                                Toggle Theme
+                            </Menu.Item>
+                            <Menu.Item key="settings">
+                                <SettingOutlined/>
+                                Account Settings
+                            </Menu.Item>
+                            <Menu.Divider/>
+                            <Menu.Item key="logout">
+                                <LogoutOutlined/>
+                                Logout
+                            </Menu.Item>
+                        </Menu>
+                    )}>
+                        <Space>
+
+                            <Avatar size='medium' style={{backgroundColor: '#87d068', cursor: 'pointer'}}
+                                    icon={<UserOutlined/>}/>
+                            <span style={{color: 'white'}}>Admin</span>
+                        </Space>
+                    </Dropdown></div>
+            );
+    }
+;
 
 export default GlobalHeaderRight

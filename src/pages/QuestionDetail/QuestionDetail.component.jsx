@@ -32,31 +32,36 @@ function QuestionDetail(props) {
                 }
             }
 
-            const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/questions/${props.match.params.questionId}`, reqConfig)
-            console.log(res.data)
+            try {
+                const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/questions/${props.match.params.questionId}`, reqConfig)
+                console.log(res.data)
 
-            setQuestion(res.data)
-            setLoading(false)
-            for (let i of res.data.test_cases) {
-                const inpRes = await axios.get(i.input)
-                i.input = inpRes.data
-                const outRes = await axios.get(i.output)
-                i.output = outRes.data
+                setQuestion(res.data)
+                setLoading(false)
+                for (let i of res.data.test_cases) {
+                    const inpRes = await axios.get(i.input)
+                    i.input = inpRes.data
+                    const outRes = await axios.get(i.output)
+                    i.output = outRes.data
+                }
+
+                setQuestion(res.data)
+                setTCsLoading(false)
+
+                const resLanguages = await axios.get(`${process.env.REACT_APP_BASE_URL}/languages`)
+                setLanguages(resLanguages.data.results)
+
+                if (localStorage.getItem('preferredLanguage')) {
+                    for (let i of resLanguages.data.results)
+                        if (i.id === parseInt(localStorage.getItem('preferredLanguage'))) {
+                            setCurrentLanguage(i)
+                        }
+                } else
+                    setCurrentLanguage(resLanguages.data.results[0])
             }
-
-            setQuestion(res.data)
-            setTCsLoading(false)
-
-            const resLanguages = await axios.get(`${process.env.REACT_APP_BASE_URL}/languages`)
-            setLanguages(resLanguages.data.results)
-
-            if (localStorage.getItem('preferredLanguage')) {
-                for (let i of resLanguages.data.results)
-                    if (i.id === parseInt(localStorage.getItem('preferredLanguage'))) {
-                        setCurrentLanguage(i)
-                    }
-            } else
-                setCurrentLanguage(resLanguages.data.results[0])
+            catch(e) {
+                console.log(e)
+            }
         })()
     }, [props.match.params.questionId])
 
@@ -109,17 +114,24 @@ function QuestionDetail(props) {
             <SplitPane split={'vertical'} defaultSize={'50%'} minSize={400} maxSize={-400}
                        style={{position: "relative", width: '100%', height: '88vh', overflowY: 'hidden'}}>
                 <div>
-                    <Card className='question-card'>
+                    <Card className='question-card' title={
                         <Space>
-                            <Button icon={<LeftOutlined/>}
-                                    onClick={_ => props.history.push(`/contests/${props.match.params.contestId}`)}>Back</Button>
-                            <Typography.Title>{question.name || ''}</Typography.Title>
+                            <Row>
+                                <Col span={8}>
+                                    <Button icon={<LeftOutlined/>}
+                                            onClick={_ => props.history.push(`/contests/${props.match.params.contestId}`)}>Back</Button>
+                                </Col>
+                                <Col span={16}>
+                                    <Typography.Title>{question.name || ''}</Typography.Title>
+                                </Col>
+                            </Row>
                         </Space>
-                        <br/><br/>
+                    }>
+
                         <Skeleton loading={loading} paragraph={{rows: 20}} active/>
                         {!loading && <div>
                             <ReactMarkdown>{question.description}</ReactMarkdown>
-                            <br/><br/>
+                            <br/>
                             <Typography.Title level={3}>Input Format</Typography.Title>
                             <ReactMarkdown>{question.input_format}</ReactMarkdown>
                             <Typography.Title level={3}>Output Format</Typography.Title>

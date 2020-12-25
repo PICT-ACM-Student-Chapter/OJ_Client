@@ -10,22 +10,24 @@ import LeaderBoard from "./pages/Leaderboard/LeaderBoard.page";
 import ContestDetail from "./pages/ContestDetailPage/ContestDetail.page"
 import Submissions from "./pages/Submissions/Submissions.page";
 import Footer from "./components/Footer/Footer";
-import Error404 from "./pages/404.page";
 import Home from "./pages/Home.page"
 
 
 const Routes = () => {
+
+
     return (
         <>
-            <ProLayout
-                title="PASC OJ"
-                logo="https://pict.acm.org/radiance/img/PASC-W2.png"
-                layout="top"
-                fixedHeader="true"
-                rightContentRender={() => <GlobalHeaderRight/>}
-                footerRender={() => <Footer/>}
-            >
-                <Switch>
+            <Switch>
+
+                <ProLayout
+                    title="PASC OJ"
+                    logo="https://pict.acm.org/radiance/img/PASC-W2.png"
+                    layout="top"
+                    fixedHeader="true"
+                    rightContentRender={() => <GlobalHeaderRight/>}
+                    footerRender={() => <Footer/>}
+                >
                     <Route exact path="/" component={Home}/>
                     <Route exact path="/login" component={Login}/>
                     <Route exact path="/register" component={Register}/>
@@ -34,9 +36,10 @@ const Routes = () => {
                     <Route exact path="/contests/:contestId" component={ContestDetail}/>
                     <Route exact path="/contests" component={Contests}/>
                     <Route exact path="/leaderboard/:contestId" component={LeaderBoard}/>
-                    <Route  component={Error404}/>
-                </Switch>
-            </ProLayout>
+                    {/*<Route  component={Error404}/>*/}
+                </ProLayout>
+            </Switch>
+
         </>
     )
 
