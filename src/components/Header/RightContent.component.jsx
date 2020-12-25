@@ -3,11 +3,12 @@ import {LogoutOutlined, RetweetOutlined, SettingOutlined, UserOutlined} from '@a
 import React, {useContext} from "react";
 import {useThemeSwitcher} from 'react-css-theme-switcher';
 import ThemeContext from "../../context/ThemeContext";
-
+import {useHistory} from "react-router";
 
 const GlobalHeaderRight = (props) => {
     const {switcher, themes} = useThemeSwitcher();
     const theme = useContext(ThemeContext)
+    const history = useHistory()
 
 
     const toggleDarkMode = () => {
@@ -21,38 +22,42 @@ const GlobalHeaderRight = (props) => {
             switcher({theme: themes.light})
         }
     };
+    const path = history.location.pathname
+    console.log(path)
+    if (path === '/' || path === '/login')
+        return <div/>
+    else
+        return (
+            <div>
+                <Dropdown overlay={() => (
+                    <Menu selectedKeys={[]}>
+                        <Menu.Item key="center">
+                            <UserOutlined/>
+                            Profile
+                        </Menu.Item>
+                        <Menu.Item key="theme" onClick={toggleDarkMode}>
+                            <RetweetOutlined/>
+                            Toggle Theme
+                        </Menu.Item>
+                        <Menu.Item key="settings">
+                            <SettingOutlined/>
+                            Account Settings
+                        </Menu.Item>
+                        <Menu.Divider/>
+                        <Menu.Item key="logout">
+                            <LogoutOutlined/>
+                            Logout
+                        </Menu.Item>
+                    </Menu>
+                )}>
+                    <Space>
 
-    return (
-        <div>
-            <Dropdown overlay={() => (
-                <Menu selectedKeys={[]}>
-                    <Menu.Item key="center">
-                        <UserOutlined/>
-                        Profile
-                    </Menu.Item>
-                    <Menu.Item key="theme" onClick={toggleDarkMode}>
-                        <RetweetOutlined/>
-                        Toggle Theme
-                    </Menu.Item>
-                    <Menu.Item key="settings">
-                        <SettingOutlined/>
-                        Account Settings
-                    </Menu.Item>
-                    <Menu.Divider/>
-                    <Menu.Item key="logout">
-                        <LogoutOutlined/>
-                        Logout
-                    </Menu.Item>
-                </Menu>
-            )}>
-                <Space>
-
-                    <Avatar size='medium' style={{backgroundColor: '#87d068', cursor: 'pointer'}}
-                            icon={<UserOutlined/>}/>
-                    <span style={{color: 'white'}}>Admin</span>
-                </Space>
-            </Dropdown></div>
-    );
+                        <Avatar size='medium' style={{backgroundColor: '#87d068', cursor: 'pointer'}}
+                                icon={<UserOutlined/>}/>
+                        <span style={{color: 'white'}}>Admin</span>
+                    </Space>
+                </Dropdown></div>
+        );
 };
 
 export default GlobalHeaderRight
