@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {Button, Card, Col, Divider, Row, Space, Statistic, Tabs, Tag, Typography} from 'antd';
-import {HourglassOutlined} from '@ant-design/icons'
+import {HourglassOutlined, TrophyOutlined} from '@ant-design/icons'
 import axios from "axios";
 import {useParams} from "react-router";
 import gfm from 'remark-gfm'
@@ -10,6 +10,7 @@ import StartContestComponent from "../../components/ContestDetailPage/StartConte
 import MiniLeaderBoard from "../../components/ContestDetailPage/MiniLeaderBoard";
 import '../../components/ContestDetailPage/ContestDetail.css'
 import MarkdownMathJaxComponent from "../../components/MarkdownMathJax.component";
+import {parseDate} from "../../utils/utils";
 
 const {TabPane} = Tabs;
 const {Countdown} = Statistic;
@@ -23,6 +24,8 @@ const ContestDetail = (props) => {
     const [isLoading, setIsLoading] = useState(true)
     const [contest, setContest] = useState(null)
     const [started, setStarted] = useState(localStorage.getItem(`contestStarted${contestId}`) || false)
+    // TODO: Remove hardcoded current rank - Take from leaderboard
+    let currentRank = 5;
 
     useEffect(() => {
         getContestDetail()
@@ -66,14 +69,27 @@ const ContestDetail = (props) => {
                         <Row align='right'>
                             <Col span={16}>
                                 <Card style={{width: '12rem'}} bodyStyle={{padding: '12px 24px'}}>
-                                    <Countdown prefix={<HourglassOutlined/>} title="Time Left"
-                                               value={contest.end_time}/>
+                                    <div className={'ant-statistic'}>
+                                        <div className={'ant-statistic-title'}>
+                                            Current Rank
+                                        </div>
+                                        <div className={'ant-statistic-content'}>
+                                            <div className={'ant-statistic-content-prefix'} style={{marginRight: '1rem'}}>
+                                                <TrophyOutlined />
+                                            </div>
+                                            <div className={'ant-statistic-content-value'}>
+                                                {currentRank}
+                                            </div>
+                                        </div>
+                                        Score: {contest.user_score}/{contest.max_score}
+                                    </div>
                                 </Card>
                             </Col>
                             <Col span={8}>
                                 <Card style={{width: '12rem'}} bodyStyle={{padding: '12px 24px'}}>
                                     <Countdown prefix={<HourglassOutlined/>} title="Time Left"
                                                value={contest.end_time}/>
+                                               Ends: {new Date(contest.end_time).toLocaleTimeString()}
                                 </Card>
                             </Col>
                         </Row>
@@ -102,7 +118,7 @@ const ContestDetail = (props) => {
                                 <TabPane tab="Questions" key="1" style={{'padding': '4%'}}>
 
                                     {contest.questions.map((ques) => (
-                                        <Row key={ques.question.id} align="middle" justify="center">
+                                        <Row key={ques.question.id} gutter={[0, 18]} align="middle" justify="center">
                                             <Col span={24}>
                                                 <Card bordered={false}>
                                                     <Row align="middle">

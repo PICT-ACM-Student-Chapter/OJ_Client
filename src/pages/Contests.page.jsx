@@ -60,7 +60,6 @@ function Contests(props) {
                 dataSource={data}
                 renderItem={item => (
                     <List.Item key={item.id}>
-                        {/*TODO: Replace cover URL from API*/}
                         <Card
                             type="inner"
                             hoverable
