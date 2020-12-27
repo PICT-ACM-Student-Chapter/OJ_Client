@@ -1,8 +1,8 @@
 import React from 'react';
 import {Button, Card, Typography} from "antd";
-import ReactMarkdown from "react-markdown";
 import gfm from "remark-gfm";
 import './ContestDetail.css'
+import MarkdownMathJaxComponent from "../MarkdownMathJax.component";
 
 const StartContestComponent = (props) => {
     return (
@@ -16,7 +16,7 @@ const StartContestComponent = (props) => {
         >
             <div id={'instruction-wrapper'}
                  style={{width: '100%', height: '60vh', overflowY: 'scroll', textAlign: 'left', fontSize: 'medium'}}>
-                <ReactMarkdown
+                <MarkdownMathJaxComponent
                     plugins={[gfm]} children={props.contest.instructions}/></div>
         </Card>
     );

@@ -2,13 +2,13 @@ import React, {useContext, useEffect, useState} from 'react'
 import {Button, Card, Col, Row, Select, Skeleton, Space, Spin, Typography} from "antd";
 import Editor from "@monaco-editor/react";
 import ThemeContext from "../../context/ThemeContext";
-import ReactMarkdown from 'react-markdown'
 import './QuestionDetail.style.css'
 import {Helmet} from "react-helmet";
 import {CaretRightOutlined, LeftOutlined, LoadingOutlined} from "@ant-design/icons";
 import SplitPane from "react-split-pane";
 import RunSubmit from "../../components/QuestionPage/RunSubmit.component";
 import axios from "axios";
+import MarkdownMathJaxComponent from "../../components/MarkdownMathJax.component";
 
 const {Option} = Select;
 
@@ -58,8 +58,7 @@ function QuestionDetail(props) {
                         }
                 } else
                     setCurrentLanguage(resLanguages.data.results[0])
-            }
-            catch(e) {
+            } catch (e) {
                 console.log(e)
             }
         })()
@@ -130,14 +129,14 @@ function QuestionDetail(props) {
 
                         <Skeleton loading={loading} paragraph={{rows: 20}} active/>
                         {!loading && <div>
-                            <ReactMarkdown>{question.description}</ReactMarkdown>
+                            <MarkdownMathJaxComponent>{question.description}</MarkdownMathJaxComponent>
                             <br/>
                             <Typography.Title level={3}>Input Format</Typography.Title>
-                            <ReactMarkdown>{question.input_format}</ReactMarkdown>
+                            <MarkdownMathJaxComponent>{question.input_format}</MarkdownMathJaxComponent>
                             <Typography.Title level={3}>Output Format</Typography.Title>
-                            <ReactMarkdown>{question.output_format}</ReactMarkdown>
+                            <MarkdownMathJaxComponent>{question.output_format}</MarkdownMathJaxComponent>
                             <Typography.Title level={3}>Constraints</Typography.Title>
-                            <ReactMarkdown>{question.output_format}</ReactMarkdown>
+                            <MarkdownMathJaxComponent>{question.output_format}</MarkdownMathJaxComponent>
                             <br/>
                             <Typography.Title level={3}>Sample Testcase(s)</Typography.Title>
                             {
