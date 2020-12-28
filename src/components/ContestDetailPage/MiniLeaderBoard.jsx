@@ -1,7 +1,9 @@
 import {Button, Table, Typography} from 'antd'
-import React, {useEffect, useState} from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import axios from "axios";
+import "./ContestDetail.css"
 import {useHistory} from "react-router";
+import UserContext from "../../context/User";
 
 const defaultCols = [
     {
@@ -31,11 +33,14 @@ function MiniLeaderBoard(props) {
     const [data, setData] = useState([])
 
     const history = useHistory()
+    const userContext = useContext(UserContext);
 
     useEffect(() => {
-        getLeaderBoard();
+        if (userContext.user !== null) {
+            getLeaderBoard();
+        }
         // eslint-disable-next-line
-    }, []);
+    }, [userContext.user]);
 
 
     const getLeaderBoard = () => {
@@ -73,9 +78,13 @@ function MiniLeaderBoard(props) {
             return null
         })
 
-        lb.sort((a, b) => ((a.score === b.score) ? (b.score - a.score) : (a.penalty - b.penalty)))
+        lb.sort((a, b) => ((a.score === b.score) ? (a.penalty - b.penalty) : (b.score - a.score)))
 
         for (let i = 0; i < lb.length; i++) {
+            if (userContext.user.username === lb[i].name) {
+                userContext.setRank(i + 1)
+                userContext.setScore(lb[i].score)
+            }
             lb[i].rank = i + 1;
         }
         setData(lb)
@@ -87,7 +96,9 @@ function MiniLeaderBoard(props) {
             <Typography.Title>Leaderboard</Typography.Title>
             {/*<Typography.Text level={3}>Your score: 256/680 | Rank: 5</Typography.Text>*/}
             <br/><br/>
-            <Table bordered dataSource={data} columns={defaultCols} loading={loading} pagination={false}/>
+            <Table bordered
+                   rowClassName={(record, index) => userContext.user !== null ? record.name === userContext.user.username ? 'table-row' : console.log(record) : null}
+                   dataSource={data} columns={defaultCols} loading={loading} pagination={false}/>
             <br/><br/>
 
             <Button size='large' block onClick={() => {

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import {Button, Card, Col, Divider, Row, Space, Statistic, Tabs, Tag, Typography} from 'antd';
 import {HourglassOutlined, TrophyOutlined} from '@ant-design/icons'
 import axios from "axios";
@@ -10,7 +10,9 @@ import StartContestComponent from "../../components/ContestDetailPage/StartConte
 import MiniLeaderBoard from "../../components/ContestDetailPage/MiniLeaderBoard";
 import '../../components/ContestDetailPage/ContestDetail.css'
 import MarkdownMathJaxComponent from "../../components/MarkdownMathJax.component";
+
 import {Helmet} from "react-helmet";
+import UserContext from "../../context/User";
 
 const {TabPane} = Tabs;
 const {Countdown} = Statistic;
@@ -18,13 +20,13 @@ const {Title} = Typography
 
 
 const ContestDetail = (props) => {
+    const userContext = useContext(UserContext);
+
     let {contestId} = useParams();
     const [isLoading, setIsLoading] = useState(true)
     const [contest, setContest] = useState(null)
     const [started, setStarted] = useState(false)
     const [questions, setQuestions] = useState([])
-    // TODO: Remove hardcoded current rank - Take from leaderboard
-    let currentRank = 5;
 
     useEffect(() => {
         getContestDetail()
@@ -52,6 +54,7 @@ const ContestDetail = (props) => {
         }).then(
             (res) => {
                 console.log(res.data)
+                res.data.questions = []
                 setContest(res.data)
                 if (res.data.status === 'STARTED') {
                     setStarted(true)
@@ -104,7 +107,7 @@ const ContestDetail = (props) => {
                                                     <TrophyOutlined/>
                                                 </div>
                                                 <div className={'ant-statistic-content-value'}>
-                                                    {currentRank}
+                                                    {userContext.rank}
                                                 </div>
                                             </div>
                                             Score: {contest.user_score}/{contest.max_score}
@@ -215,6 +218,7 @@ export default ContestDetail
 
 
 // const children =
+//
 // {
 //     guide: `# React App for Online Judge
 // [![Netlify Status](https://api.netlify.com/api/v1/badges/055ae047-fa35-42db-a7b9-b55be8743512/deploy-status)](https://app.netlify.com/sites/fervent-bhabha-03f267/deploys)
