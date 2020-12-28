@@ -72,6 +72,7 @@ function LeaderBoard(props) {
 
     const getQuestions = () => {
         setLoading(true)
+
         axios.get(`${process.env.REACT_APP_BASE_URL}/contests/${props.match.params.contestId}`,
             {
                 headers: {
@@ -80,7 +81,15 @@ function LeaderBoard(props) {
             })
             .then(res => {
                 setContest(res.data)
-                generateColumns(res.data.questions)
+                axios.get(`${process.env.REACT_APP_BASE_URL}/contests/${props.match.params.contestId}/questions`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                }).then(res => {
+                    console.log(res.data)
+                    generateColumns(res.data)
+                })
+
             }).then(() => {
             setLoading(false)
         })
@@ -102,8 +111,8 @@ function LeaderBoard(props) {
             console.log(que)
             //Set Column for leaderboard table
             col.push({
-                title: <Typography.Title level={5}>{`${que.question.name}`}</Typography.Title>,
-                dataIndex: `question${que.question.id}`,
+                title: <Typography.Title level={5}>{`${que.name}`}</Typography.Title>,
+                dataIndex: `question${que.id}`,
                 key: `question${i}`,
                 width: '15rem',
                 align: 'center',
@@ -144,7 +153,7 @@ function LeaderBoard(props) {
                 penalty: row.total_penalty,
             }
             for (let i of row.questions) {
-                base[`question${i.que_id}`] = {score: i.score, pealty: i.penalty}
+                base[`question${i.que_id}`] = {score: i.score, penalty: i.penalty}
             }
             return base
         })
