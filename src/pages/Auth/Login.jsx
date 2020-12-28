@@ -1,12 +1,16 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import './css/login.css';
 import {Button, Form, Input, message, Typography} from 'antd';
 import {LockOutlined, UserOutlined} from '@ant-design/icons';
 import axios from 'axios'
 import * as queryString from "query-string";
+import jwt_decode from "jwt-decode";
+import UserContext from "../../context/User";
 
 
 const Login = (props) => {
+    const userContext = useContext(UserContext);
+
     const [errors, setErrors] = React.useState('')
     const [status, setStatus] = React.useState('')
 
@@ -20,6 +24,9 @@ const Login = (props) => {
             console.log(res.data.access)
             localStorage.setItem('token', res.data.access)
             localStorage.setItem('refresh-token', res.data.refresh)
+            let decoded = jwt_decode(res.data.access);
+            userContext.loadUser(decoded.user_id)
+
             message.success('Login Successful !!');
 
             const qs = queryString.parse(props.history.location.search);
