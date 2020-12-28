@@ -29,12 +29,6 @@ function Contests(props) {
     }, []);
 
     async function handleEnterContest(contest) {
-        if (contest.status === 'REGISTERED')
-            await axios.patch(`${process.env.REACT_APP_BASE_URL}/contests/${contest.contest_id.id}/start`, {}, {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
-            })
         props.history.push('/contests/' + contest.contest_id.id)
     }
 
