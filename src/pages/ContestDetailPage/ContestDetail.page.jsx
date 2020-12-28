@@ -18,8 +18,6 @@ const {TabPane} = Tabs;
 const {Countdown} = Statistic;
 const {Title} = Typography
 
-// const deadline = Date.now() + 1000 * 60 * 60 * 24 * 2 + 1000 * 30; // Moment is also OK
-
 
 const ContestDetail = (props) => {
     const userContext = useContext(UserContext);
@@ -27,12 +25,26 @@ const ContestDetail = (props) => {
     let {contestId} = useParams();
     const [isLoading, setIsLoading] = useState(true)
     const [contest, setContest] = useState(null)
-    const [started, setStarted] = useState(localStorage.getItem(`contestStarted${contestId}`) || false)
+    const [started, setStarted] = useState(false)
+    const [questions, setQuestions] = useState([])
 
     useEffect(() => {
         getContestDetail()
         // eslint-disable-next-line
     }, [])
+
+    useEffect(() => {
+        if (started) {
+            axios.get(`${process.env.REACT_APP_BASE_URL}/contests/${contestId}/questions`, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            }).then(res => {
+                console.log(res.data)
+                setQuestions(res.data)
+            })
+        }
+    }, [started, contestId])
 
     const getContestDetail = () => {
         axios.get(`${process.env.REACT_APP_BASE_URL}/contests/${contestId}`, {
@@ -44,6 +56,9 @@ const ContestDetail = (props) => {
                 console.log(res.data)
                 res.data.questions = []
                 setContest(res.data)
+                if (res.data.status === 'STARTED') {
+                    setStarted(true)
+                }
             }
         )
             .then(() => {
@@ -54,8 +69,12 @@ const ContestDetail = (props) => {
             })
     }
 
-    function startContest() {
-        localStorage.setItem(`contestStarted${contestId}`, true)
+    async function startContest() {
+        await axios.patch(`${process.env.REACT_APP_BASE_URL}/contests/${contest.id}/start`, {}, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        })
         setStarted(true)
     }
 
@@ -127,36 +146,37 @@ const ContestDetail = (props) => {
                                 <Tabs size='large' type="card">
                                     <TabPane tab="Questions" key="1" style={{'padding': '4%'}}>
 
-                                        {contest.questions.map((ques) => (
-                                            <Row key={ques.question.id} gutter={[0, 18]} align="middle"
+                                        {questions.map((ques) => (
+                                            <Row key={ques.id} gutter={[0, 18]} align="middle"
                                                  justify="center">
                                                 <Col span={24}>
                                                     <Card bordered={false}>
                                                         <Row align="middle">
                                                             <Col lg={12} onClick={() => {
-                                                                props.history.push(`/contests/${contestId}/${ques.question.id}`)
+                                                                props.history.push(`/contests/${contestId}/${ques.id}`)
                                                             }}>
                                                                 <h2><Link
-                                                                    to={`/contests/${contestId}/${ques.question.id}`}> {ques.question.name}</Link>
+                                                                    to={`/contests/${contestId}/${ques.id}`}> {ques.name}</Link>
                                                                 </h2>
                                                             </Col>
                                                             <Col lg={12} align={'right'}>
                                                                 <Space size={'middle'}>
-                                                                    <Tag color='blue'
-                                                                         style={{
-                                                                             'fontSize': 'larger',
-                                                                             padding: '0.4rem'
-                                                                         }}>
-                                                                        Score: {ques.question.score}
+                                                                    <Tag
+                                                                        color={ques.user_score.score === ques.score ? 'green' : 'blue'}
+                                                                        style={{
+                                                                            'fontSize': 'larger',
+                                                                            padding: '0.4rem'
+                                                                        }}>
+                                                                        Score: {ques.user_score.score} / {ques.score}
                                                                     </Tag>
                                                                     <Link
-                                                                        to={`/contests/${contestId}/${ques.question.id}`}>
+                                                                        to={`/contests/${contestId}/${ques.id}`}>
                                                                         <Button size='large' type={'primary'}>
                                                                             Solve
                                                                         </Button>
                                                                     </Link>
                                                                     <Link
-                                                                        to={`/contests/${contestId}/${ques.question.id}/submissions?name=${ques.question.name}`}>
+                                                                        to={`/contests/${contestId}/${ques.id}/submissions?name=${ques.name}`}>
                                                                         <Button size='large'>
                                                                             My Submissions
                                                                         </Button>
