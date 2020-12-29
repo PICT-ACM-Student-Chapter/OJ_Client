@@ -136,7 +136,7 @@ function QuestionDetail(props) {
                             <Typography.Title level={3}>Output Format</Typography.Title>
                             <MarkdownMathJaxComponent>{question.output_format}</MarkdownMathJaxComponent>
                             <Typography.Title level={3}>Constraints</Typography.Title>
-                            <MarkdownMathJaxComponent>{question.output_format}</MarkdownMathJaxComponent>
+                            <MarkdownMathJaxComponent>{question.constraints}</MarkdownMathJaxComponent>
                             <br/>
                             <Typography.Title level={3}>Sample Testcase(s)</Typography.Title>
                             {
