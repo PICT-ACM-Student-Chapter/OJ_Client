@@ -96,7 +96,7 @@ const ContestDetail = (props) => {
                         <Col span={12} align='right'>
                             <Row align='right'>
                                 <Col span={16}>
-                                    <Card style={{width: '12rem'}} bodyStyle={{padding: '12px 24px'}}>
+                                    {userContext.rank && <Card style={{width: '12rem'}} bodyStyle={{padding: '12px 24px'}}>
                                         <div className={'ant-statistic'}>
                                             <div className={'ant-statistic-title'}>
                                                 Current Rank
@@ -112,7 +112,7 @@ const ContestDetail = (props) => {
                                             </div>
                                             Score: {contest.user_score}/{contest.max_score}
                                         </div>
-                                    </Card>
+                                    </Card>}
                                 </Col>
                                 <Col span={8}>
                                     <Card style={{width: '12rem'}} bodyStyle={{padding: '12px 24px'}}>

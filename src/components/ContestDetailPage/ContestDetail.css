@@ -2,6 +2,11 @@
     max-width: 100%
 }
 
+#instruction-wrapper {
+    max-height: 50vh;
+    overflow-y: scroll;
+}
+
 .table-row > td {
     background-color: #2f5b9052;
 }
