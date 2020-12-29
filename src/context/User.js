@@ -44,15 +44,18 @@ class UserProvider extends Component {
     dispose = () => {
         this.setState({
             user: null,
-
+            rank: null,
+            score: null
         })
+        localStorage.setItem('refresh-token', null)
+        localStorage.setItem('token', null)
     }
 
 
     render() {
         const {children} = this.props;
         const {user, rank, score} = this.state;
-        const {setUser, loadUser, setScore, setRank} = this;
+        const {setUser, loadUser, setScore, setRank,dispose} = this;
 
         return (
             <UserContext.Provider
@@ -62,6 +65,7 @@ class UserProvider extends Component {
                     score,
                     setUser,
                     loadUser,
+                    dispose,
                     setScore,
                     setRank
                 }}>

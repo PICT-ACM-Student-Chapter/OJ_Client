@@ -1,5 +1,5 @@
 import React from 'react';
-import {Route, Switch} from 'react-router-dom';
+import {matchPath, Route, Switch} from 'react-router-dom';
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
 import Contests from './pages/Contests.page';
@@ -10,7 +10,7 @@ import LeaderBoard from "./pages/Leaderboard/LeaderBoard.page";
 import ContestDetail from "./pages/ContestDetailPage/ContestDetail.page"
 import Submissions from "./pages/Submissions/Submissions.page";
 import Footer from "./components/Footer/Footer";
-import Home from "./pages/Home.page"
+import Home from "./pages/Home/index"
 
 
 const Routes = () => {
@@ -19,16 +19,18 @@ const Routes = () => {
     return (
         <>
             <Switch>
-
+                <Route exact path="/" component={Home}/>
                 <ProLayout
                     title="PASC OJ"
                     logo="https://pict.acm.org/radiance/img/PASC-W2.png"
                     layout="top"
                     fixedHeader="true"
                     rightContentRender={() => <GlobalHeaderRight/>}
-                    footerRender={() => <Footer/>}
+                    footerRender={(props) => {
+                        if (!matchPath(props.location.pathname, {path: "/contests/:contestId/:questionId", exact: true}))
+                            return <Footer/>
+                    }}
                 >
-                    <Route exact path="/" component={Home}/>
                     <Route exact path="/login" component={Login}/>
                     <Route exact path="/register" component={Register}/>
                     <Route exact path="/contests/:contestId/:questionId" component={QuestionDetail}/>

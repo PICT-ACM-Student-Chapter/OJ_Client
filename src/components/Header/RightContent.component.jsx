@@ -7,13 +7,14 @@ import {useHistory} from "react-router";
 import createAuthRefreshInterceptor from "axios-auth-refresh";
 import axios from "axios";
 import {refreshAuthLogic} from "../../utils/utils";
-
+import UserContext from "../../context/User";
+import Gravatar from 'react-gravatar'
 
 const GlobalHeaderRight = (props) => {
         const {switcher, themes} = useThemeSwitcher();
         const theme = useContext(ThemeContext)
+        const userContext = useContext(UserContext)
         const history = useHistory()
-
 
         useEffect(() => {
                 const pathLogin = history.location.pathname
@@ -24,8 +25,7 @@ const GlobalHeaderRight = (props) => {
                     axios.post(process.env.REACT_APP_BASE_URL + '/auth/jwt/verify', {"token": (localStorage.getItem('refresh-token'))})
                         .catch(err => {
                             console.log(err, '==================Line 14==================')
-                            localStorage.setItem('refresh-token', null)
-                            localStorage.setItem('token', null)
+                            userContext.dispose()
                             const path = history.location.pathname
                             history.push(`/login?redirect=${path}`)
 
@@ -57,8 +57,15 @@ const GlobalHeaderRight = (props) => {
                 })
 
                 // eslint-disable-next-line
-            }, []
+            }, [userContext]
         )
+
+        const logout = ()=>{
+            userContext.dispose()
+            history.push('/login')
+
+
+        }
 
 
         const toggleDarkMode = () => {
@@ -94,7 +101,7 @@ const GlobalHeaderRight = (props) => {
                                 Account Settings
                             </Menu.Item>
                             <Menu.Divider/>
-                            <Menu.Item key="logout">
+                            <Menu.Item key="logout" onClick={logout}>
                                 <LogoutOutlined/>
                                 Logout
                             </Menu.Item>
@@ -103,8 +110,8 @@ const GlobalHeaderRight = (props) => {
                         <Space>
 
                             <Avatar size='medium' style={{backgroundColor: '#87d068', cursor: 'pointer'}}
-                                    icon={<UserOutlined/>}/>
-                            <span style={{color: 'white'}}>Admin</span>
+                                    icon={<Gravatar email={userContext.user && userContext.user.email} />}/>
+                            <span style={{color: 'white'}}>{userContext.user && userContext.user.username}</span>
                         </Space>
                     </Dropdown></div>
             );
