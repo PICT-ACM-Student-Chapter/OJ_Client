@@ -47,15 +47,15 @@ class UserProvider extends Component {
             rank: null,
             score: null
         })
-        localStorage.setItem('refresh-token', null)
-        localStorage.setItem('token', null)
+        localStorage.removeItem('refresh-token')
+        localStorage.removeItem('token')
     }
 
 
     render() {
         const {children} = this.props;
         const {user, rank, score} = this.state;
-        const {setUser, loadUser, setScore, setRank,dispose} = this;
+        const {setUser, loadUser, setScore, setRank, dispose} = this;
 
         return (
             <UserContext.Provider

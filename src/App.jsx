@@ -12,7 +12,7 @@ function App() {
     const userContext = useContext(UserContext);
 
     useEffect(() => {
-        if (localStorage.getItem("token") !== "null") {
+        if (localStorage.getItem("token")) {
             let decoded = jwt_decode(localStorage.getItem("token"));
             userContext.loadUser(decoded.user_id);
             console.log(userContext.user)
