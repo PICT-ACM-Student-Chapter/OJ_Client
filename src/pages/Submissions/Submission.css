@@ -1,0 +1,9 @@
+.ant-table-row-expand-icon {
+    color: rgb(56, 114, 224)!important;
+    border-color: rgb(56, 114, 224)!important;
+}
+
+.ant-modal-body {
+    height: 600px;
+    overflow-y: scroll;
+}

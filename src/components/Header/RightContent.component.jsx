@@ -42,7 +42,6 @@ const GlobalHeaderRight = (props) => {
                     } else {
                         axios.post(process.env.REACT_APP_BASE_URL + '/auth/jwt/verify', {"token": (localStorage.getItem('refresh-token'))})
                             .catch(err => {
-                                console.log(err, '==================Line 14==================')
                                 localStorage.setItem('refresh-token', null)
                                 localStorage.setItem('token', null)
                                 const path = history.location.pathname

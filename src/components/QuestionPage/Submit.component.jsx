@@ -31,7 +31,7 @@ const SubmitComponent = (props) => {
                     submit the solution first</Typography.Title></div>}
                 {submissionLoading && <Skeleton active/>}
                 {testCases.length > 0 && !submissionLoading && <div>
-                    <Progress success={{percent: Math.round(passed / testCases.length * 100, 2)}}
+                    <Progress style={{paddingRight:"0.5rem"}} success={{percent: Math.round(passed / testCases.length * 100, 2)}}
                               percent={Math.round(totalJudged / testCases.length * 100)} strokeColor={'grey'}
                               status={totalJudged !== testCases.length && "active"}/>
                     <Typography.Link>{passed} of {testCases.length} Test Cases passed</Typography.Link>

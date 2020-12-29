@@ -8,6 +8,7 @@ import {vs, vs2015} from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import {b64Decode, parseDate} from "../../utils/utils";
 import {useLocation} from "react-router";
 import {ForkOutlined} from "@ant-design/icons";
+import "./Submission.css"
 
 const statusColor = {
     'AC': 'green',
@@ -150,7 +151,6 @@ function Submissions(props) {
                 }
             })
             .then(res => {
-                setLoading(false)
                 setSubmissions(res.data.results)
                 generateData(res.data.results)
 
@@ -227,7 +227,7 @@ function Submissions(props) {
             <Typography.Title>Submissions</Typography.Title>
             <Typography.Title type={'secondary'} level={3}>{query.get("name") || ""}</Typography.Title>
             <br/><br/><br/>
-            <Table bordered dataSource={data} columns={columns} loading={false}
+            <Table bordered dataSource={data} columns={columns} loading={loading}
                    pagination={false} expandable={{expandedRowRender}}
             />
             <Modal
@@ -258,6 +258,7 @@ function Submissions(props) {
                 onCancel={() => setVisible(false)}
                 width={1000}
             >
+
                 <SyntaxHighlighter language={codeLang.monaco_lang_code} style={theme()}>
                     {b64Decode(code)}
                 </SyntaxHighlighter>
