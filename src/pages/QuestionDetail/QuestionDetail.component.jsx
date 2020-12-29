@@ -119,6 +119,17 @@ function QuestionDetail(props) {
                                 <Col span={8}>
                                     <Button icon={<LeftOutlined/>}
                                             onClick={_ => props.history.push(`/contests/${props.match.params.contestId}`)}>Back</Button>
+                                    &nbsp;
+                                    &nbsp;
+                                    &nbsp;          &nbsp;
+                                    &nbsp;
+                                    &nbsp;          &nbsp;
+                                    &nbsp;
+                                    &nbsp;          &nbsp;
+                                    &nbsp;
+                                    &nbsp;          &nbsp;
+                                    &nbsp;
+                                    &nbsp;
                                 </Col>
                                 <Col span={16}>
                                     <Typography.Title>{question.name || ''}</Typography.Title>
