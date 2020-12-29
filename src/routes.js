@@ -1,5 +1,5 @@
 import React from 'react';
-import {Route, Switch} from 'react-router-dom';
+import {matchPath, Route, Switch} from 'react-router-dom';
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
 import Contests from './pages/Contests.page';
@@ -26,7 +26,10 @@ const Routes = () => {
                     layout="top"
                     fixedHeader="true"
                     rightContentRender={() => <GlobalHeaderRight/>}
-                    footerRender={() => <Footer/>}
+                    footerRender={(props) => {
+                        if (!matchPath(props.location.pathname, {path: "/contests/:contestId/:questionId", exact: true}))
+                            return <Footer/>
+                    }}
                 >
                     <Route exact path="/login" component={Login}/>
                     <Route exact path="/register" component={Register}/>

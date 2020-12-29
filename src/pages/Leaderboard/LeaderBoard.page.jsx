@@ -4,6 +4,7 @@ import axios from "axios";
 import UserContext from "../../context/User";
 import "./leaderboard.css"
 import {TrophyOutlined} from "@ant-design/icons";
+import {Link} from "react-router-dom";
 
 const defaultCols = [
     {
@@ -38,14 +39,13 @@ const defaultCols = [
 function LeaderBoard(props) {
     const [loading, setLoading] = useState(true)
     const [data, setData] = useState([])
-    const [columns, setColumns] = useState([defaultCols])
+    const [columns, setColumns] = useState(defaultCols)
     const [contest, setContest] = useState({})
 
     const userContext = useContext(UserContext);
 
     useEffect(() => {
         if (userContext.user !== null) {
-            getLeaderBoard();
             getQuestions();
         }
         // eslint-disable-next-line
@@ -86,12 +86,11 @@ function LeaderBoard(props) {
                         'Authorization': `Bearer ${localStorage.getItem('token')}`
                     }
                 }).then(res => {
-                    console.log(res.data)
                     generateColumns(res.data)
+                    getLeaderBoard();
                 })
 
             }).then(() => {
-            setLoading(false)
         })
             .catch(e => {
                 console.log(e.data)
@@ -111,7 +110,7 @@ function LeaderBoard(props) {
             console.log(que)
             //Set Column for leaderboard table
             col.push({
-                title: <Typography.Title level={5}>{`${que.name}`}</Typography.Title>,
+                title: <Link to={`/contests/${props.match.params.contestId}/${que.id}`}><Typography.Title level={5}>{`${que.name}`}</Typography.Title></Link>,
                 dataIndex: `question${que.id}`,
                 key: `question${i}`,
                 width: '15rem',
