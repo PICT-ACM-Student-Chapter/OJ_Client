@@ -16,7 +16,7 @@ const StartContestComponent = (props) => {
         >
             <div id={'instruction-wrapper'}
                  style={{width: '100%', height: '60vh', overflowY: 'scroll', textAlign: 'left', fontSize: 'medium'}}>
-                <MarkdownMathJaxComponent
+                <MarkdownMathJaxComponent className="markdown"
                     plugins={[gfm]} children={props.contest.instructions}/></div>
         </Card>
     );

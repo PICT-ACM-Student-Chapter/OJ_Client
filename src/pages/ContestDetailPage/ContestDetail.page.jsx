@@ -195,7 +195,7 @@ const ContestDetail = (props) => {
                                     <TabPane tab="Instructions" key="2" style={{'padding': '4%'}}>
                                         <div style={{fontSize: 'medium'}} id={'instruction-wrapper'}>
                                             <MarkdownMathJaxComponent
-                                                className="instructions"
+                                                className="markdown"
                                                 plugins={[gfm]} children={contest.instructions}/></div>
 
                                     </TabPane>

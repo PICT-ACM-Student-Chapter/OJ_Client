@@ -140,14 +140,14 @@ function QuestionDetail(props) {
 
                         <Skeleton loading={loading} paragraph={{rows: 20}} active/>
                         {!loading && <div>
-                            <MarkdownMathJaxComponent>{question.description}</MarkdownMathJaxComponent>
+                                <MarkdownMathJaxComponent className='markdown'>{question.description}</MarkdownMathJaxComponent>
                             <br/>
                             <Typography.Title level={3}>Input Format</Typography.Title>
-                            <MarkdownMathJaxComponent>{question.input_format}</MarkdownMathJaxComponent>
+                            <MarkdownMathJaxComponent className='markdown'>{question.input_format}</MarkdownMathJaxComponent>
                             <Typography.Title level={3}>Output Format</Typography.Title>
-                            <MarkdownMathJaxComponent>{question.output_format}</MarkdownMathJaxComponent>
+                            <MarkdownMathJaxComponent className='markdown'>{question.output_format}</MarkdownMathJaxComponent>
                             <Typography.Title level={3}>Constraints</Typography.Title>
-                            <MarkdownMathJaxComponent>{question.constraints}</MarkdownMathJaxComponent>
+                            <MarkdownMathJaxComponent className='markdown'>{question.constraints}</MarkdownMathJaxComponent>
                             <br/>
                             <Typography.Title level={3}>Sample Testcase(s)</Typography.Title>
                             {
