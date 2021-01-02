@@ -9,6 +9,7 @@ import {b64Decode, parseDate} from "../../utils/utils";
 import {useLocation} from "react-router";
 import {ForkOutlined} from "@ant-design/icons";
 import "./Submission.css"
+import SubmissionDetail from "./SubmissionDetail.component";
 
 const statusColor = {
     'AC': 'green',
@@ -198,25 +199,9 @@ function Submissions(props) {
 
 
     const expandedRowRender = (record) => {
-
-        let passedTestCases = 0;
-
-        let testcases = []
-
-        submissions.forEach(submission => {
-
-            if (submission.id === record.key) {
-                submission.verdicts.forEach(testcase => {
-                    if (testcase.status === 'AC') {
-                        passedTestCases++;
-                    }
-                })
-                testcases = submission.verdicts
-            }
-
-        })
-
-        return <SubmitComponent testCases={testcases} submissionLoading={false} passedTestCases={passedTestCases}/>
+        return <SubmissionDetail contestId={props.match.params.contestId}
+                                 queId={props.match.params.questionId}
+                                 record={record}/>
     }
 
     let query = useQuery();
