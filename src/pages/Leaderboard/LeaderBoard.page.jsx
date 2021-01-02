@@ -191,7 +191,9 @@ function LeaderBoard(props) {
                     Score: {contest.user_score}/{contest.max_score}
                 </div>
             </Card>
-            <br/><br/><br/>
+            <br/><br/>
+            *Updated every minute
+            <br/>
             <Table bordered
                    rowClassName={(record, index) => userContext.user !== null ? record.name === userContext.user.username ? 'table-row' : console.log(record) : null}
 

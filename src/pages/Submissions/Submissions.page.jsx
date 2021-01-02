@@ -162,7 +162,7 @@ function Submissions(props) {
 
     const getLanguages = async () => {
         const resLanguages = await axios.get(`${process.env.REACT_APP_BASE_URL}/languages`)
-        setLang(resLanguages.data.results)
+        setLang(resLanguages.data)
     }
 
     const getLangfromId = (id) => {

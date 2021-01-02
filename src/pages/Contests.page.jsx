@@ -19,7 +19,7 @@ function Contests(props) {
             }
         }).then(
             (res) => {
-                setData(res.data.results)
+                setData(res.data)
             }
         ).then(() => {
             setIsLoading(false)

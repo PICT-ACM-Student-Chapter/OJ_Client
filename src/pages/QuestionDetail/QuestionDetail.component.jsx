@@ -49,15 +49,15 @@ function QuestionDetail(props) {
                 setTCsLoading(false)
 
                 const resLanguages = await axios.get(`${process.env.REACT_APP_BASE_URL}/languages`)
-                setLanguages(resLanguages.data.results)
+                setLanguages(resLanguages.data)
 
                 if (localStorage.getItem('preferredLanguage')) {
-                    for (let i of resLanguages.data.results)
+                    for (let i of resLanguages.data)
                         if (i.id === parseInt(localStorage.getItem('preferredLanguage'))) {
                             setCurrentLanguage(i)
                         }
                 } else
-                    setCurrentLanguage(resLanguages.data.results[0])
+                    setCurrentLanguage(resLanguages.data[0])
             } catch (e) {
                 console.log(e)
             }

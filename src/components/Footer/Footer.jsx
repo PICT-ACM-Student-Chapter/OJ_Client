@@ -18,13 +18,13 @@ const Footer = () => {
                 {
                     key: 'github',
                     title: <GithubOutlined/>,
-                    href: 'https://github.com/ant-design/ant-design-pro',
+                    href: 'https://github.com/PICT-ACM-Student-Chapter',
                     blankTarget: true,
                 },
                 {
                     key: 'LinkedIn',
                     title: 'LinkedIn',
-                    href: 'https://ant.design',
+                    href: 'https://www.linkedin.com/company/pict-acm-student-chapter/',
                     blankTarget: true,
                 },
             ]}
