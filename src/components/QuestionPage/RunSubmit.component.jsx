@@ -96,8 +96,7 @@ export default function RunSubmit(props) {
     }
 
     const handleRun = async (inputTC) => {
-        // eslint-disable-next-line
-        if (props.getCode() == '') {
+        if (props.getCode() === '') {
             message.error("Code cannot be blank!")
             props.funcInputTC()
             return
@@ -134,8 +133,7 @@ export default function RunSubmit(props) {
 
 
     const handleSubmit = async () => {
-        // eslint-disable-next-line
-        if (props.getCode() == '') {
+        if (props.getCode() === '') {
             message.error("Code cannot be blank!")
             return
         }
