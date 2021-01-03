@@ -1,7 +1,6 @@
 import {Button, Col, Row, Space, Table, Tag, Typography} from 'antd'
 import React, {useEffect, useState} from 'react'
 import axios from "axios";
-import SubmitComponent from "../../components/QuestionPage/Submit.component";
 import Modal from "antd/es/modal/Modal";
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import {vs, vs2015} from 'react-syntax-highlighter/dist/esm/styles/hljs';
@@ -37,6 +36,7 @@ function useQuery() {
 function Submissions(props) {
     const [loading, setLoading] = useState(true)
     const [data, setData] = useState([])
+    // eslint-disable-next-line
     const [submissions, setSubmissions] = useState([])
     const [visible, setVisible] = useState(false);
     const [code, setCode] = useState(null)
