@@ -15,8 +15,10 @@ class GlobalProvider extends Component {
         contestID: null,
         question: {},
         questionID: null,
-        languages: []
-
+        languages: [],
+        isContestLive: true,
+        apiError: null,
+        apiErrorMsg: ''
     };
 
     getContests = (setIsLoading) => {
@@ -135,10 +137,22 @@ class GlobalProvider extends Component {
         }
     }
 
+    setIsContestLive = (isLive)=>{
+        this.setState({isContestLive: isLive})
+    }
+
+    setApiError = (err)=>{
+        this.setState({apiError: err})
+    }
+
+    setApiErrorMsg = (err)=>{
+        this.setState({apiErrorMsg: err})
+    }
+
     render() {
         const {children} = this.props;
-        const {contests, contest, languages, question} = this.state;
-        const {getContests, getContestDetail, getAllLanguages, getQuestionDetail} = this;
+        const {contests, contest, languages, question, isContestLive, apiError, apiErrorMsg} = this.state;
+        const {getContests, getContestDetail, getAllLanguages, getQuestionDetail, setIsContestLive, setApiError, setApiErrorMsg} = this;
 
         return (
             <GlobalContext.Provider
@@ -147,10 +161,16 @@ class GlobalProvider extends Component {
                     contest,
                     languages,
                     question,
+                    isContestLive,
+                    apiError,
+                    apiErrorMsg,
                     getContests,
                     getContestDetail,
                     getAllLanguages,
-                    getQuestionDetail
+                    getQuestionDetail,
+                    setIsContestLive,
+                    setApiError,
+                    setApiErrorMsg
                 }}>
                 {" "}
                 {children}{" "}

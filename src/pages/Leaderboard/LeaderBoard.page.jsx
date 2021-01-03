@@ -5,6 +5,7 @@ import UserContext from "../../context/User";
 import "./leaderboard.css"
 import {TrophyOutlined} from "@ant-design/icons";
 import {Link} from "react-router-dom";
+import GlobalContext from "../../context/GlobalContext";
 
 const defaultCols = [
     {
@@ -40,13 +41,14 @@ function LeaderBoard(props) {
     const [loading, setLoading] = useState(true)
     const [data, setData] = useState([])
     const [columns, setColumns] = useState(defaultCols)
-    const [contest, setContest] = useState({})
+    const [totalScore, setTotalScore] = useState('')
 
     const userContext = useContext(UserContext);
+    const globalContext = useContext(GlobalContext);
 
     useEffect(() => {
         if (userContext.user !== null) {
-            getQuestions();
+            getLeaderBoard()
         }
         // eslint-disable-next-line
     }, [userContext.user]);
@@ -63,35 +65,9 @@ function LeaderBoard(props) {
             })
             .then(res => {
                 setLoading(false)
+                generateColumns(res.data.questions)
                 generateData(res.data.results)
             })
-            .catch(e => {
-                console.log(e.data)
-            })
-    }
-
-    const getQuestions = () => {
-        setLoading(true)
-
-        axios.get(`${process.env.REACT_APP_BASE_URL}/contests/${props.match.params.contestId}`,
-            {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
-            })
-            .then(res => {
-                setContest(res.data)
-                axios.get(`${process.env.REACT_APP_BASE_URL}/contests/${props.match.params.contestId}/questions`, {
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`
-                    }
-                }).then(res => {
-                    generateColumns(res.data)
-                    getLeaderBoard();
-                })
-
-            }).then(() => {
-        })
             .catch(e => {
                 console.log(e.data)
             })
@@ -105,12 +81,15 @@ function LeaderBoard(props) {
         questions.sort((a, b) => parseInt(a.order) - parseInt(b.order))
         console.log(questions.length)
 
+        let scoreSum = 0
+
         questions.forEach((que, i) => {
 
             console.log(que)
+            scoreSum += que.score
             //Set Column for leaderboard table
             col.push({
-                title: <Link to={`/contests/${props.match.params.contestId}/${que.id}`}><Typography.Title level={5}>{`${que.name}`}</Typography.Title></Link>,
+                title: <Link to={`/contests/${props.match.params.contestId}/${que.id}`}><Typography.Title level={5}>{`${que.id}`}</Typography.Title></Link>,
                 dataIndex: `question${que.id}`,
                 key: `question${i}`,
                 width: '15rem',
@@ -136,6 +115,7 @@ function LeaderBoard(props) {
 
             if (i === (questions.length - 1)) {
                 console.log(col)
+                setTotalScore(scoreSum)
                 setColumns(col)
             }
         })
@@ -172,7 +152,7 @@ function LeaderBoard(props) {
     return (
         <div style={{padding: "2% 4%"}}>
             <Typography.Title>Leaderboard</Typography.Title>
-            <Typography.Title type={'secondary'} level={3}>{contest.name || ''}</Typography.Title>
+            <Typography.Title type={'secondary'} level={3}>{globalContext.contest?.name || props.match.params.contestId || ''}</Typography.Title>
             <br/>
             <Card style={{width: '12rem'}} bodyStyle={{padding: '12px 24px'}}>
                 <div className={'ant-statistic'}>
@@ -188,7 +168,7 @@ function LeaderBoard(props) {
                             {userContext.rank}
                         </div>
                     </div>
-                    Score: {contest.user_score}/{contest.max_score}
+                    Score: {userContext.score}/{totalScore || ''}
                 </div>
             </Card>
             <br/><br/>

@@ -29,7 +29,7 @@ const ContestDetail = (props) => {
     const [started, setStarted] = useState(false)
     const [questions, setQuestions] = useState([])
 
-    const {contest} = globalContext
+    const {contest, setIsContestLive} = globalContext
 
     useEffect(() => {
         globalContext.getContestDetail(contestId, setStarted, setIsLoading)
@@ -99,7 +99,7 @@ const ContestDetail = (props) => {
                                 <Col span={8}>
                                     <Card style={{width: '12rem'}} bodyStyle={{padding: '12px 24px'}}>
                                         <Countdown prefix={<HourglassOutlined/>} title="Time Left"
-                                                   value={contest.end_time}/>
+                                                   value={contest.end_time} onFinish={_=>{setIsContestLive(false)}}/>
                                         Ends: {new Date(contest.end_time).toLocaleTimeString()}
                                     </Card>
                                 </Col>
