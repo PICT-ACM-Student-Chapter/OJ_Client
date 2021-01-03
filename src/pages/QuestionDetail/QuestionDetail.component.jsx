@@ -1,16 +1,17 @@
 import React, {useContext, useEffect, useState} from 'react'
-import {Button, Card, Col, Row, Select, Skeleton, Space, Spin, Typography} from "antd";
+import {Button, Card, Col, Row, Select, Skeleton, Space, Spin, Typography, Statistic} from "antd";
 import Editor from "@monaco-editor/react";
 import ThemeContext from "../../context/ThemeContext";
 import './QuestionDetail.style.css'
 import {Helmet} from "react-helmet";
-import {CaretRightOutlined, LeftOutlined, LoadingOutlined} from "@ant-design/icons";
+import {CaretRightOutlined, HourglassOutlined, ProfileOutlined, LoadingOutlined, BarChartOutlined} from "@ant-design/icons";
 import SplitPane from "react-split-pane";
 import RunSubmit from "../../components/QuestionPage/RunSubmit.component";
 import MarkdownMathJaxComponent from "../../components/MarkdownMathJax.component";
 import GlobalContext from "../../context/GlobalContext";
 
 const {Option} = Select;
+const {Countdown} = Statistic;
 
 function QuestionDetail(props) {
 
@@ -19,17 +20,22 @@ function QuestionDetail(props) {
     const [editor, setEditor] = useState(null);
     const [loading, setLoading] = useState(true);
     const [tcsLoading, setTCsLoading] = useState(true);
+    const [started, setStarted] = useState(false)
+
     // const [languages, setLanguages] = useState([])
     const [currentLanguage, setCurrentLanguage] = useState({})
     const [inputTC, setInputTC] = useState(null)
 
     const {languages, getAllLanguages, getQuestionDetail, question} = globalContext
+    const {contest} = globalContext
 
     let savedCodes = JSON.parse(localStorage.getItem(`codes${props.match.params.questionId}`) || '{}')
 
     useEffect(() => {
         getAllLanguages()
         getQuestionDetail(props.match.params.questionId, setLoading, setTCsLoading, setCurrentLanguage)
+        globalContext.getContestDetail(props.match.params.contestId, setStarted, setLoading)
+
         // (async function () {
         //     const reqConfig = {
         //         headers: {
@@ -120,28 +126,20 @@ function QuestionDetail(props) {
                        style={{position: "relative", width: '100%', height: '88vh', overflowY: 'hidden'}}>
                 <div>
                     <Card className='question-card' title={
-                        <Space>
-                            <Row>
-                                <Col span={8}>
-                                    <Button icon={<LeftOutlined/>}
-                                            onClick={_ => props.history.push(`/contests/${props.match.params.contestId}`)}>Back</Button>
-                                    &nbsp;
-                                    &nbsp;
-                                    &nbsp;          &nbsp;
-                                    &nbsp;
-                                    &nbsp;          &nbsp;
-                                    &nbsp;
-                                    &nbsp;          &nbsp;
-                                    &nbsp;
-                                    &nbsp;          &nbsp;
-                                    &nbsp;
-                                    &nbsp;
-                                </Col>
+                            <Row justify="space-around" align="middle">
                                 <Col span={16}>
                                     <Typography.Title>{question.name || ''}</Typography.Title>
                                 </Col>
+                                <Col align='right' span={8}>
+                                    {
+                                        contest?<Card style={{width: '12rem'}} bodyStyle={{padding: '12px 24px'}}>
+                                            <Countdown prefix={<HourglassOutlined/>} title="Time Left"
+                                                       value={contest.end_time}/>
+                                            Ends: {new Date(contest.end_time).toLocaleTimeString()}
+                                        </Card>:null
+                                    }
+                                </Col>
                             </Row>
-                        </Space>
                     }>
 
                         <Skeleton loading={loading} paragraph={{rows: 20}} active/>
@@ -200,11 +198,26 @@ function QuestionDetail(props) {
                 </div>
                 <div>
                     <Card style={{marginBottom: '16px', position: 'relative'}} className='button-group-card'>
+                        <Row justify="space-around" align="middle">
+                            <Col span={12}>
+                                Languages: &nbsp;
+                                {
+                                    languages?                                <Select style={{width: 120}} size='large' value={currentLanguage.id}
+                                                                                      onChange={handleSelectLanguage}>
+                                        {languages.map(lang => <Option value={lang.id}>{lang.name}</Option>)}
+                                    </Select>:null
+                                }
 
-                        <Select style={{width: 120}} size='large' value={currentLanguage.id}
-                                onChange={handleSelectLanguage}>
-                            {languages.map(lang => <Option value={lang.id}>{lang.name}</Option>)}
-                        </Select>
+                            </Col>
+                            <Col align='right' span={12}>
+                                <Space>
+                                <Button icon={<ProfileOutlined />} size={'large'}>My Submissions</Button>
+                                <Button icon={<BarChartOutlined />} type='primary' size={'large'}>Leaderboard</Button>
+                                </Space>
+
+                            </Col>
+                        </Row>
+
                     </Card>
                     <div style={{position: 'relative', height: '88vh'}}>
                         <div style={{width: '100%', position: 'absolute'}}>
