@@ -25,11 +25,11 @@ const SubmissionDetail = ({contestId, queId, record})=>{
                 setTestcases(res.data.verdicts)
                 return res
             })
-            .then((res)=>{
+            .then(()=>{
                 setSubLoading(false)
             })
 
-
+    // eslint-disable-next-line
     },[])
 
     return <SubmitComponent testCases={testcases} submissionLoading={subLoading} passedTestCases={passedTestCases}/>

@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react'
-import {Button, Card, Input, Popconfirm, Space} from "antd";
+import {Button, Card, Input, message, Popconfirm, Space} from "antd";
 import {CaretRightOutlined, DownOutlined, LoadingOutlined, UpOutlined} from "@ant-design/icons";
 import RunOutputComponent from "./RunOutput.component";
 import SubmitComponent from "./Submit.component";
@@ -96,6 +96,18 @@ export default function RunSubmit(props) {
     }
 
     const handleRun = async (inputTC) => {
+        if(props.getCode() == ''){
+            message.error("Code cannot be blank!")
+            props.funcInputTC()
+            return
+        }
+
+        if(!props.getLang().id){
+            message.error("Select a language")
+            props.funcInputTC()
+            return
+        }
+
         setActiveTab('output')
         setOutputLoading(true)
 
@@ -121,6 +133,15 @@ export default function RunSubmit(props) {
 
 
     const handleSubmit = async () => {
+        if(props.getCode() == ''){
+            message.error("Code cannot be blank!")
+            return
+        }
+
+        if(!props.getLang().id){
+            message.error("Select a language")
+            return
+        }
         setActiveTab('submit')
         setSubmissionLoading(true)
 
