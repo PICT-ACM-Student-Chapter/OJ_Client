@@ -13,6 +13,9 @@ class GlobalProvider extends Component {
         contests: null,
         contest: null,
         contestID: null,
+        question: {},
+        questionID: null,
+        languages: []
 
     };
 
@@ -74,19 +77,80 @@ class GlobalProvider extends Component {
         }
     }
 
+    getAllLanguages = () => {
+        if (this.state.languages.length === 0) {
+            axios.get(`${process.env.REACT_APP_BASE_URL}/languages`)
+                .then(res => {
+                    this.setState({languages: res.data});
+
+                })
+        }
+    }
+
+    getQuestionDetail = async (questionId, setLoading, setTCsLoading, setCurrentLanguage) => {
+
+        if (this.state.question === {} || this.state.questionID !== questionId) {
+            const reqConfig = {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            }
+
+            try {
+                const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/questions/${questionId}`, reqConfig)
+
+                this.setState({question: res.data, questionID: questionId});
+                setLoading(false)
+
+                for (let i of res.data.test_cases) {
+                    const inpRes = await axios.get(i.input)
+                    i.input = inpRes.data
+                    const outRes = await axios.get(i.output)
+                    i.output = outRes.data
+                }
+
+                this.setState({question: res.data});
+                setTCsLoading(false)
+
+                if (localStorage.getItem('preferredLanguage')) {
+                    for (let i of this.state.languages)
+                        if (i.id === parseInt(localStorage.getItem('preferredLanguage'))) {
+                            setCurrentLanguage(i)
+                        }
+                } else
+                    setCurrentLanguage(this.state.languages[0])
+            } catch (e) {
+                console.log(e)
+            }
+        } else {
+            setLoading(false)
+            setTCsLoading(false)
+            if (localStorage.getItem('preferredLanguage')) {
+                for (let i of this.state.languages)
+                    if (i.id === parseInt(localStorage.getItem('preferredLanguage'))) {
+                        setCurrentLanguage(i)
+                    }
+            } else
+                setCurrentLanguage(this.state.languages[0])
+        }
+    }
 
     render() {
         const {children} = this.props;
-        const {contests, contest,} = this.state;
-        const {getContests, getContestDetail} = this;
+        const {contests, contest, languages, question} = this.state;
+        const {getContests, getContestDetail, getAllLanguages, getQuestionDetail} = this;
 
         return (
             <GlobalContext.Provider
                 value={{
                     contests,
                     contest,
+                    languages,
+                    question,
                     getContests,
-                    getContestDetail
+                    getContestDetail,
+                    getAllLanguages,
+                    getQuestionDetail
                 }}>
                 {" "}
                 {children}{" "}

@@ -33,6 +33,7 @@ const ContestDetail = (props) => {
 
     useEffect(() => {
         globalContext.getContestDetail(contestId, setStarted, setIsLoading)
+        globalContext.getAllLanguages()
         // eslint-disable-next-line
     }, [])
 

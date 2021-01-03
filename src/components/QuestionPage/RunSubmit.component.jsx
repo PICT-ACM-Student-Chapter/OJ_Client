@@ -96,13 +96,14 @@ export default function RunSubmit(props) {
     }
 
     const handleRun = async (inputTC) => {
-        if(props.getCode() == ''){
+        // eslint-disable-next-line
+        if (props.getCode() == '') {
             message.error("Code cannot be blank!")
             props.funcInputTC()
             return
         }
 
-        if(!props.getLang().id){
+        if (!props.getLang().id) {
             message.error("Select a language")
             props.funcInputTC()
             return
@@ -133,12 +134,13 @@ export default function RunSubmit(props) {
 
 
     const handleSubmit = async () => {
-        if(props.getCode() == ''){
+        // eslint-disable-next-line
+        if (props.getCode() == '') {
             message.error("Code cannot be blank!")
             return
         }
 
-        if(!props.getLang().id){
+        if (!props.getLang().id) {
             message.error("Select a language")
             return
         }
@@ -200,7 +202,7 @@ export default function RunSubmit(props) {
                   className='button-group-card' onTabChange={setActiveTab} activeTabKey={activeTab}
                   extra={
                       <Space style={{position: 'absolute', right: 16, zIndex: 10}}>
-                          <Button disabled={outputLoading} onClick={()=>handleRun(null)}>
+                          <Button disabled={outputLoading} onClick={() => handleRun(null)}>
                               {outputLoading ? <LoadingOutlined/> : <CaretRightOutlined/>}
                               Run
                           </Button>

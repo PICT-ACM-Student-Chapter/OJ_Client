@@ -7,61 +7,67 @@ import {Helmet} from "react-helmet";
 import {CaretRightOutlined, LeftOutlined, LoadingOutlined} from "@ant-design/icons";
 import SplitPane from "react-split-pane";
 import RunSubmit from "../../components/QuestionPage/RunSubmit.component";
-import axios from "axios";
 import MarkdownMathJaxComponent from "../../components/MarkdownMathJax.component";
+import GlobalContext from "../../context/GlobalContext";
 
 const {Option} = Select;
 
 function QuestionDetail(props) {
+
+    const globalContext = useContext((GlobalContext))
     const theme = useContext(ThemeContext)
     const [editor, setEditor] = useState(null);
     const [loading, setLoading] = useState(true);
     const [tcsLoading, setTCsLoading] = useState(true);
-    const [question, setQuestion] = useState({})
-    const [languages, setLanguages] = useState([])
+    // const [languages, setLanguages] = useState([])
     const [currentLanguage, setCurrentLanguage] = useState({})
     const [inputTC, setInputTC] = useState(null)
+
+    const {languages, getAllLanguages, getQuestionDetail, question} = globalContext
 
     let savedCodes = JSON.parse(localStorage.getItem(`codes${props.match.params.questionId}`) || '{}')
 
     useEffect(() => {
-        (async function () {
-            const reqConfig = {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
-            }
-
-            try {
-                const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/questions/${props.match.params.questionId}`, reqConfig)
-                console.log(res.data)
-
-                setQuestion(res.data)
-                setLoading(false)
-                for (let i of res.data.test_cases) {
-                    const inpRes = await axios.get(i.input)
-                    i.input = inpRes.data
-                    const outRes = await axios.get(i.output)
-                    i.output = outRes.data
-                }
-
-                setQuestion(res.data)
-                setTCsLoading(false)
-
-                const resLanguages = await axios.get(`${process.env.REACT_APP_BASE_URL}/languages`)
-                setLanguages(resLanguages.data)
-
-                if (localStorage.getItem('preferredLanguage')) {
-                    for (let i of resLanguages.data)
-                        if (i.id === parseInt(localStorage.getItem('preferredLanguage'))) {
-                            setCurrentLanguage(i)
-                        }
-                } else
-                    setCurrentLanguage(resLanguages.data[0])
-            } catch (e) {
-                console.log(e)
-            }
-        })()
+        getAllLanguages()
+        getQuestionDetail(props.match.params.questionId, setLoading, setTCsLoading, setCurrentLanguage)
+        // (async function () {
+        //     const reqConfig = {
+        //         headers: {
+        //             'Authorization': `Bearer ${localStorage.getItem('token')}`
+        //         }
+        //     }
+        //
+        //     try {
+        //         const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/questions/${props.match.params.questionId}`, reqConfig)
+        //         console.log(res.data)
+        //
+        //         setQuestion(res.data)
+        //         setLoading(false)
+        //         for (let i of res.data.test_cases) {
+        //             const inpRes = await axios.get(i.input)
+        //             i.input = inpRes.data
+        //             const outRes = await axios.get(i.output)
+        //             i.output = outRes.data
+        //         }
+        //
+        //         setQuestion(res.data)
+        //         setTCsLoading(false)
+        //
+        //         const resLanguages = await axios.get(`${process.env.REACT_APP_BASE_URL}/languages`)
+        //         setLanguages(resLanguages.data)
+        //
+        //         if (localStorage.getItem('preferredLanguage')) {
+        //             for (let i of resLanguages.data)
+        //                 if (i.id === parseInt(localStorage.getItem('preferredLanguage'))) {
+        //                     setCurrentLanguage(i)
+        //                 }
+        //         } else
+        //             setCurrentLanguage(resLanguages.data[0])
+        //     } catch (e) {
+        //         console.log(e)
+        //     }
+        // })()
+        // eslint-disable-next-line
     }, [props.match.params.questionId])
 
     useEffect(() => {
@@ -140,14 +146,18 @@ function QuestionDetail(props) {
 
                         <Skeleton loading={loading} paragraph={{rows: 20}} active/>
                         {!loading && <div>
-                                <MarkdownMathJaxComponent className='markdown'>{question.description}</MarkdownMathJaxComponent>
+                            <MarkdownMathJaxComponent
+                                className='markdown'>{question.description}</MarkdownMathJaxComponent>
                             <br/>
                             <Typography.Title level={3}>Input Format</Typography.Title>
-                            <MarkdownMathJaxComponent className='markdown'>{question.input_format}</MarkdownMathJaxComponent>
+                            <MarkdownMathJaxComponent
+                                className='markdown'>{question.input_format}</MarkdownMathJaxComponent>
                             <Typography.Title level={3}>Output Format</Typography.Title>
-                            <MarkdownMathJaxComponent className='markdown'>{question.output_format}</MarkdownMathJaxComponent>
+                            <MarkdownMathJaxComponent
+                                className='markdown'>{question.output_format}</MarkdownMathJaxComponent>
                             <Typography.Title level={3}>Constraints</Typography.Title>
-                            <MarkdownMathJaxComponent className='markdown'>{question.constraints}</MarkdownMathJaxComponent>
+                            <MarkdownMathJaxComponent
+                                className='markdown'>{question.constraints}</MarkdownMathJaxComponent>
                             <br/>
                             <Typography.Title level={3}>Sample Testcase(s)</Typography.Title>
                             {
