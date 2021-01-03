@@ -26,13 +26,13 @@ function QuestionDetail(props) {
     const [editor, setEditor] = useState(null);
     const [loading, setLoading] = useState(true);
     const [tcsLoading, setTCsLoading] = useState(true);
+    // eslint-disable-next-line
     const [started, setStarted] = useState(false)
 
-    // const [languages, setLanguages] = useState([])
     const [currentLanguage, setCurrentLanguage] = useState({})
     const [inputTC, setInputTC] = useState(null)
 
-    const {languages, getAllLanguages, getQuestionDetail, question} = globalContext
+    const {languages, getAllLanguages, getQuestionDetail, question, setIsContestLive} = globalContext
     const {contest} = globalContext
 
     let savedCodes = JSON.parse(localStorage.getItem(`codes${props.match.params.questionId}`) || '{}')
@@ -140,7 +140,9 @@ function QuestionDetail(props) {
                                 {
                                     contest ? <Card style={{width: '12rem'}} bodyStyle={{padding: '12px 24px'}}>
                                         <Countdown prefix={<HourglassOutlined/>} title="Time Left"
-                                                   value={contest.end_time}/>
+                                                   value={contest.end_time} onFinish={_ => {
+                                            setIsContestLive(false)
+                                        }}/>
                                         Ends: {new Date(contest.end_time).toLocaleTimeString()}
                                     </Card> : null
                                 }

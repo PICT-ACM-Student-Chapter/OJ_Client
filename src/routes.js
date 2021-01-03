@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext} from 'react';
 import {matchPath, Route, Switch} from 'react-router-dom';
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
@@ -14,7 +14,6 @@ import Footer from "./components/Footer/Footer";
 import Home from "./pages/Home/index"
 import GlobalContext from "./context/GlobalContext";
 import {useLocation} from "react-router";
-import axios from "axios";
 import Error403 from "./pages/403.page";
 import Error404 from "./pages/404.page";
 import Error500 from "./pages/500.page";
@@ -79,9 +78,9 @@ const Routes = (props) => {
                     {/*<Route  component={Error404}/>*/}
                 </ProLayout>
             </Switch>}
-            {apiError === 403 && <Error403 message={apiErrorMsg} />}
-            {apiError === 404 && <Error404 message={apiErrorMsg} />}
-            {apiError === 500 && <Error500 message={apiErrorMsg} />}
+            {apiError === 403 && <Error403 message={apiErrorMsg}/>}
+            {apiError === 404 && <Error404 message={apiErrorMsg}/>}
+            {apiError === 500 && <Error500 message={apiErrorMsg}/>}
         </>
     )
 
