@@ -23,8 +23,7 @@ const GlobalHeaderRight = (props) => {
 
                 } else {
                     axios.post(process.env.REACT_APP_BASE_URL + '/auth/jwt/verify', {"token": (localStorage.getItem('refresh-token'))})
-                        .catch(err => {
-                            console.log(err, '==================Line 14==================')
+                        .catch(_ => {
                             userContext.dispose()
                             const path = history.location.pathname
                             history.push(`/login?redirect=${path}`)
@@ -57,10 +56,10 @@ const GlobalHeaderRight = (props) => {
                 })
 
                 // eslint-disable-next-line
-            }, [userContext]
+            }, []
         )
 
-        const logout = ()=>{
+        const logout = () => {
             userContext.dispose()
             history.push('/login')
 
@@ -110,7 +109,7 @@ const GlobalHeaderRight = (props) => {
                         <Space>
 
                             <Avatar size='medium' style={{backgroundColor: '#87d068', cursor: 'pointer'}}
-                                    icon={<Gravatar email={userContext.user && userContext.user.email} />}/>
+                                    icon={<Gravatar email={userContext.user && userContext.user.email}/>}/>
                             <span style={{color: 'white'}}>{userContext.user && userContext.user.username}</span>
                         </Space>
                     </Dropdown></div>

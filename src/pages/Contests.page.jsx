@@ -1,31 +1,23 @@
-import React, {useEffect, useState} from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import {Button, Card, Divider, Image, List, Row, Skeleton, Typography} from 'antd'
 import Meta from 'antd/lib/card/Meta';
-import axios from 'axios';
 import {parseDate} from "../utils/utils";
 import {ClockCircleOutlined, EnterOutlined} from '@ant-design/icons'
 import './contests.page.css'
+import GlobalContext from "../context/GlobalContext";
+
 const {Title} = Typography;
 
 
 function Contests(props) {
+
+    const globalContext = useContext(GlobalContext)
+
     const [isLoading, setIsLoading] = useState(true)
-    const [data, setData] = useState([{}, {}, {}, {}])
+
     useEffect(() => {
-        // Update the document title using the browser API
-        axios.get(`${process.env.REACT_APP_BASE_URL}/contests`, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        }).then(
-            (res) => {
-                setData(res.data)
-            }
-        ).then(() => {
-            setIsLoading(false)
-
-        })
-
+        globalContext.getContests(setIsLoading)
+        // eslint-disable-next-line
     }, []);
 
     async function handleEnterContest(contest) {
@@ -51,7 +43,7 @@ function Contests(props) {
                     padding: '1% 2%'
                 }}
                 rowKey='id'
-                dataSource={data}
+                dataSource={globalContext.contests !== null ? globalContext.contests : [{}, {}, {}, {}]}
                 renderItem={item => (
                     <List.Item key={item.id}>
                         <Card
@@ -76,7 +68,7 @@ function Contests(props) {
                             </>}
                             <Row align={'center'}>
                                 <Button
-                                    disabled={isLoading  || ( !isLoading && (new Date(item.contest_id.start_time) > new Date() || new Date(item.contest_id.end_time) < new Date()))}
+                                    disabled={isLoading || (!isLoading && (new Date(item.contest_id.start_time) > new Date() || new Date(item.contest_id.end_time) < new Date()))}
                                     onClick={() => handleEnterContest(item)}
                                     icon={<EnterOutlined/>} type="primary">Enter</Button>
                             </Row>

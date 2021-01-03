@@ -13,6 +13,7 @@ import MarkdownMathJaxComponent from "../../components/MarkdownMathJax.component
 
 import {Helmet} from "react-helmet";
 import UserContext from "../../context/User";
+import GlobalContext from "../../context/GlobalContext";
 
 const {TabPane} = Tabs;
 const {Countdown} = Statistic;
@@ -21,15 +22,17 @@ const {Title} = Typography
 
 const ContestDetail = (props) => {
     const userContext = useContext(UserContext);
-
+    const globalContext = useContext(GlobalContext)
     let {contestId} = useParams();
     const [isLoading, setIsLoading] = useState(true)
-    const [contest, setContest] = useState(null)
+    // const [contest, setContest] = useState(null)
     const [started, setStarted] = useState(false)
     const [questions, setQuestions] = useState([])
 
+    const {contest} = globalContext
+
     useEffect(() => {
-        getContestDetail()
+        globalContext.getContestDetail(contestId, setStarted, setIsLoading)
         // eslint-disable-next-line
     }, [])
 
@@ -45,29 +48,6 @@ const ContestDetail = (props) => {
             })
         }
     }, [started, contestId])
-
-    const getContestDetail = () => {
-        axios.get(`${process.env.REACT_APP_BASE_URL}/contests/${contestId}`, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        }).then(
-            (res) => {
-                console.log(res.data)
-                res.data.questions = []
-                setContest(res.data)
-                if (res.data.status === 'STARTED') {
-                    setStarted(true)
-                }
-            }
-        )
-            .then(() => {
-                setIsLoading(false)
-            })
-            .catch(err => {
-                console.log(err)
-            })
-    }
 
     async function startContest() {
         await axios.patch(`${process.env.REACT_APP_BASE_URL}/contests/${contest.id}/start`, {}, {
@@ -96,7 +76,8 @@ const ContestDetail = (props) => {
                         <Col span={12} align='right'>
                             <Row align='right'>
                                 <Col span={16}>
-                                    {userContext.rank && <Card style={{width: '12rem'}} bodyStyle={{padding: '12px 24px'}}>
+                                    {userContext.rank &&
+                                    <Card style={{width: '12rem'}} bodyStyle={{padding: '12px 24px'}}>
                                         <div className={'ant-statistic'}>
                                             <div className={'ant-statistic-title'}>
                                                 Current Rank
@@ -110,7 +91,7 @@ const ContestDetail = (props) => {
                                                     {userContext.rank}
                                                 </div>
                                             </div>
-                                            Score: {contest.user_score}/{contest.max_score}
+                                            Score: {userContext.score}/{contest.max_score}
                                         </div>
                                     </Card>}
                                 </Col>
