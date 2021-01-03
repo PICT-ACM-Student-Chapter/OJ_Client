@@ -1,10 +1,16 @@
 import React, {useContext, useEffect, useState} from 'react'
-import {Button, Card, Col, Row, Select, Skeleton, Space, Spin, Typography, Statistic} from "antd";
+import {Button, Card, Col, Row, Select, Skeleton, Space, Spin, Statistic, Typography} from "antd";
 import Editor from "@monaco-editor/react";
 import ThemeContext from "../../context/ThemeContext";
 import './QuestionDetail.style.css'
 import {Helmet} from "react-helmet";
-import {CaretRightOutlined, HourglassOutlined, ProfileOutlined, LoadingOutlined, BarChartOutlined} from "@ant-design/icons";
+import {
+    BarChartOutlined,
+    CaretRightOutlined,
+    HourglassOutlined,
+    LoadingOutlined,
+    ProfileOutlined
+} from "@ant-design/icons";
 import SplitPane from "react-split-pane";
 import RunSubmit from "../../components/QuestionPage/RunSubmit.component";
 import MarkdownMathJaxComponent from "../../components/MarkdownMathJax.component";
@@ -34,7 +40,7 @@ function QuestionDetail(props) {
     useEffect(() => {
         getAllLanguages()
         getQuestionDetail(props.match.params.questionId, setLoading, setTCsLoading, setCurrentLanguage)
-        globalContext.getContestDetail(props.match.params.contestId, setStarted, setLoading)
+        globalContext.getContestDetail(props.match.params.contestId, setStarted, setStarted)
 
         // (async function () {
         //     const reqConfig = {
@@ -126,20 +132,20 @@ function QuestionDetail(props) {
                        style={{position: "relative", width: '100%', height: '88vh', overflowY: 'hidden'}}>
                 <div>
                     <Card className='question-card' title={
-                            <Row justify="space-around" align="middle">
-                                <Col span={16}>
-                                    <Typography.Title>{question.name || ''}</Typography.Title>
-                                </Col>
-                                <Col align='right' span={8}>
-                                    {
-                                        contest?<Card style={{width: '12rem'}} bodyStyle={{padding: '12px 24px'}}>
-                                            <Countdown prefix={<HourglassOutlined/>} title="Time Left"
-                                                       value={contest.end_time}/>
-                                            Ends: {new Date(contest.end_time).toLocaleTimeString()}
-                                        </Card>:null
-                                    }
-                                </Col>
-                            </Row>
+                        <Row justify="space-around" align="middle">
+                            <Col span={16}>
+                                <Typography.Title>{question.name || ''}</Typography.Title>
+                            </Col>
+                            <Col align='right' span={8}>
+                                {
+                                    contest ? <Card style={{width: '12rem'}} bodyStyle={{padding: '12px 24px'}}>
+                                        <Countdown prefix={<HourglassOutlined/>} title="Time Left"
+                                                   value={contest.end_time}/>
+                                        Ends: {new Date(contest.end_time).toLocaleTimeString()}
+                                    </Card> : null
+                                }
+                            </Col>
+                        </Row>
                     }>
 
                         <Skeleton loading={loading} paragraph={{rows: 20}} active/>
@@ -202,17 +208,18 @@ function QuestionDetail(props) {
                             <Col span={12}>
                                 Languages: &nbsp;
                                 {
-                                    languages?                                <Select style={{width: 120}} size='large' value={currentLanguage.id}
-                                                                                      onChange={handleSelectLanguage}>
+                                    languages ? <Select style={{width: 120}} size='large' value={currentLanguage.id}
+                                                        onChange={handleSelectLanguage}>
                                         {languages.map(lang => <Option value={lang.id}>{lang.name}</Option>)}
-                                    </Select>:null
+                                    </Select> : null
                                 }
 
                             </Col>
                             <Col align='right' span={12}>
                                 <Space>
-                                <Button icon={<ProfileOutlined />} size={'large'}>My Submissions</Button>
-                                <Button icon={<BarChartOutlined />} type='primary' size={'large'}>Leaderboard</Button>
+                                    <Button icon={<ProfileOutlined/>} size={'large'}>My Submissions</Button>
+                                    <Button icon={<BarChartOutlined/>} type='primary'
+                                            size={'large'}>Leaderboard</Button>
                                 </Space>
 
                             </Col>
