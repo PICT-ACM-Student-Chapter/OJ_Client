@@ -1,5 +1,5 @@
 import {Button, Col, Row, Space, Table, Tag, Typography} from 'antd'
-import React, {useEffect, useState} from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import axios from "axios";
 import Modal from "antd/es/modal/Modal";
 import SyntaxHighlighter from 'react-syntax-highlighter';
@@ -9,6 +9,7 @@ import {useLocation} from "react-router";
 import {ForkOutlined} from "@ant-design/icons";
 import "./Submission.css"
 import SubmissionDetail from "./SubmissionDetail.component";
+import GlobalContext from "../../context/GlobalContext";
 
 const statusColor = {
     'AC': 'green',
@@ -40,11 +41,13 @@ function Submissions(props) {
     const [submissions, setSubmissions] = useState([])
     const [visible, setVisible] = useState(false);
     const [code, setCode] = useState(null)
-    const [lang, setLang] = useState([])
     const [codeLang, setCodeLang] = useState({})
+    const globalContext = useContext(GlobalContext)
+    const {languages} = globalContext
 
     useEffect(() => {
-        getLanguages();
+        globalContext.getAllLanguages();
+
         // setSubmissions(submitResponse)
         // generateData(submitResponse)
         // eslint-disable-next-line
@@ -56,7 +59,7 @@ function Submissions(props) {
         // setSubmissions(submitResponse)
         // generateData(submitResponse)
         // eslint-disable-next-line
-    }, [lang]);
+    }, [languages]);
 
     const onClickView = (record) => {
         console.log(record)
@@ -161,14 +164,11 @@ function Submissions(props) {
             })
     }
 
-    const getLanguages = async () => {
-        const resLanguages = await axios.get(`${process.env.REACT_APP_BASE_URL}/languages`)
-        setLang(resLanguages.data)
-    }
+
 
     const getLangfromId = (id) => {
-        if (lang) {
-            for (let i of lang) {
+        if (languages) {
+            for (let i of languages) {
                 if (i.id === id)
                     return i
             }
