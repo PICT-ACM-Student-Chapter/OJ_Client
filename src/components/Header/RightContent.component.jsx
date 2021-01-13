@@ -91,17 +91,9 @@ const GlobalHeaderRight = (props) => {
                 <div>
                     <Dropdown overlay={() => (
                         <Menu selectedKeys={[]}>
-                            <Menu.Item key="center">
-                                <UserOutlined/>
-                                Profile
-                            </Menu.Item>
                             <Menu.Item key="theme" onClick={toggleDarkMode}>
                                 <RetweetOutlined/>
                                 Toggle Theme
-                            </Menu.Item>
-                            <Menu.Item key="settings">
-                                <SettingOutlined/>
-                                Account Settings
                             </Menu.Item>
                             <Menu.Divider/>
                             <Menu.Item key="logout" onClick={logout}>

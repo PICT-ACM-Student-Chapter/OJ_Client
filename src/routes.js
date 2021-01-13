@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {matchPath, Route, Switch} from 'react-router-dom';
+import {Link, matchPath, Route, Switch} from 'react-router-dom';
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
 import Contests from './pages/Contests.page';
@@ -63,8 +63,9 @@ const Routes = (props) => {
             {!apiError && <Switch>
                 <Route exact path="/" component={Home}/>
                 <ProLayout
-                    title="PASC OJ"
-                    logo="https://pict.acm.org/radiance/img/PASC-W2.png"
+                    title="PASC Online Judge"
+                    logo={<Link to={'/contests'}><img style={{width: "auto"}}
+                                                      src={"https://pict.acm.org/assets/images/navbar/Logo-name.png"}/></Link>}
                     layout="top"
                     fixedHeader="true"
                     rightContentRender={() => <GlobalHeaderRight/>}

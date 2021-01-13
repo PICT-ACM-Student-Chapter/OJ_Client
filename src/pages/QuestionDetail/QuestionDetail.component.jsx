@@ -15,6 +15,7 @@ import SplitPane from "react-split-pane";
 import RunSubmit from "../../components/QuestionPage/RunSubmit.component";
 import MarkdownMathJaxComponent from "../../components/MarkdownMathJax.component";
 import GlobalContext from "../../context/GlobalContext";
+import {Link} from "react-router-dom";
 
 const {Option} = Select;
 const {Countdown} = Statistic;
@@ -41,44 +42,6 @@ function QuestionDetail(props) {
         getAllLanguages()
         getQuestionDetail(props.match.params.questionId, setLoading, setTCsLoading, setCurrentLanguage)
         globalContext.getContestDetail(props.match.params.contestId, setStarted, setStarted)
-
-        // (async function () {
-        //     const reqConfig = {
-        //         headers: {
-        //             'Authorization': `Bearer ${localStorage.getItem('token')}`
-        //         }
-        //     }
-        //
-        //     try {
-        //         const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/questions/${props.match.params.questionId}`, reqConfig)
-        //         console.log(res.data)
-        //
-        //         setQuestion(res.data)
-        //         setLoading(false)
-        //         for (let i of res.data.test_cases) {
-        //             const inpRes = await axios.get(i.input)
-        //             i.input = inpRes.data
-        //             const outRes = await axios.get(i.output)
-        //             i.output = outRes.data
-        //         }
-        //
-        //         setQuestion(res.data)
-        //         setTCsLoading(false)
-        //
-        //         const resLanguages = await axios.get(`${process.env.REACT_APP_BASE_URL}/languages`)
-        //         setLanguages(resLanguages.data)
-        //
-        //         if (localStorage.getItem('preferredLanguage')) {
-        //             for (let i of resLanguages.data)
-        //                 if (i.id === parseInt(localStorage.getItem('preferredLanguage'))) {
-        //                     setCurrentLanguage(i)
-        //                 }
-        //         } else
-        //             setCurrentLanguage(resLanguages.data[0])
-        //     } catch (e) {
-        //         console.log(e)
-        //     }
-        // })()
         // eslint-disable-next-line
     }, [props.match.params.questionId])
 
@@ -188,7 +151,6 @@ function QuestionDetail(props) {
 
                                                     <Card className='test-case-card' type="inner" loading={tcsLoading}
                                                           title={<Typography.Title level={4}>Output</Typography.Title>}
-                                                        // extra={<a href="#">Copy</a>}
                                                     >
                                                         <pre>{output}</pre>
                                                     </Card>
@@ -219,9 +181,9 @@ function QuestionDetail(props) {
                             </Col>
                             <Col align='right' span={12}>
                                 <Space>
-                                    <Button icon={<ProfileOutlined/>} size={'large'}>My Submissions</Button>
-                                    <Button icon={<BarChartOutlined/>} type='primary'
-                                            size={'large'}>Leaderboard</Button>
+                                    <Link to={`${window.location.pathname}/submissions`}><Button icon={<ProfileOutlined/>} size={'medium'}>My Submissions</Button></Link>
+                                    <Link to={`/leaderboard/${props.match.params.contestId}`}><Button icon={<BarChartOutlined/>} type='primary'
+                                                          size={'medium'}>Leaderboard</Button></Link>
                                 </Space>
 
                             </Col>
