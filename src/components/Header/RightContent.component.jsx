@@ -1,5 +1,5 @@
 import {Avatar, Dropdown, Menu, Space} from 'antd';
-import {LogoutOutlined, RetweetOutlined, SettingOutlined, UserOutlined} from '@ant-design/icons';
+import {LogoutOutlined, RetweetOutlined} from '@ant-design/icons';
 import React, {useContext, useEffect} from "react";
 import {useThemeSwitcher} from 'react-css-theme-switcher';
 import ThemeContext from "../../context/ThemeContext";
@@ -26,7 +26,7 @@ const GlobalHeaderRight = (props) => {
                         .catch(_ => {
                             userContext.dispose()
                             const path = history.location.pathname
-                            if(path !== "/login")
+                            if (path !== "/login")
                                 history.push(`/login?redirect=${path}`)
 
                             return
@@ -41,7 +41,7 @@ const GlobalHeaderRight = (props) => {
                         return
                     } else {
                         axios.post(process.env.REACT_APP_BASE_URL + '/auth/jwt/verify', {"token": (localStorage.getItem('refresh-token'))})
-                            .then(()=>{
+                            .then(() => {
 
                             })
                             .catch(err => {
@@ -83,7 +83,7 @@ const GlobalHeaderRight = (props) => {
             }
         };
         const path = history.location.pathname
-// console.log(path)
+
         if (path === '/' || path === '/login')
             return <div/>
         else

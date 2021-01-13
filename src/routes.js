@@ -65,7 +65,7 @@ const Routes = (props) => {
                 <ProLayout
                     title="PASC Online Judge"
                     logo={<Link to={'/contests'}><img style={{width: "auto"}}
-                                                      src={"https://pict.acm.org/assets/images/navbar/Logo-name.png"}/></Link>}
+                                                      src={"https://pict.acm.org/assets/images/navbar/Logo-name.png"} alt={"Logo"}/></Link>}
                     layout="top"
                     fixedHeader="true"
                     rightContentRender={() => <GlobalHeaderRight/>}
