@@ -12,6 +12,8 @@ const refreshAuthLogic = (failedRequest) => {
             console.log(failedRequest.response, '------Utils--------')
             failedRequest.response.config.headers['Authorization'] = 'Bearer ' + tokenRefreshResponse.data.access;
             return Promise.resolve();
+        }).catch(()=>{
+            return Promise.reject("any")
         })
 
 }

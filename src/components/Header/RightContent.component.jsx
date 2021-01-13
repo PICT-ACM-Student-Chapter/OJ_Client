@@ -18,7 +18,7 @@ const GlobalHeaderRight = (props) => {
 
         useEffect(() => {
                 const pathLogin = history.location.pathname
-                if (pathLogin === '/' || pathLogin === '/login') {
+                if (pathLogin === '/') {
                     console.log(pathLogin, "--------Line 21 header---------")
 
                 } else {
@@ -26,7 +26,8 @@ const GlobalHeaderRight = (props) => {
                         .catch(_ => {
                             userContext.dispose()
                             const path = history.location.pathname
-                            history.push(`/login?redirect=${path}`)
+                            if(path !== "/login")
+                                history.push(`/login?redirect=${path}`)
 
                             return
                         })
@@ -40,6 +41,9 @@ const GlobalHeaderRight = (props) => {
                         return
                     } else {
                         axios.post(process.env.REACT_APP_BASE_URL + '/auth/jwt/verify', {"token": (localStorage.getItem('refresh-token'))})
+                            .then(()=>{
+
+                            })
                             .catch(err => {
                                 localStorage.setItem('refresh-token', null)
                                 localStorage.setItem('token', null)
