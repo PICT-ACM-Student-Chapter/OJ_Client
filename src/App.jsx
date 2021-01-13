@@ -6,6 +6,7 @@ import {ThemeProvider} from './context/ThemeContext'
 import UserContext from "./context/User";
 import jwt_decode from "jwt-decode";
 import GlobalContext from "./context/GlobalContext";
+import {useHistory} from "react-router";
 
 
 function App() {
@@ -16,8 +17,15 @@ function App() {
     useEffect(() => {
 
         if (localStorage.getItem("token")) {
-            let decoded = jwt_decode(localStorage.getItem("token"));
-            userContext.loadUser(decoded.user_id);
+            try {
+                let decoded = jwt_decode(localStorage.getItem("token"));
+                userContext.loadUser(decoded.user_id);
+            } catch (e){
+                localStorage.removeItem("token")
+                localStorage.removeItem("refresh-token")
+                const location = window.location
+                location.pathname = `/login?redirect=${location.pathname}`
+            }
         }
         // eslint-disable-next-line
     }, []);
