@@ -23,23 +23,21 @@ const Routes = (props) => {
 
     const globalContext = useContext(GlobalContext)
     const location = useLocation()
+    const [contestStatus, setContestStatus] = React.useState(null)
 
     const {apiError, apiErrorMsg} = globalContext;
+    const match = matchPath(location.pathname, {
+        path: "/contests/:contestId",
+        exact: false
+    })
 
-    // axios.interceptors.response.use((res)=>{
-    //     setApiError(null)
-    //     setApiErrorMsg('')
-    //     return res;
-    // }, function (error) {
-    //     const statusCode = error.response ? error.response.status : null;
-    //
-    //     if(statusCode) {
-    //         setApiError(statusCode)
-    //         setApiErrorMsg(error?.response?.data?.detail)
-    //     }
-    //
-    //     return Promise.reject(error);
-    // })
+    React.useEffect(() => {
+        if (globalContext.contests && match) {
+            const contestId = match.params.contestId
+            setContestStatus(checkContest(contestId))
+        }
+        // eslint-disable-next-line
+    }, [globalContext.contests, location.pathname, match])
 
     const checkContest = (contestId) => {
         /*
@@ -59,11 +57,6 @@ const Routes = (props) => {
         }
         return -2;
     }
-
-    const match = matchPath(location.pathname, {
-        path: "/contests/:contestId",
-        exact: false
-    })
 
     return (
         <>
@@ -85,16 +78,16 @@ const Routes = (props) => {
                 >
                     <Route exact path="/login" component={Login}/>
                     <Route exact path="/register" component={Register}/>
-                    {match && checkContest(match.params.contestId) === 0 ? <>
+                    {contestStatus === 0 ? <>
                         <Route exact path="/contests/:contestId" component={ContestDetail}/>
                         <Route exact path="/contests/:contestId/:questionId" component={QuestionDetail}/>
                         <Route exact path="/contests/:contestId/:questionId/submissions" component={Submissions}/>
                     </> : <>
-                        {match && checkContest(match.params.contestId) === 1 &&
+                        {contestStatus === 1 &&
                         <ContestOverPage contestId={match.params.contestId}/>}
-                        {match && checkContest(match.params.contestId) === -1 &&
+                        {contestStatus === -1 &&
                         <Error403 contestId={match.params.contestId}/>}
-                        {match && checkContest(match.params.contestId) === -2 &&
+                        {contestStatus === -2 &&
                         <Error404 contestId={match.params.contestId}/>}
                     </>}
                     <Route exact path="/contests" component={Contests}/>

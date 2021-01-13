@@ -6,7 +6,6 @@ import {ThemeProvider} from './context/ThemeContext'
 import UserContext from "./context/User";
 import jwt_decode from "jwt-decode";
 import GlobalContext from "./context/GlobalContext";
-import {useHistory} from "react-router";
 
 
 function App() {
