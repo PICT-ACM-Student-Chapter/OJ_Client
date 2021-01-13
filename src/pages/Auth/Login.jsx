@@ -6,10 +6,12 @@ import axios from 'axios'
 import * as queryString from "query-string";
 import jwt_decode from "jwt-decode";
 import UserContext from "../../context/User";
+import GlobalContext from "../../context/GlobalContext";
 
 
 const Login = (props) => {
     const userContext = useContext(UserContext);
+    const globalContext = useContext(GlobalContext);
 
     const [errors, setErrors] = React.useState('')
     const [status, setStatus] = React.useState('')
@@ -28,6 +30,8 @@ const Login = (props) => {
             userContext.loadUser(decoded.user_id)
 
             message.success('Login Successful !!');
+
+            globalContext.getContests(()=>{})
 
             const qs = queryString.parse(props.history.location.search);
             if (qs.redirect) {

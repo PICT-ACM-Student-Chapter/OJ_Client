@@ -11,6 +11,7 @@ class GlobalProvider extends Component {
     // Context state
     state = {
         contests: null,
+        isContestsLoading: true,
         contest: null,
         contestID: null,
         question: {},
@@ -21,7 +22,8 @@ class GlobalProvider extends Component {
         apiErrorMsg: ''
     };
 
-    getContests = (setIsLoading) => {
+    getContests = () => {
+        this.setState({isContestsLoading: true});
         if (this.state.contests === null) {
             axios.get(`${process.env.REACT_APP_BASE_URL}/contests`, {
                 headers: {
@@ -29,13 +31,11 @@ class GlobalProvider extends Component {
                 }
             }).then(
                 (res) => {
-                    this.setState({contests: res.data});
+                    this.setState({contests: res.data, isContestsLoading: false});
                 }
-            ).then(() => {
-                setIsLoading(false)
-            })
+            )
         } else {
-            setIsLoading(false)
+            this.setState({isContestsLoading: false});
         }
     }
 
@@ -151,13 +151,14 @@ class GlobalProvider extends Component {
 
     render() {
         const {children} = this.props;
-        const {contests, contest, languages, question, isContestLive, apiError, apiErrorMsg} = this.state;
+        const {contests, contest, languages, question, isContestLive, apiError, apiErrorMsg, isContestsLoading} = this.state;
         const {getContests, getContestDetail, getAllLanguages, getQuestionDetail, setIsContestLive, setApiError, setApiErrorMsg} = this;
 
         return (
             <GlobalContext.Provider
                 value={{
                     contests,
+                    isContestsLoading,
                     contest,
                     languages,
                     question,

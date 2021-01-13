@@ -40,6 +40,26 @@ const Routes = (props) => {
     //
     //     return Promise.reject(error);
     // })
+
+    const checkContest = (contestId) => {
+        /*
+        Returns :
+        0: Contest started
+        1: Contest ended
+        -1: Contest not started
+        -2: Invalid contest
+         */
+        for (let c of globalContext.contests) {
+            if (c.contest_id?.id === contestId && new Date(c.contest_id.end_time) < new Date())
+                return 1;
+            if (c.contest_id?.id === contestId && new Date(c.contest_id.start_time) > new Date())
+                return -1;
+            if (c.contest_id?.id === contestId)
+                return 0;
+        }
+        return -2;
+    }
+
     const match = matchPath(location.pathname, {
         path: "/contests/:contestId",
         exact: false
@@ -65,12 +85,17 @@ const Routes = (props) => {
                 >
                     <Route exact path="/login" component={Login}/>
                     <Route exact path="/register" component={Register}/>
-                    {globalContext.isContestLive ? <>
+                    {match && checkContest(match.params.contestId) === 0 ? <>
                         <Route exact path="/contests/:contestId" component={ContestDetail}/>
                         <Route exact path="/contests/:contestId/:questionId" component={QuestionDetail}/>
                         <Route exact path="/contests/:contestId/:questionId/submissions" component={Submissions}/>
                     </> : <>
-                        {match && <ContestOverPage contestId={match.params.contestId}/>}
+                        {match && checkContest(match.params.contestId) === 1 &&
+                        <ContestOverPage contestId={match.params.contestId}/>}
+                        {match && checkContest(match.params.contestId) === -1 &&
+                        <Error403 contestId={match.params.contestId}/>}
+                        {match && checkContest(match.params.contestId) === -2 &&
+                        <Error404 contestId={match.params.contestId}/>}
                     </>}
                     <Route exact path="/contests" component={Contests}/>
                     <Route exact path="/leaderboard/:contestId" component={LeaderBoard}/>
