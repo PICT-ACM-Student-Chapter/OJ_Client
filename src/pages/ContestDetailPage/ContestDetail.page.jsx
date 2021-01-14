@@ -25,17 +25,31 @@ const ContestDetail = (props) => {
     const globalContext = useContext(GlobalContext)
     let {contestId} = useParams();
     const [isLoading, setIsLoading] = useState(true)
+    const [isQueLoading, setIsQueLoading] = useState(true)
     // const [contest, setContest] = useState(null)
     const [started, setStarted] = useState(false)
     const [questions, setQuestions] = useState([])
 
     const {contest, setIsContestLive} = globalContext
-
     useEffect(() => {
-        globalContext.getContestDetail(contestId, setStarted, setIsLoading)
+        globalContext.getContestDetail(contestId, setIsLoading)
         globalContext.getAllLanguages()
+
         // eslint-disable-next-line
     }, [])
+
+    useEffect(()=>{
+        let contests = globalContext.contests
+        for (let c of contests){
+            if(c.contest_id.id === contestId){
+                if (c.status === 'STARTED'){
+                    setStarted(true)
+                }
+                break;
+            }
+        }
+
+    },[globalContext.contests,contestId])
 
     useEffect(() => {
         if (started) {
@@ -44,19 +58,38 @@ const ContestDetail = (props) => {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }
             }).then(res => {
-                console.log(res.data)
-                setQuestions(res.data)
+                let ques = res.data
+                ques.sort((a, b) => parseInt(a.contest_que.order) - parseInt(b.contest_que.order))
+                setQuestions(ques)
+                return ques
             })
+                .then(ques=>{
+                    setIsQueLoading(false)
+                    }
+                )
         }
-    }, [started, contestId])
+    }, [started,contestId])
 
     async function startContest() {
-        await axios.patch(`${process.env.REACT_APP_BASE_URL}/contests/${contest.id}/start`, {}, {
+        const res =await axios.patch(`${process.env.REACT_APP_BASE_URL}/contests/${contest.id}/start`, {}, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
         })
-        setStarted(true)
+
+        if (res.data.status === 'STARTED'){
+            let contests = globalContext.contests
+            console.log('sdfdsfdf',contests)
+            for (let c of contests){
+                if(c.contest_id.id === contest.id){
+                    c.status = 'STARTED'
+                    await globalContext.setContests(contests)
+                    break
+                }
+            }
+            console.log('sdfdfdf',contests)
+            setStarted(true)
+        }
     }
 
     return (
@@ -66,10 +99,8 @@ const ContestDetail = (props) => {
                 <title>{`${isLoading ? 'Loading Contest...' : contest.name} - PASC OJ`}</title>
                 <link rel="canonical" href="http://mysite.com/example"/>
             </Helmet>
-            {isLoading ?
-                <ProSkeleton key={1}/> :
-
-                <div style={{'padding': '2% 4%'}}>
+            {
+                isLoading?"": <div style={{'padding': '2% 4%'}}>
                     <Row gutter={[0, 24]}>
                         <Col span={12}>
                             <Title>{contest.name}</Title>
@@ -127,52 +158,52 @@ const ContestDetail = (props) => {
 
                                 <Tabs size='large' type="card">
                                     <TabPane tab="Questions" key="1" style={{'padding': '4%'}}>
-
-                                        {questions.map((ques) => (
-                                            <Row key={ques.id} gutter={[0, 18]} align="middle"
-                                                 justify="center">
-                                                <Col span={24}>
-                                                    <Card bordered={false}>
-                                                        <Row align="middle">
-                                                            <Col lg={12} onClick={() => {
-                                                                props.history.push(`/contests/${contestId}/${ques.id}`)
-                                                            }}>
-                                                                <h2><Link
-                                                                    to={`/contests/${contestId}/${ques.id}`}> {ques.name}</Link>
-                                                                </h2>
-                                                            </Col>
-                                                            <Col lg={12} align={'right'}>
-                                                                <Space size={'middle'}>
-                                                                    <Tag
-                                                                        color={ques.user_score.score === ques.score ? 'green' : 'blue'}
-                                                                        style={{
-                                                                            'fontSize': 'larger',
-                                                                            padding: '0.4rem'
-                                                                        }}>
-                                                                        Score: {ques.user_score.score} / {ques.score}
-                                                                    </Tag>
-                                                                    <Link
-                                                                        to={`/contests/${contestId}/${ques.id}`}>
-                                                                        <Button size='large' type={'primary'}>
-                                                                            Solve
-                                                                        </Button>
-                                                                    </Link>
-                                                                    <Link
-                                                                        to={`/contests/${contestId}/${ques.id}/submissions?name=${ques.name}`}>
-                                                                        <Button size='large'>
-                                                                            My Submissions
-                                                                        </Button>
-                                                                    </Link>
-                                                                </Space>
-                                                            </Col>
-                                                        </Row>
-                                                    </Card>
-                                                </Col>
-                                                <br/>
-                                            </Row>
-                                        ))}
-
-
+                                        {
+                                            isQueLoading ? <ProSkeleton/>:
+                                                questions.map((ques) => (
+                                                    <Row key={ques.id} gutter={[0, 18]} align="middle"
+                                                         justify="center">
+                                                        <Col span={24}>
+                                                            <Card bordered={false}>
+                                                                <Row align="middle">
+                                                                    <Col lg={12} onClick={() => {
+                                                                        props.history.push(`/contests/${contestId}/${ques.id}`)
+                                                                    }}>
+                                                                        <h2><Link
+                                                                            to={`/contests/${contestId}/${ques.id}`}> {ques.name}</Link>
+                                                                        </h2>
+                                                                    </Col>
+                                                                    <Col lg={12} align={'right'}>
+                                                                        <Space size={'middle'}>
+                                                                            <Tag
+                                                                                color={ques.user_score.score === ques.score ? 'green' : 'blue'}
+                                                                                style={{
+                                                                                    'fontSize': 'larger',
+                                                                                    padding: '0.4rem'
+                                                                                }}>
+                                                                                Score: {ques.user_score.score} / {ques.score}
+                                                                            </Tag>
+                                                                            <Link
+                                                                                to={`/contests/${contestId}/${ques.id}`}>
+                                                                                <Button size='large' type={'primary'}>
+                                                                                    Solve
+                                                                                </Button>
+                                                                            </Link>
+                                                                            <Link
+                                                                                to={`/contests/${contestId}/${ques.id}/submissions?name=${ques.name}`}>
+                                                                                <Button size='large'>
+                                                                                    My Submissions
+                                                                                </Button>
+                                                                            </Link>
+                                                                        </Space>
+                                                                    </Col>
+                                                                </Row>
+                                                            </Card>
+                                                        </Col>
+                                                        <br/>
+                                                    </Row>
+                                                ))
+                                        }
                                     </TabPane>
                                     <TabPane tab="Instructions" key="2" style={{'padding': '4%'}}>
                                         <div style={{fontSize: 'medium'}} id={'instruction-wrapper'}>
@@ -191,43 +222,12 @@ const ContestDetail = (props) => {
                             </Col>
                         </Row></>
                     }
-                </div>}
+                </div>
+            }
+
         </>
     )
 }
 
 
 export default ContestDetail
-
-
-// const children =
-//
-// {
-//     guide: `# React App for Online Judge
-// [![Netlify Status](https://api.netlify.com/api/v1/badges/055ae047-fa35-42db-a7b9-b55be8743512/deploy-status)](https://app.netlify.com/sites/fervent-bhabha-03f267/deploys)
-//
-// 🔥 Online Judge Platform of PICT ACM Student Chapter
-//
-// ## Guide to use the repo
-//
-// After you clone the repo you need to install necessary node modules, use below command to download them :
-//
-// ### \`yarn install\` or \`npm install\`
-//
-// To start the react server you need to run following command :
-//
-// ### \`yarn start\` or \`npm start\`
-//
-// This runs the app in the development mode.\\
-// Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-//
-// The page will reload if you make edits.\\
-// You will also see any lint errors in the console.
-//
-// ## CI/CD pipeline
-//
-// Main branch is configured to automatically deploy on netlify. You can visit the domain below to access deployed website.
-//
-// ### \`https://fervent-bhabha-03f267.netlify.app/\` or \`www.onlinejudge.ml\`
-// .`
-// }

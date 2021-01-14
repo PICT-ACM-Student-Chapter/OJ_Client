@@ -78,8 +78,7 @@ function LeaderBoard(props) {
         // col = a copy of defaultCols
         let col = [...defaultCols];
 
-        questions.sort((a, b) => parseInt(a.order) - parseInt(b.order))
-        console.log(questions.length)
+        // questions.sort((a, b) => parseInt(a.order) - parseInt(b.order))
 
         let scoreSum = 0
 

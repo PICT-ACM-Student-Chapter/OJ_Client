@@ -25,7 +25,7 @@ class GlobalProvider extends Component {
     getContests = () => {
         this.setState({isContestsLoading: true});
         if (this.state.contests === null) {
-            axios.get(`${process.env.REACT_APP_BASE_URL}/contests`, {
+            axios.get(`${process.env.REACT_APP_BASE_URL}/contests/`, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }
@@ -39,7 +39,11 @@ class GlobalProvider extends Component {
         }
     }
 
-    getContestDetail = (contestId, setStarted, setIsLoading) => {
+    setContests = (contests)=>{
+        this.setState({contests:contests})
+    }
+
+    getContestDetail = (contestId, setIsLoading) => {
 
         if (this.state.contest === null || this.state.contestID !== contestId) {
 
@@ -58,10 +62,6 @@ class GlobalProvider extends Component {
                 (res) => {
                     res.data.questions = []
                     this.setState({contest: res.data, contestID: contestId});
-
-                    if (res.data.status === 'STARTED') {
-                        setStarted(true)
-                    }
                 }
             )
                 .then(() => {
@@ -73,15 +73,13 @@ class GlobalProvider extends Component {
                 })
         } else {
             setIsLoading(false)
-            if (this.state.contest.status === 'STARTED') {
-                setStarted(true)
-            }
+
         }
     }
 
     getAllLanguages = () => {
         if (this.state.languages.length === 0) {
-            axios.get(`${process.env.REACT_APP_BASE_URL}/languages`)
+            axios.get(`${process.env.REACT_APP_BASE_URL}/languages/`)
                 .then(res => {
                     this.setState({languages: res.data});
 
@@ -152,7 +150,7 @@ class GlobalProvider extends Component {
     render() {
         const {children} = this.props;
         const {contests, contest, languages, question, isContestLive, apiError, apiErrorMsg, isContestsLoading} = this.state;
-        const {getContests, getContestDetail, getAllLanguages, getQuestionDetail, setIsContestLive, setApiError, setApiErrorMsg} = this;
+        const {getContests, setContests, getContestDetail, getAllLanguages, getQuestionDetail, setIsContestLive, setApiError, setApiErrorMsg} = this;
 
         return (
             <GlobalContext.Provider
@@ -166,6 +164,7 @@ class GlobalProvider extends Component {
                     apiError,
                     apiErrorMsg,
                     getContests,
+                    setContests,
                     getContestDetail,
                     getAllLanguages,
                     getQuestionDetail,
