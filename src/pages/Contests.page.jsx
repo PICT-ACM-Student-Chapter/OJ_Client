@@ -2,7 +2,7 @@ import React, {useContext, useEffect} from 'react'
 import {Button, Card, Divider, Image, List, Row, Skeleton, Typography} from 'antd'
 import Meta from 'antd/lib/card/Meta';
 import {parseDate} from "../utils/utils";
-import {ClockCircleOutlined, EnterOutlined} from '@ant-design/icons'
+import {BarChartOutlined, ClockCircleOutlined, EnterOutlined} from '@ant-design/icons'
 import './contests.page.css'
 import GlobalContext from "../context/GlobalContext";
 
@@ -19,6 +19,9 @@ function Contests(props) {
 
     async function handleEnterContest(contest) {
         props.history.push('/contests/' + contest.contest_id.id)
+    }
+    async function handleEnterLeaderboard(contest) {
+        props.history.push('/leaderboard/' + contest.contest_id.id)
     }
 
     return (
@@ -64,10 +67,22 @@ function Contests(props) {
                                 <Divider/>
                             </>}
                             <Row align={'center'}>
-                                <Button
-                                    disabled={globalContext.isContestsLoading || (!globalContext.isContestsLoading && (new Date(item.contest_id.start_time) > new Date() || new Date(item.contest_id.end_time) < new Date()))}
-                                    onClick={() => handleEnterContest(item)}
-                                    icon={<EnterOutlined/>} type="primary">Enter</Button>
+                                {
+                                    globalContext.isContestsLoading || (!globalContext.isContestsLoading && (new Date(item.contest_id.end_time) < new Date()))?
+                                        <Button
+                                            onClick={() => handleEnterLeaderboard(item)}
+                                            icon={<BarChartOutlined/>} type="primary">Leaderboard
+                                        </Button>:
+                                        <Button
+                                            disabled={globalContext.isContestsLoading || (!globalContext.isContestsLoading && (new Date(item.contest_id.start_time) > new Date() || new Date(item.contest_id.end_time) < new Date()))}
+                                            onClick={() => handleEnterContest(item)}
+                                            icon={<EnterOutlined/>} type="primary">Enter
+                                        </Button>
+                                }
+
+
+
+
                             </Row>
                         </Card>
                     </List.Item>

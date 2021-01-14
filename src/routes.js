@@ -79,21 +79,20 @@ const Routes = (props) => {
                 >
                     <Route exact path="/login" component={Login}/>
                     <Route exact path="/register" component={Register}/>
-                    {contestStatus === 0 ? <>
+                    { match &&(contestStatus === 0 ? <>
                         <Route exact path="/contests/:contestId" component={ContestDetail}/>
                         <Route exact path="/contests/:contestId/:questionId" component={QuestionDetail}/>
                         <Route exact path="/contests/:contestId/:questionId/submissions" component={Submissions}/>
                     </> : <>
                         {contestStatus === 1 &&
-                        <ContestOverPage contestId={match.params.contestId}/>}
+                        <ContestOverPage contestId={match && match.params.contestId}/>}
                         {contestStatus === -1 &&
-                        <Error403 contestId={match.params.contestId}/>}
+                        <Error403 contestId={match && match.params.contestId}/>}
                         {contestStatus === -2 &&
-                        <Error404 contestId={match.params.contestId}/>}
-                    </>}
+                        <Error404 contestId={match && match.params.contestId}/>}
+                    </>)}
                     <Route exact path="/contests" component={Contests}/>
                     <Route exact path="/leaderboard/:contestId" component={LeaderBoard}/>
-                    <Route exact path={'/lol'} component={ContestOverPage}/>
                     {/*<Route  component={Error404}/>*/}
                 </ProLayout>
             </Switch>}
