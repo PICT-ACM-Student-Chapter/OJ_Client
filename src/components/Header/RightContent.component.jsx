@@ -9,11 +9,13 @@ import axios from "axios";
 import {refreshAuthLogic} from "../../utils/utils";
 import UserContext from "../../context/User";
 import Gravatar from 'react-gravatar'
+import GlobalContext from '../../context/GlobalContext';
 
 const GlobalHeaderRight = (props) => {
         const {switcher, themes} = useThemeSwitcher();
         const theme = useContext(ThemeContext)
         const userContext = useContext(UserContext)
+        const globalContext = useContext(GlobalContext)
         const history = useHistory()
 
         useEffect(() => {
@@ -25,6 +27,7 @@ const GlobalHeaderRight = (props) => {
                     axios.post(process.env.REACT_APP_BASE_URL + '/auth/jwt/verify', {"token": (localStorage.getItem('refresh-token'))})
                         .catch(_ => {
                             userContext.dispose()
+                            globalContext.dispose()
                             const path = history.location.pathname
                             if (path !== "/login")
                                 history.push(`/login?redirect=${path}`)
@@ -65,6 +68,7 @@ const GlobalHeaderRight = (props) => {
 
         const logout = () => {
             userContext.dispose()
+            globalContext.dispose()
             history.push('/login')
 
 

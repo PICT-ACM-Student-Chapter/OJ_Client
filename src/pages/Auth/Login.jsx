@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import './css/login.css';
 import {Button, Form, Input, message, Typography} from 'antd';
 import {LockOutlined, UserOutlined} from '@ant-design/icons';
@@ -15,6 +15,13 @@ const Login = (props) => {
 
     const [errors, setErrors] = React.useState('')
     const [status, setStatus] = React.useState('')
+
+    useEffect(()=>{
+        userContext.dispose()
+        globalContext.dispose()
+        //eslint-disable-next-line
+    },[])
+
 
     const onFinish = async values => {
         setStatus('validating')
