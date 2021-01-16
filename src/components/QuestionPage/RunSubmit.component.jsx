@@ -90,7 +90,7 @@ export default function RunSubmit(props) {
         }
 
         if (totalJudged !== res.data.verdicts.length && ref.current) {
-            await sleep(SUBMIT_INTERVAL)
+            await sleep(SUBMIT_INTERVAL * 1000)
             checkSubmit(id)
         }
 
