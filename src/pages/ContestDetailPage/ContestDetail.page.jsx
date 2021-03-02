@@ -3,17 +3,17 @@ import {Button, Card, Col, Divider, Row, Space, Statistic, Tabs, Tag, Typography
 import {HourglassOutlined, TrophyOutlined} from '@ant-design/icons'
 import axios from "axios";
 import {useParams} from "react-router";
-import gfm from 'remark-gfm'
 import ProSkeleton from '@ant-design/pro-skeleton';
-import {Link} from "react-router-dom";
 import StartContestComponent from "../../components/ContestDetailPage/StartContest.component";
-import MiniLeaderBoard from "../../components/ContestDetailPage/MiniLeaderBoard";
 import '../../components/ContestDetailPage/ContestDetail.css'
-import MarkdownMathJaxComponent from "../../components/MarkdownMathJax.component";
 
 import {Helmet} from "react-helmet";
 import UserContext from "../../context/User";
 import GlobalContext from "../../context/GlobalContext";
+import {Link} from "react-router-dom";
+import MarkdownMathJaxComponent from "../../components/MarkdownMathJax.component";
+import gfm from "remark-gfm";
+import MiniLeaderBoard from "../../components/ContestDetailPage/MiniLeaderBoard";
 
 const {TabPane} = Tabs;
 const {Countdown} = Statistic;
@@ -135,7 +135,10 @@ const ContestDetail = (props) => {
                                                     <Card bordered={false}>
                                                         <Row align="middle">
                                                             <Col lg={12} onClick={() => {
-                                                                props.history.push(`/contests/${contestId}/${ques.id}`)
+                                                                props.history.push({
+                                                                    path: `/contests/${contestId}/${ques.id}`,
+                                                                    state: {isReverseCoding: ques.contest_que.is_reverse_coding}
+                                                                })
                                                             }}>
                                                                 <h2><Link
                                                                     to={`/contests/${contestId}/${ques.id}`}> {ques.name}</Link>

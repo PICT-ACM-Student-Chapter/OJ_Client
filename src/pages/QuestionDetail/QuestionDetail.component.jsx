@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react'
-import {Button, Card, Col, Row, Select, Skeleton, Space, Spin, Statistic, Typography} from "antd";
+import {Button, Card, Col, Input, Row, Select, Skeleton, Space, Spin, Statistic, Typography} from "antd";
 import Editor from "@monaco-editor/react";
 import ThemeContext from "../../context/ThemeContext";
 import './QuestionDetail.style.css'
@@ -7,6 +7,7 @@ import {Helmet} from "react-helmet";
 import {
     BarChartOutlined,
     CaretRightOutlined,
+    CodeOutlined,
     HourglassOutlined,
     LoadingOutlined,
     ProfileOutlined
@@ -15,9 +16,14 @@ import SplitPane from "react-split-pane";
 import RunSubmit from "../../components/QuestionPage/RunSubmit.component";
 import MarkdownMathJaxComponent from "../../components/MarkdownMathJax.component";
 import GlobalContext from "../../context/GlobalContext";
+import {b64Encode, sleep} from "../../utils/utils";
+import axios from "axios";
 
 const {Option} = Select;
 const {Countdown} = Statistic;
+
+const RUN_INTERVAL = 1  // In secs
+
 
 function QuestionDetail(props) {
 
@@ -27,20 +33,29 @@ function QuestionDetail(props) {
     const [loading, setLoading] = useState(true);
     const [tcsLoading, setTCsLoading] = useState(true);
     const [started, setStarted] = useState(false)
-
+    const [isReverseCode, setIsReverseCode] = useState("")
+    const [inputRC, setInputRC] = useState("")
     // const [languages, setLanguages] = useState([])
     const [currentLanguage, setCurrentLanguage] = useState({})
     const [inputTC, setInputTC] = useState(null)
-
-    const {languages, getAllLanguages, getQuestionDetail, question} = globalContext
+    const [runRc, setRunRc] = useState(false)
+    const [outputRC, setOutputRC] = useState("")
+    const {languages, getAllLanguages, getQuestionDetail, question, getContestDetail} = globalContext
     const {contest} = globalContext
 
     let savedCodes = JSON.parse(localStorage.getItem(`codes${props.match.params.questionId}`) || '{}')
 
+
     useEffect(() => {
+        if (props.location.state) {
+            setIsReverseCode(props.location.state.isReverseCoding)
+            console.log(props.location.state.isReverseCoding)
+        } else {
+            props.history.push(`/contests/${props.match.params.contestId}`)
+        }
         getAllLanguages()
         getQuestionDetail(props.match.params.questionId, setLoading, setTCsLoading, setCurrentLanguage)
-        globalContext.getContestDetail(props.match.params.contestId, setStarted, setStarted)
+        getContestDetail(props.match.params.contestId, setStarted, setStarted)
 
         // (async function () {
         //     const reqConfig = {
@@ -121,6 +136,52 @@ function QuestionDetail(props) {
         setInputTC(null)
     }
 
+    const checkRCRun = async (id) => {
+        const reqConfig = {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        }
+        // /contests/{contest_id}/questions/{ques_id}/rc/run/{id}
+        const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/contests/
+        ${props.match.params.contestId}/questions/${props.match.params.questionId}/rc/run/${id}`, reqConfig)
+        console.log(res.data)
+        if (res.data.status === 'IN_QUEUE') {
+            await sleep(RUN_INTERVAL * 1000);
+            checkRCRun(id)
+        } else {
+            setRunRc(false)
+            props.funcInputTC()
+            setOutputRC(res.data)
+        }
+    }
+
+    const handleRCRun = async () => {
+
+        setRunRc(true)
+
+        const data = {
+            stdin: b64Encode(inputRC)
+        }
+        const reqConfig = {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        }
+        try {
+            console.log(props.match.params.questionId)
+            const res = await axios.post(`${process.env.REACT_APP_BASE_URL}/contests/
+            ${props.match.params.contestId}/questions/${props.match.params.questionId}/rc/run`, data, reqConfig)
+            const subId = res.data.id
+
+            checkRCRun(subId)
+
+        } catch (e) {
+
+            setRunRc(false)
+        }
+    }
+
     return (
         <div>
             <Helmet>
@@ -163,41 +224,84 @@ function QuestionDetail(props) {
                             <MarkdownMathJaxComponent
                                 className='markdown'>{question.constraints}</MarkdownMathJaxComponent>
                             <br/>
-                            <Typography.Title level={3}>Sample Testcase(s)</Typography.Title>
-                            {
-                                question.test_cases && question.test_cases.map(({input, output, id}) => (
-                                        <div key={id}>
-                                            <Row gutter={16}>
-                                                <Col xs={24} sm={24} md={24} lg={12} xl={12}>
-                                                    <Card className='test-case-card' type="inner" loading={tcsLoading}
-                                                          title={<Typography.Title level={4}>Input</Typography.Title>}
-                                                          extra={<Button disabled={inputTC} onClick={() => {
-                                                              setInputTC(input)
-                                                          }}>
-                                                              {inputTC ? <LoadingOutlined/> : <CaretRightOutlined/>}
-                                                              Run
-                                                          </Button>
-                                                          }
-                                                    >
-                                                        <pre>{input}</pre>
-                                                    </Card>
-                                                </Col>
-                                                <Col xs={24} sm={24} md={24} lg={12} xl={12}>
 
-                                                    <Card className='test-case-card' type="inner" loading={tcsLoading}
-                                                          title={<Typography.Title level={4}>Output</Typography.Title>}
-                                                        // extra={<a href="#">Copy</a>}
-                                                    >
-                                                        <pre>{output}</pre>
-                                                    </Card>
-                                                </Col>
-                                            </Row>
-                                            <br/>
-                                        </div>
-                                    )
-                                )
+                            {isReverseCode &&
+                            <>
+                                <Typography.Title level={3}>Run Testcase</Typography.Title>
+                                <br/>
+                                <Row gutter={12}>
+                                    <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+                                        <Input size="large" placeholder="Enter Input"
+                                               prefix={runRc ? <LoadingOutlined style={{margin: "0.5rem"}}/> :
+                                                   <CodeOutlined style={{margin: "0.5rem"}}/>}
+                                               disabled={runRc}
+                                               onChange={(e) => {
+                                                   setInputRC(e.target.value)
+                                               }}
+                                               onKeyDown={(e) => {
+                                                   if (e.keyCode === 13) {
+                                                       handleRCRun()
+                                                   }
+                                               }}/>
+                                    </Col>
+                                    <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+                                        <Input size="large" placeholder="Output"
+                                               prefix={runRc ? <LoadingOutlined style={{margin: "0.5rem"}}/> :
+                                                   <CodeOutlined style={{margin: "0.5rem"}}/>}
+                                               value={outputRC}
+                                               disabled={true}/>
+
+                                    </Col>
+                                </Row>
+
+                            </>
                             }
-                        </div>}
+                            <br/><br/>
+                            <>
+
+                                <Typography.Title level={3}>Sample Testcase(s)</Typography.Title>
+                                {
+                                    question.test_cases && question.test_cases.map(({input, output, id}) => (
+                                            <div key={id}>
+                                                <Row gutter={16}>
+                                                    <Col xs={24} sm={24} md={24} lg={12} xl={12}>
+                                                        <Card className='test-case-card' type="inner"
+                                                              loading={tcsLoading}
+                                                              title={<Typography.Title
+                                                                  level={4}>Input</Typography.Title>}
+                                                              extra={<Button disabled={inputTC} onClick={() => {
+                                                                  setInputTC(input)
+                                                              }}>
+                                                                  {inputTC ? <LoadingOutlined/> : <CaretRightOutlined/>}
+                                                                  Run
+                                                              </Button>
+                                                              }
+                                                        >
+                                                            <pre>{input}</pre>
+                                                        </Card>
+                                                    </Col>
+                                                    <Col xs={24} sm={24} md={24} lg={12} xl={12}>
+
+                                                        <Card className='test-case-card' type="inner"
+                                                              loading={tcsLoading}
+                                                              title={<Typography.Title
+                                                                  level={4}>Output</Typography.Title>}
+                                                            // extra={<a href="#">Copy</a>}
+                                                        >
+                                                            <pre>{output}</pre>
+                                                        </Card>
+                                                    </Col>
+                                                </Row>
+                                                <br/>
+                                            </div>
+                                        )
+                                    )
+                                }
+                            </>
+
+
+                        </div>
+                        }
 
 
                     </Card>
