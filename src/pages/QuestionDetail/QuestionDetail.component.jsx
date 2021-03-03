@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react'
-import {Button, Card, Col, Input, Row, Select, Skeleton, Space, Spin, Statistic, Typography} from "antd";
+import {Breadcrumb, Button, Card, Col, Input, Row, Select, Skeleton, Space, Spin, Statistic, Typography} from "antd";
 import Editor from "@monaco-editor/react";
 import ThemeContext from "../../context/ThemeContext";
 import './QuestionDetail.style.css'
@@ -44,6 +44,8 @@ function QuestionDetail(props) {
     const {languages, getAllLanguages, getQuestionDetail, question, setIsContestLive} = globalContext
     const [runRc, setRunRc] = useState(false)
     const [outputRC, setOutputRC] = useState("")
+    const [linkTo, setLinkTo] = useState("")
+
     const {contest} = globalContext
 
     let savedCodes = JSON.parse(localStorage.getItem(`codes${props.match.params.questionId}`) || '{}')
@@ -56,6 +58,8 @@ function QuestionDetail(props) {
         } else {
             props.history.push(`/contests/${props.match.params.contestId}`)
         }
+        setLinkTo(`/contests/${props.match.params.contestId}`)
+        console.log(question)
         getAllLanguages()
         getQuestionDetail(props.match.params.questionId, setLoading, setTCsLoading, setCurrentLanguage)
         globalContext.getContestDetail(props.match.params.contestId, setStarted, setStarted)
@@ -154,10 +158,24 @@ function QuestionDetail(props) {
             <SplitPane split={'vertical'} defaultSize={'50%'} minSize={400} maxSize={-400}
                        style={{position: "relative", width: '100%', height: '88vh', overflowY: 'hidden'}}>
                 <div>
-                    <Card className='question-card' title={
+                    <Card className='question-card' title={<>
+                        <Row justify="space-around" align="middle" style={{borderBottom: "0.5px solid #333333"}}>
+                            <Col>
+                                <Breadcrumb style={{fontSize: "large"}}>
+                                    <Breadcrumb.Item>
+                                        <Link to={{pathname: linkTo}}>Questions</Link>
+                                    </Breadcrumb.Item>
+                                    <Breadcrumb.Item>
+                                        <span>{question.name || "" }</span>
+                                    </Breadcrumb.Item>
+
+                                </Breadcrumb>
+                            </Col>
+                        </Row>
+                        <br/>
                         <Row justify="space-around" align="middle">
                             <Col span={16}>
-                                <Typography.Title>{question.name || ''}</Typography.Title>
+                                <Typography.Title>{ question.name || ""}</Typography.Title>
                             </Col>
                             <Col align='right' span={8}>
                                 {
@@ -171,6 +189,7 @@ function QuestionDetail(props) {
                                 }
                             </Col>
                         </Row>
+                    </>
                     }>
 
                         <Skeleton loading={loading} paragraph={{rows: 20}} active/>
@@ -304,9 +323,11 @@ function QuestionDetail(props) {
                             </Col>
                             <Col align='right' span={12}>
                                 <Space>
-                                    <Link to={`${window.location.pathname}/submissions`}><Button icon={<ProfileOutlined/>} size={'medium'}>My Submissions</Button></Link>
-                                    <Link to={`/leaderboard/${props.match.params.contestId}`}><Button icon={<BarChartOutlined/>} type='primary'
-                                                          size={'medium'}>Leaderboard</Button></Link>
+                                    <Link to={`${window.location.pathname}/submissions`}><Button
+                                        icon={<ProfileOutlined/>} size={'medium'}>My Submissions</Button></Link>
+                                    <Link to={`/leaderboard/${props.match.params.contestId}`}><Button
+                                        icon={<BarChartOutlined/>} type='primary'
+                                        size={'medium'}>Leaderboard</Button></Link>
                                 </Space>
 
                             </Col>
@@ -317,15 +338,17 @@ function QuestionDetail(props) {
                         <div style={{width: '100%', position: 'absolute'}}>
                             <Card width={'100%'} className={'editor-card'}
                                   style={{height: '71vh'}}>
-                                <Editor
-                                    loading={<Spin size={'large'} tip={'Loading Editor'}/>}
-                                    language={currentLanguage.monaco_lang_code}
-                                    theme={theme.theme}
-                                    editorDidMount={handleEditorMount}
-                                    options={{
-                                        fontSize: 16,
-                                    }}
-                                />
+                                {JSON.stringify(currentLanguage) === '{}' ? <></> :
+                                    <Editor
+                                        loading={<Spin size={'large'} tip={'Loading Editor'}/>}
+                                        language={currentLanguage.monaco_lang_code}
+                                        theme={theme.theme}
+                                        editorDidMount={handleEditorMount}
+                                        options={{
+                                            fontSize: 16,
+                                        }}
+                                    />
+                                }
                             </Card>
                         </div>
                         <RunSubmit match={props.match} getCode={getCode} getLang={_ => currentLanguage}
