@@ -7,7 +7,6 @@ import {Helmet} from "react-helmet";
 import {
     BarChartOutlined,
     CaretRightOutlined,
-    CodeOutlined,
     HourglassOutlined,
     LoadingOutlined,
     ProfileOutlined
@@ -226,27 +225,46 @@ function QuestionDetail(props) {
                             <>
                                 <Typography.Title level={3}>Run Testcase</Typography.Title>
                                 <br/>
-                                <Row gutter={12}>
-                                    <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                                        <Input.TextArea size="large" placeholder="Enter Input"
-                                               prefix={runRc ? <LoadingOutlined style={{margin: "0.5rem"}}/> :
-                                                   <CodeOutlined style={{margin: "0.5rem"}}/>}
-                                               disabled={runRc}
-                                               onChange={(e) => {
-                                                   setInputRC(e.target.value)
-                                               }}
-                                               onKeyDown={(e) => {
-                                                   if (e.keyCode === 13) {
-                                                       handleRCRun()
-                                                   }
-                                               }}/>
+                                <Row gutter={24}>
+                                    <Col xs={18} sm={18} md={18} lg={18} xl={18}>
+                                        <Input.TextArea
+                                            placeholder="    ENTER INPUT HERE"
+                                            disabled={runRc}
+                                            onChange={(e) => {
+                                                setInputRC(e.target.value)
+                                            }}
+                                            autoSize={{minRows: 1, maxRows: 7}}
+                                            style={{fontFamily: "monospace", fontSize: "17px"}}
+                                            required
+                                        />
                                     </Col>
-                                    <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                                        <Input size="large" placeholder="Output"
-                                               prefix={runRc ? <LoadingOutlined style={{margin: "0.5rem"}}/> :
-                                                   <CodeOutlined style={{margin: "0.5rem"}}/>}
-                                               value={outputRC}
-                                               disabled={true}/>
+
+                                    <Col xs={6} sm={6} md={6} lg={6} xl={6}>
+                                        <Button disabled={runRc || !inputRC}
+                                                size='large'
+                                                type='primary'
+                                                onClick={() => {
+                                                    handleRCRun()
+                                                }}
+                                                style={{width: "100%"}}
+                                        >
+                                            {runRc ? <LoadingOutlined/> : <CaretRightOutlined/>}
+                                            Run
+                                        </Button>
+                                    </Col>
+
+                                </Row>
+                                <br/>
+                                <Row>
+                                    <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                                        <Input.TextArea placeholder="    OUTPUT SHOWN HERE"
+                                                        value={outputRC}
+                                                        readonly
+                                                        autoSize={{minRows: 1, maxRows: 7}}
+                                                        style={{fontFamily: "monospace", fontSize: "17px"}}
+
+                                        />
+
 
                                     </Col>
                                 </Row>
