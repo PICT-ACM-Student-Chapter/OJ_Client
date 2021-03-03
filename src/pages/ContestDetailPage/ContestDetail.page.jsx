@@ -24,6 +24,7 @@ const ContestDetail = (props) => {
     const globalContext = useContext(GlobalContext)
     let {contestId} = useParams();
     const [isLoading, setIsLoading] = useState(true)
+    //eslint-disable-next-line
     const [isQueLoading, setIsQueLoading] = useState(true)
     // const [contest, setContest] = useState(null)
     const [started, setStarted] = useState(false)
