@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react'
-import {Button, Card, Col, Row, Select, Skeleton, Space, Spin, Statistic, Typography} from "antd";
+import {Button, Card, Col, Input, Row, Select, Skeleton, Space, Spin, Statistic, Typography} from "antd";
 import Editor from "@monaco-editor/react";
 import ThemeContext from "../../context/ThemeContext";
 import './QuestionDetail.style.css'
@@ -15,10 +15,15 @@ import SplitPane from "react-split-pane";
 import RunSubmit from "../../components/QuestionPage/RunSubmit.component";
 import MarkdownMathJaxComponent from "../../components/MarkdownMathJax.component";
 import GlobalContext from "../../context/GlobalContext";
+import {b64Decode, b64Encode, sleep} from "../../utils/utils";
+import axios from "axios";
 import {Link} from "react-router-dom";
 
 const {Option} = Select;
 const {Countdown} = Statistic;
+
+const RUN_INTERVAL = 1  // In secs
+
 
 function QuestionDetail(props) {
 
@@ -30,15 +35,27 @@ function QuestionDetail(props) {
     // eslint-disable-next-line
     const [started, setStarted] = useState(false)
 
+    const [isReverseCode, setIsReverseCode] = useState("")
+    const [inputRC, setInputRC] = useState("")
+    // const [languages, setLanguages] = useState([])
     const [currentLanguage, setCurrentLanguage] = useState({})
     const [inputTC, setInputTC] = useState(null)
 
     const {languages, getAllLanguages, getQuestionDetail, question, setIsContestLive} = globalContext
+    const [runRc, setRunRc] = useState(false)
+    const [outputRC, setOutputRC] = useState("")
     const {contest} = globalContext
 
     let savedCodes = JSON.parse(localStorage.getItem(`codes${props.match.params.questionId}`) || '{}')
 
+
     useEffect(() => {
+        if (props.location.state) {
+            setIsReverseCode(props.location.state.isReverseCoding)
+            console.log(props.location.state.isReverseCoding)
+        } else {
+            props.history.push(`/contests/${props.match.params.contestId}`)
+        }
         getAllLanguages()
         getQuestionDetail(props.match.params.questionId, setLoading, setTCsLoading, setCurrentLanguage)
         globalContext.getContestDetail(props.match.params.contestId, setStarted, setStarted)
@@ -82,6 +99,49 @@ function QuestionDetail(props) {
 
     const funcInputTC = () => {
         setInputTC(null)
+    }
+
+    const checkRCRun = async (id) => {
+        const reqConfig = {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        }
+        // /contests/{contest_id}/questions/{ques_id}/rc/run/{id}
+        const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/contests/${props.match.params.contestId}/questions/${props.match.params.questionId}/rc/run/${id}`, reqConfig)
+        console.log(res.data)
+        if (res.data.status === 'IN_QUEUE') {
+            await sleep(RUN_INTERVAL * 1000);
+            checkRCRun(id)
+        } else {
+            setRunRc(false)
+            setOutputRC(b64Decode(res.data.stdout))
+        }
+    }
+
+    const handleRCRun = async () => {
+
+        setRunRc(true)
+
+        const data = {
+            stdin: b64Encode(inputRC)
+        }
+        const reqConfig = {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        }
+        try {
+            console.log(props.match.params.questionId)
+            const res = await axios.post(`${process.env.REACT_APP_BASE_URL}/contests/${props.match.params.contestId}/questions/${props.match.params.questionId}/rc/run`, data, reqConfig)
+            const subId = res.data.id
+
+            checkRCRun(subId)
+
+        } catch (e) {
+
+            setRunRc(false)
+        }
     }
 
     return (
@@ -128,40 +188,103 @@ function QuestionDetail(props) {
                             <MarkdownMathJaxComponent
                                 className='markdown'>{question.constraints}</MarkdownMathJaxComponent>
                             <br/>
-                            <Typography.Title level={3}>Sample Testcase(s)</Typography.Title>
-                            {
-                                question.test_cases && question.test_cases.map(({input, output, id}) => (
-                                        <div key={id}>
-                                            <Row gutter={16}>
-                                                <Col xs={24} sm={24} md={24} lg={12} xl={12}>
-                                                    <Card className='test-case-card' type="inner" loading={tcsLoading}
-                                                          title={<Typography.Title level={4}>Input</Typography.Title>}
-                                                          extra={<Button disabled={inputTC} onClick={() => {
-                                                              setInputTC(input)
-                                                          }}>
-                                                              {inputTC ? <LoadingOutlined/> : <CaretRightOutlined/>}
-                                                              Run
-                                                          </Button>
-                                                          }
-                                                    >
-                                                        <pre>{input}</pre>
-                                                    </Card>
-                                                </Col>
-                                                <Col xs={24} sm={24} md={24} lg={12} xl={12}>
 
-                                                    <Card className='test-case-card' type="inner" loading={tcsLoading}
-                                                          title={<Typography.Title level={4}>Output</Typography.Title>}
-                                                    >
-                                                        <pre>{output}</pre>
-                                                    </Card>
-                                                </Col>
-                                            </Row>
-                                            <br/>
-                                        </div>
-                                    )
-                                )
+                            {isReverseCode &&
+                            <>
+                                <Typography.Title level={3}>Run Testcase</Typography.Title>
+                                <br/>
+                                <Row gutter={24}>
+                                    <Col xs={18} sm={18} md={18} lg={18} xl={18}>
+                                        <Input.TextArea
+                                            placeholder="    ENTER INPUT HERE"
+                                            disabled={runRc}
+                                            onChange={(e) => {
+                                                setInputRC(e.target.value)
+                                            }}
+                                            autoSize={{minRows: 1, maxRows: 7}}
+                                            style={{fontFamily: "monospace", fontSize: "17px"}}
+                                            required
+                                        />
+                                    </Col>
+
+                                    <Col xs={6} sm={6} md={6} lg={6} xl={6}>
+                                        <Button disabled={runRc || !inputRC}
+                                                size='large'
+                                                type='primary'
+                                                onClick={() => {
+                                                    handleRCRun()
+                                                }}
+                                                style={{width: "100%"}}
+                                        >
+                                            {runRc ? <LoadingOutlined/> : <CaretRightOutlined/>}
+                                            Run
+                                        </Button>
+                                    </Col>
+
+                                </Row>
+                                <br/>
+                                <Row>
+                                    <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                                        <Input.TextArea placeholder="    OUTPUT SHOWN HERE"
+                                                        value={outputRC}
+                                                        readonly
+                                                        autoSize={{minRows: 1, maxRows: 7}}
+                                                        style={{fontFamily: "monospace", fontSize: "17px"}}
+
+                                        />
+
+
+                                    </Col>
+                                </Row>
+
+                            </>
                             }
-                        </div>}
+                            <br/><br/>
+                            <>
+
+                                <Typography.Title level={3}>Sample Testcase(s)</Typography.Title>
+                                {
+                                    question.test_cases && question.test_cases.map(({input, output, id}) => (
+                                            <div key={id}>
+                                                <Row gutter={16}>
+                                                    <Col xs={24} sm={24} md={24} lg={12} xl={12}>
+                                                        <Card className='test-case-card' type="inner"
+                                                              loading={tcsLoading}
+                                                              title={<Typography.Title
+                                                                  level={4}>Input</Typography.Title>}
+                                                              extra={<Button disabled={inputTC} onClick={() => {
+                                                                  setInputTC(input)
+                                                              }}>
+                                                                  {inputTC ? <LoadingOutlined/> : <CaretRightOutlined/>}
+                                                                  Run
+                                                              </Button>
+                                                              }
+                                                        >
+                                                            <pre>{input}</pre>
+                                                        </Card>
+                                                    </Col>
+                                                    <Col xs={24} sm={24} md={24} lg={12} xl={12}>
+
+                                                        <Card className='test-case-card' type="inner"
+                                                              loading={tcsLoading}
+                                                              title={<Typography.Title
+                                                                  level={4}>Output</Typography.Title>}
+                                                            // extra={<a href="#">Copy</a>}
+                                                        >
+                                                            <pre>{output}</pre>
+                                                        </Card>
+                                                    </Col>
+                                                </Row>
+                                                <br/>
+                                            </div>
+                                        )
+                                    )
+                                }
+                            </>
+
+
+                        </div>
+                        }
 
 
                     </Card>

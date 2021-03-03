@@ -3,17 +3,16 @@ import {Button, Card, Col, Divider, Row, Space, Statistic, Tabs, Tag, Typography
 import {HourglassOutlined, TrophyOutlined} from '@ant-design/icons'
 import axios from "axios";
 import {useParams} from "react-router";
-import gfm from 'remark-gfm'
-import ProSkeleton from '@ant-design/pro-skeleton';
-import {Link} from "react-router-dom";
 import StartContestComponent from "../../components/ContestDetailPage/StartContest.component";
-import MiniLeaderBoard from "../../components/ContestDetailPage/MiniLeaderBoard";
 import '../../components/ContestDetailPage/ContestDetail.css'
-import MarkdownMathJaxComponent from "../../components/MarkdownMathJax.component";
 
 import {Helmet} from "react-helmet";
 import UserContext from "../../context/User";
 import GlobalContext from "../../context/GlobalContext";
+import {Link} from "react-router-dom";
+import MarkdownMathJaxComponent from "../../components/MarkdownMathJax.component";
+import gfm from "remark-gfm";
+import MiniLeaderBoard from "../../components/ContestDetailPage/MiniLeaderBoard";
 
 const {TabPane} = Tabs;
 const {Countdown} = Statistic;
@@ -38,18 +37,18 @@ const ContestDetail = (props) => {
         // eslint-disable-next-line
     }, [])
 
-    useEffect(()=>{
+    useEffect(() => {
         let contests = globalContext.contests
-        for (let c of contests){
-            if(c.contest_id.id === contestId){
-                if (c.status === 'STARTED'){
+        for (let c of contests) {
+            if (c.contest_id.id === contestId) {
+                if (c.status === 'STARTED') {
                     setStarted(true)
                 }
                 break;
             }
         }
 
-    },[globalContext.contests,contestId])
+    }, [globalContext.contests, contestId])
 
     useEffect(() => {
         if (started) {
@@ -63,31 +62,31 @@ const ContestDetail = (props) => {
                 setQuestions(ques)
                 return ques
             })
-                .then(ques=>{
-                    setIsQueLoading(false)
+                .then(ques => {
+                        setIsQueLoading(false)
                     }
                 )
         }
-    }, [started,contestId])
+    }, [started, contestId])
 
     async function startContest() {
-        const res =await axios.patch(`${process.env.REACT_APP_BASE_URL}/contests/${contest.id}/start`, {}, {
+        const res = await axios.patch(`${process.env.REACT_APP_BASE_URL}/contests/${contest.id}/start`, {}, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
         })
 
-        if (res.data.status === 'STARTED'){
+        if (res.data.status === 'STARTED') {
             let contests = globalContext.contests
-            console.log('sdfdsfdf',contests)
-            for (let c of contests){
-                if(c.contest_id.id === contest.id){
+            console.log('sdfdsfdf', contests)
+            for (let c of contests) {
+                if (c.contest_id.id === contest.id) {
                     c.status = 'STARTED'
                     await globalContext.setContests(contests)
                     break
                 }
             }
-            console.log('sdfdfdf',contests)
+            console.log('sdfdfdf', contests)
             setStarted(true)
         }
     }
@@ -100,7 +99,7 @@ const ContestDetail = (props) => {
                 <link rel="canonical" href="http://mysite.com/example"/>
             </Helmet>
             {
-                isLoading?"": <div style={{'padding': '2% 4%'}}>
+                isLoading ? "" : <div style={{'padding': '2% 4%'}}>
                     <Row gutter={[0, 24]}>
                         <Col span={12}>
                             <Title>{contest.name}</Title>
@@ -130,7 +129,9 @@ const ContestDetail = (props) => {
                                 <Col span={8}>
                                     <Card style={{width: '12rem'}} bodyStyle={{padding: '12px 24px'}}>
                                         <Countdown prefix={<HourglassOutlined/>} title="Time Left"
-                                                   value={contest.end_time} onFinish={_=>{setIsContestLive(false)}}/>
+                                                   value={contest.end_time} onFinish={_ => {
+                                            setIsContestLive(false)
+                                        }}/>
                                         Ends: {new Date(contest.end_time).toLocaleTimeString()}
                                     </Card>
                                 </Col>
@@ -158,52 +159,58 @@ const ContestDetail = (props) => {
 
                                 <Tabs size='large' type="card">
                                     <TabPane tab="Questions" key="1" style={{'padding': '4%'}}>
-                                        {
-                                            isQueLoading ? <ProSkeleton/>:
-                                                questions.map((ques) => (
-                                                    <Row key={ques.id} gutter={[0, 18]} align="middle"
-                                                         justify="center">
-                                                        <Col span={24}>
-                                                            <Card bordered={false}>
-                                                                <Row align="middle">
-                                                                    <Col lg={12} onClick={() => {
-                                                                        props.history.push(`/contests/${contestId}/${ques.id}`)
-                                                                    }}>
-                                                                        <h2><Link
-                                                                            to={`/contests/${contestId}/${ques.id}`}> {ques.name}</Link>
-                                                                        </h2>
-                                                                    </Col>
-                                                                    <Col lg={12} align={'right'}>
-                                                                        <Space size={'middle'}>
-                                                                            <Tag
-                                                                                color={ques.user_score.score === ques.score ? 'green' : 'blue'}
-                                                                                style={{
-                                                                                    'fontSize': 'larger',
-                                                                                    padding: '0.4rem'
-                                                                                }}>
-                                                                                Score: {ques.user_score.score} / {ques.score}
-                                                                            </Tag>
-                                                                            <Link
-                                                                                to={`/contests/${contestId}/${ques.id}`}>
-                                                                                <Button size='large' type={'primary'}>
-                                                                                    Solve
-                                                                                </Button>
-                                                                            </Link>
-                                                                            <Link
-                                                                                to={`/contests/${contestId}/${ques.id}/submissions?name=${ques.name}`}>
-                                                                                <Button size='large'>
-                                                                                    My Submissions
-                                                                                </Button>
-                                                                            </Link>
-                                                                        </Space>
-                                                                    </Col>
-                                                                </Row>
-                                                            </Card>
-                                                        </Col>
-                                                        <br/>
-                                                    </Row>
-                                                ))
-                                        }
+
+                                        {questions.map((ques) => (
+                                            <Row key={ques.id} gutter={[0, 18]} align="middle"
+                                                 justify="center">
+                                                <Col span={24}>
+                                                    <Card bordered={false}>
+                                                        <Row align="middle">
+                                                            <Col lg={12} onClick={() => {
+                                                                props.history.push({
+                                                                    path: `/contests/${contestId}/${ques.id}`,
+                                                                    state: {isReverseCoding: ques.contest_que.is_reverse_coding}
+                                                                })
+                                                            }}>
+                                                                <h2><Link
+                                                                    to={`/contests/${contestId}/${ques.id}`}> {ques.name}</Link>
+                                                                </h2>
+                                                            </Col>
+                                                            <Col lg={12} align={'right'}>
+                                                                <Space size={'middle'}>
+                                                                    <Tag
+                                                                        color={ques.user_score.score === ques.score ? 'green' : 'blue'}
+                                                                        style={{
+                                                                            'fontSize': 'larger',
+                                                                            padding: '0.4rem'
+                                                                        }}>
+                                                                        Score: {ques.user_score.score} / {ques.score}
+                                                                    </Tag>
+                                                                    <Link
+                                                                        to={{
+                                                                            pathname: `/contests/${contestId}/${ques.id}`,
+                                                                            state: {isReverseCoding: ques.contest_que.is_reverse_coding}
+                                                                        }}>
+                                                                        <Button size='large' type={'primary'}>
+                                                                            Solve
+                                                                        </Button>
+                                                                    </Link>
+                                                                    <Link
+                                                                        to={`/contests/${contestId}/${ques.id}/submissions?name=${ques.name}`}>
+                                                                        <Button size='large'>
+                                                                            My Submissions
+                                                                        </Button>
+                                                                    </Link>
+                                                                </Space>
+                                                            </Col>
+                                                        </Row>
+                                                    </Card>
+                                                </Col>
+                                                <br/>
+                                            </Row>
+                                        ))}
+
+
                                     </TabPane>
                                     <TabPane tab="Instructions" key="2" style={{'padding': '4%'}}>
                                         <div style={{fontSize: 'medium'}} id={'instruction-wrapper'}>
