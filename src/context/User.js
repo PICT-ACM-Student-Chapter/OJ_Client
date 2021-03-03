@@ -27,7 +27,7 @@ class UserProvider extends Component {
 
     loadUser = (id) => {
 
-        axios.get(`${process.env.REACT_APP_BASE_URL}/auth/users/${id}`,
+        axios.get(`${process.env.REACT_APP_BASE_URL}/auth/users/${id}/`,
             {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`

@@ -1,12 +1,10 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useState, useRef} from 'react'
 import {Button, Card, Input, message, Popconfirm, Space} from "antd";
 import {CaretRightOutlined, DownOutlined, LoadingOutlined, UpOutlined} from "@ant-design/icons";
 import RunOutputComponent from "./RunOutput.component";
 import SubmitComponent from "./Submit.component";
 import axios from "axios";
 import {b64Encode, sleep} from '../../utils/utils'
-
-const {useState} = React
 
 const RUN_INTERVAL = 1  // In secs
 const SUBMIT_INTERVAL = 1  // In secs
@@ -25,6 +23,9 @@ export default function RunSubmit(props) {
     // eslint-disable-next-line
     const [submission, setSubmission] = useState({});
     const [testCases, setTestCases] = useState([]);
+
+    // Used in checkRun and checkSubmit to check if component is still mounted
+    const ref = useRef()
 
 
     useEffect(() => {
@@ -59,7 +60,7 @@ export default function RunSubmit(props) {
         }
         const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/run/${id}`, reqConfig)
         console.log(res.data)
-        if (res.data.status === 'IN_QUEUE') {
+        if (res.data.status === 'IN_QUEUE' && ref.current) {
             await sleep(RUN_INTERVAL * 1000);
             checkRun(id)
         } else {
@@ -88,8 +89,8 @@ export default function RunSubmit(props) {
             }
         }
 
-        if (totalJudged !== res.data.verdicts.length) {
-            await sleep(SUBMIT_INTERVAL)
+        if (totalJudged !== res.data.verdicts.length && ref.current) {
+            await sleep(SUBMIT_INTERVAL * 1000)
             checkSubmit(id)
         }
 
@@ -124,7 +125,6 @@ export default function RunSubmit(props) {
         try {
             const res = await axios.post(`${process.env.REACT_APP_BASE_URL}/run`, data, reqConfig)
             const subId = res.data.id
-
             checkRun(subId)
         } catch (e) {
             setOutputLoading(false)
@@ -174,7 +174,7 @@ export default function RunSubmit(props) {
     }
 
     return (
-        <div>
+        <div ref={ref}>
             {!isTerminalOpen &&
             <Card style={{marginTop: '16px', marginBottom: '0px', position: 'relative', top: '73vh'}}
                   className='button-group-card' hoverable

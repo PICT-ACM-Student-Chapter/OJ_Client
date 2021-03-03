@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import './css/login.css';
 import {Button, Form, Input, message, Typography} from 'antd';
 import {LockOutlined, UserOutlined} from '@ant-design/icons';
@@ -6,19 +6,28 @@ import axios from 'axios'
 import * as queryString from "query-string";
 import jwt_decode from "jwt-decode";
 import UserContext from "../../context/User";
+import GlobalContext from "../../context/GlobalContext";
 
 
 const Login = (props) => {
     const userContext = useContext(UserContext);
+    const globalContext = useContext(GlobalContext);
 
     const [errors, setErrors] = React.useState('')
     const [status, setStatus] = React.useState('')
+
+    useEffect(()=>{
+        userContext.dispose()
+        globalContext.dispose()
+        //eslint-disable-next-line
+    },[])
+
 
     const onFinish = async values => {
         setStatus('validating')
         setErrors('')
         try {
-            const res = await axios.post(`${process.env.REACT_APP_BASE_URL}/auth/jwt/create/`, values)
+            const res = await axios.post(`${process.env.REACT_APP_BASE_URL}/login/`, values, {headers: {}})
             setStatus('success')
             setErrors('')
             console.log(res.data.access)
@@ -28,6 +37,8 @@ const Login = (props) => {
             userContext.loadUser(decoded.user_id)
 
             message.success('Login Successful !!');
+
+            globalContext.getContests(()=>{})
 
             const qs = queryString.parse(props.history.location.search);
             if (qs.redirect) {
@@ -56,17 +67,17 @@ const Login = (props) => {
                 <Typography.Title align={'center'}>Login</Typography.Title>
                 <br/><br/>
                 <Form.Item
-                    name="username"
+                    name="email"
                     rules={[
                         {
                             required: true,
-                            message: 'Please input your Username!',
+                            message: 'Please input your Email!',
                         },
                     ]}
                     validateStatus={status}
                     hasFeedback={true}
                 >
-                    <Input size='large' prefix={<UserOutlined className="site-form-item-icon"/>} placeholder="Username"
+                    <Input size='large' prefix={<UserOutlined className="site-form-item-icon"/>} placeholder="Email"
                            errors={'dd'}/>
                 </Form.Item>
                 <Form.Item

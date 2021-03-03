@@ -1,5 +1,5 @@
 import {Avatar, Dropdown, Menu, Space} from 'antd';
-import {LogoutOutlined, RetweetOutlined, SettingOutlined, UserOutlined} from '@ant-design/icons';
+import {LogoutOutlined, RetweetOutlined} from '@ant-design/icons';
 import React, {useContext, useEffect} from "react";
 import {useThemeSwitcher} from 'react-css-theme-switcher';
 import ThemeContext from "../../context/ThemeContext";
@@ -9,24 +9,28 @@ import axios from "axios";
 import {refreshAuthLogic} from "../../utils/utils";
 import UserContext from "../../context/User";
 import Gravatar from 'react-gravatar'
+import GlobalContext from '../../context/GlobalContext';
 
 const GlobalHeaderRight = (props) => {
         const {switcher, themes} = useThemeSwitcher();
         const theme = useContext(ThemeContext)
         const userContext = useContext(UserContext)
+        const globalContext = useContext(GlobalContext)
         const history = useHistory()
 
         useEffect(() => {
                 const pathLogin = history.location.pathname
-                if (pathLogin === '/' || pathLogin === '/login') {
+                if (pathLogin === '/') {
                     console.log(pathLogin, "--------Line 21 header---------")
 
                 } else {
                     axios.post(process.env.REACT_APP_BASE_URL + '/auth/jwt/verify', {"token": (localStorage.getItem('refresh-token'))})
                         .catch(_ => {
                             userContext.dispose()
+                            globalContext.dispose()
                             const path = history.location.pathname
-                            history.push(`/login?redirect=${path}`)
+                            if (path !== "/login")
+                                history.push(`/login?redirect=${path}`)
 
                             return
                         })
@@ -40,6 +44,9 @@ const GlobalHeaderRight = (props) => {
                         return
                     } else {
                         axios.post(process.env.REACT_APP_BASE_URL + '/auth/jwt/verify', {"token": (localStorage.getItem('refresh-token'))})
+                            .then(() => {
+
+                            })
                             .catch(err => {
                                 localStorage.setItem('refresh-token', null)
                                 localStorage.setItem('token', null)
@@ -61,6 +68,7 @@ const GlobalHeaderRight = (props) => {
 
         const logout = () => {
             userContext.dispose()
+            globalContext.dispose()
             history.push('/login')
 
 
@@ -79,7 +87,7 @@ const GlobalHeaderRight = (props) => {
             }
         };
         const path = history.location.pathname
-// console.log(path)
+
         if (path === '/' || path === '/login')
             return <div/>
         else
@@ -87,17 +95,9 @@ const GlobalHeaderRight = (props) => {
                 <div>
                     <Dropdown overlay={() => (
                         <Menu selectedKeys={[]}>
-                            <Menu.Item key="center">
-                                <UserOutlined/>
-                                Profile
-                            </Menu.Item>
                             <Menu.Item key="theme" onClick={toggleDarkMode}>
                                 <RetweetOutlined/>
                                 Toggle Theme
-                            </Menu.Item>
-                            <Menu.Item key="settings">
-                                <SettingOutlined/>
-                                Account Settings
                             </Menu.Item>
                             <Menu.Divider/>
                             <Menu.Item key="logout" onClick={logout}>
