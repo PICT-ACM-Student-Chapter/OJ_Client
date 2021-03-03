@@ -228,7 +228,7 @@ function QuestionDetail(props) {
                                 <br/>
                                 <Row gutter={12}>
                                     <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                                        <Input size="large" placeholder="Enter Input"
+                                        <Input.TextArea size="large" placeholder="Enter Input"
                                                prefix={runRc ? <LoadingOutlined style={{margin: "0.5rem"}}/> :
                                                    <CodeOutlined style={{margin: "0.5rem"}}/>}
                                                disabled={runRc}
