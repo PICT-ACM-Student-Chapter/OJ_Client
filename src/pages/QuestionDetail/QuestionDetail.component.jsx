@@ -16,7 +16,7 @@ import SplitPane from "react-split-pane";
 import RunSubmit from "../../components/QuestionPage/RunSubmit.component";
 import MarkdownMathJaxComponent from "../../components/MarkdownMathJax.component";
 import GlobalContext from "../../context/GlobalContext";
-import {b64Encode, sleep} from "../../utils/utils";
+import {b64Decode, b64Encode, sleep} from "../../utils/utils";
 import axios from "axios";
 
 const {Option} = Select;
@@ -143,16 +143,14 @@ function QuestionDetail(props) {
             }
         }
         // /contests/{contest_id}/questions/{ques_id}/rc/run/{id}
-        const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/contests/
-        ${props.match.params.contestId}/questions/${props.match.params.questionId}/rc/run/${id}`, reqConfig)
+        const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/contests/${props.match.params.contestId}/questions/${props.match.params.questionId}/rc/run/${id}`, reqConfig)
         console.log(res.data)
         if (res.data.status === 'IN_QUEUE') {
             await sleep(RUN_INTERVAL * 1000);
             checkRCRun(id)
         } else {
             setRunRc(false)
-            props.funcInputTC()
-            setOutputRC(res.data)
+            setOutputRC(b64Decode(res.data.stdout))
         }
     }
 
@@ -170,8 +168,7 @@ function QuestionDetail(props) {
         }
         try {
             console.log(props.match.params.questionId)
-            const res = await axios.post(`${process.env.REACT_APP_BASE_URL}/contests/
-            ${props.match.params.contestId}/questions/${props.match.params.questionId}/rc/run`, data, reqConfig)
+            const res = await axios.post(`${process.env.REACT_APP_BASE_URL}/contests/${props.match.params.contestId}/questions/${props.match.params.questionId}/rc/run`, data, reqConfig)
             const subId = res.data.id
 
             checkRCRun(subId)

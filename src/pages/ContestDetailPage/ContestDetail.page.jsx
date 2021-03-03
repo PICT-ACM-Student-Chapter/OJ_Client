@@ -155,7 +155,10 @@ const ContestDetail = (props) => {
                                                                         Score: {ques.user_score.score} / {ques.score}
                                                                     </Tag>
                                                                     <Link
-                                                                        to={`/contests/${contestId}/${ques.id}`}>
+                                                                        to={{
+                                                                            pathname: `/contests/${contestId}/${ques.id}`,
+                                                                            state: {isReverseCoding: ques.contest_que.is_reverse_coding}
+                                                                        }}>
                                                                         <Button size='large' type={'primary'}>
                                                                             Solve
                                                                         </Button>
