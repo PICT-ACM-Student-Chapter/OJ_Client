@@ -28,9 +28,9 @@ const ContestDetail = (props) => {
     const [isQueLoading, setIsQueLoading] = useState(true)
     // const [contest, setContest] = useState(null)
     const [started, setStarted] = useState(false)
-    const [questions, setQuestions] = useState([])
+    // const [questions, setQuestions] = useState([])
 
-    const {contest, setIsContestLive} = globalContext
+    const {contest, setIsContestLive, getAllQuestions, allQuestions} = globalContext
     useEffect(() => {
         globalContext.getContestDetail(contestId, setIsLoading)
         globalContext.getAllLanguages()
@@ -53,21 +53,26 @@ const ContestDetail = (props) => {
 
     useEffect(() => {
         if (started) {
-            axios.get(`${process.env.REACT_APP_BASE_URL}/contests/${contestId}/questions`, {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
-            }).then(res => {
-                let ques = res.data
-                ques.sort((a, b) => parseInt(a.contest_que.order) - parseInt(b.contest_que.order))
-                setQuestions(ques)
-                return ques
-            })
-                .then(ques => {
-                        setIsQueLoading(false)
-                    }
-                )
+
+            // eslint-disable-next-line
+            getAllQuestions(contestId, setIsQueLoading)
+
+            // axios.get(`${process.env.REACT_APP_BASE_URL}/contests/${contestId}/questions`, {
+            //     headers: {
+            //         'Authorization': `Bearer ${localStorage.getItem('token')}`
+            //     }
+            // }).then(res => {
+            //     let ques = res.data
+            //     ques.sort((a, b) => parseInt(a.contest_que.order) - parseInt(b.contest_que.order))
+            //     setQuestions(ques)
+            //     return ques
+            // })
+            //     .then(ques => {
+            //             setIsQueLoading(false)
+            //         }
+            //     )
         }
+        // eslint-disable-next-line
     }, [started, contestId])
 
     async function startContest() {
@@ -79,7 +84,6 @@ const ContestDetail = (props) => {
 
         if (res.data.status === 'STARTED') {
             let contests = globalContext.contests
-            console.log('sdfdsfdf', contests)
             for (let c of contests) {
                 if (c.contest_id.id === contest.id) {
                     c.status = 'STARTED'
@@ -87,7 +91,6 @@ const ContestDetail = (props) => {
                     break
                 }
             }
-            console.log('sdfdfdf', contests)
             setStarted(true)
         }
     }
@@ -160,8 +163,8 @@ const ContestDetail = (props) => {
 
                                 <Tabs size='large' type="card">
                                     <TabPane tab="Questions" key="1" style={{'padding': '4%'}}>
-
-                                        {questions.map((ques) => (
+                                        {/*// TODO: Add loader for isQuestion Loading*/}
+                                        {allQuestions.map((ques) => (
                                             <Row key={ques.id} gutter={[0, 18]} align="middle"
                                                  justify="center">
                                                 <Col span={24}>

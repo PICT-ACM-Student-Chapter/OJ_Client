@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import axios from "axios";
 import UserContext from "./User";
 
@@ -15,6 +15,7 @@ class GlobalProvider extends Component {
         contest: null,
         contestID: null,
         question: {},
+        allQuestions: [],
         questionID: null,
         languages: [],
         isContestLive: true,
@@ -24,22 +25,23 @@ class GlobalProvider extends Component {
 
     dispose = () => {
         this.setState({
-            contests: null,
-            isContestsLoading: true,
-            contest: null,
-            contestID: null,
-            question: {},
-            questionID: null,
-            languages: [],
-            isContestLive: true,
-            apiError: null,
-            apiErrorMsg: ''
-        }
+                contests: null,
+                isContestsLoading: true,
+                contest: null,
+                contestID: null,
+                question: {},
+                allQuestions: [],
+                questionID: null,
+                languages: [],
+                isContestLive: true,
+                apiError: null,
+                apiErrorMsg: ''
+            }
         )
     }
 
     getContests = () => {
-        this.setState({ isContestsLoading: true });
+        this.setState({isContestsLoading: true});
         if (this.state.contests === null) {
             axios.get(`${process.env.REACT_APP_BASE_URL}/contests/`, {
                 headers: {
@@ -47,16 +49,16 @@ class GlobalProvider extends Component {
                 }
             }).then(
                 (res) => {
-                    this.setState({ contests: res.data, isContestsLoading: false });
+                    this.setState({contests: res.data, isContestsLoading: false});
                 }
             )
         } else {
-            this.setState({ isContestsLoading: false });
+            this.setState({isContestsLoading: false});
         }
     }
 
     setContests = (contests) => {
-        this.setState({ contests: contests })
+        this.setState({contests: contests})
     }
 
     getContestDetail = (contestId, setIsLoading) => {
@@ -77,7 +79,7 @@ class GlobalProvider extends Component {
             }).then(
                 (res) => {
                     res.data.questions = []
-                    this.setState({ contest: res.data, contestID: contestId });
+                    this.setState({contest: res.data, contestID: contestId});
                 }
             )
                 .then(() => {
@@ -97,10 +99,26 @@ class GlobalProvider extends Component {
         if (this.state.languages.length === 0) {
             axios.get(`${process.env.REACT_APP_BASE_URL}/languages/`)
                 .then(res => {
-                    this.setState({ languages: res.data });
+                    this.setState({languages: res.data});
 
                 })
         }
+    }
+
+    getAllQuestions = (contestId, setIsQueLoading) => {
+        axios.get(`${process.env.REACT_APP_BASE_URL}/contests/${contestId}/questions`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        }).then(res => {
+            let ques = res.data
+            ques.sort((a, b) => parseInt(a.contest_que.order) - parseInt(b.contest_que.order))
+            this.setState({allQuestions: ques});
+        })
+            .then(ques => {
+                    setIsQueLoading(false)
+                }
+            )
     }
 
     getQuestionDetail = async (questionId, setLoading, setTCsLoading, setCurrentLanguage) => {
@@ -115,7 +133,7 @@ class GlobalProvider extends Component {
             try {
                 const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/questions/${questionId}`, reqConfig)
 
-                this.setState({ question: res.data, questionID: questionId });
+                this.setState({question: res.data, questionID: questionId});
                 setLoading(false)
 
                 for (let i of res.data.test_cases) {
@@ -125,7 +143,7 @@ class GlobalProvider extends Component {
                     i.output = outRes.data
                 }
 
-                this.setState({ question: res.data });
+                this.setState({question: res.data});
                 setTCsLoading(false)
 
                 if (localStorage.getItem('preferredLanguage')) {
@@ -152,21 +170,42 @@ class GlobalProvider extends Component {
     }
 
     setIsContestLive = (isLive) => {
-        this.setState({ isContestLive: isLive })
+        this.setState({isContestLive: isLive})
     }
 
     setApiError = (err) => {
-        this.setState({ apiError: err })
+        this.setState({apiError: err})
     }
 
     setApiErrorMsg = (err) => {
-        this.setState({ apiErrorMsg: err })
+        this.setState({apiErrorMsg: err})
     }
 
     render() {
-        const { children } = this.props;
-        const { contests, contest, languages, question, isContestLive, apiError, apiErrorMsg, isContestsLoading } = this.state;
-        const { getContests,dispose, setContests, getContestDetail, getAllLanguages, getQuestionDetail, setIsContestLive, setApiError, setApiErrorMsg } = this;
+        const {children} = this.props;
+        const {
+            contests,
+            contest,
+            languages,
+            question,
+            isContestLive,
+            apiError,
+            apiErrorMsg,
+            isContestsLoading,
+            allQuestions
+        } = this.state;
+        const {
+            getContests,
+            dispose,
+            setContests,
+            getContestDetail,
+            getAllLanguages,
+            getQuestionDetail,
+            setIsContestLive,
+            setApiError,
+            setApiErrorMsg,
+            getAllQuestions
+        } = this;
 
         return (
             <GlobalContext.Provider
@@ -179,6 +218,7 @@ class GlobalProvider extends Component {
                     isContestLive,
                     apiError,
                     apiErrorMsg,
+                    allQuestions,
                     dispose,
                     getContests,
                     setContests,
@@ -187,7 +227,8 @@ class GlobalProvider extends Component {
                     getQuestionDetail,
                     setIsContestLive,
                     setApiError,
-                    setApiErrorMsg
+                    setApiErrorMsg,
+                    getAllQuestions
                 }}>
                 {" "}
                 {children}{" "}
@@ -198,7 +239,7 @@ class GlobalProvider extends Component {
 
 export default GlobalContext;
 
-export { GlobalProvider };
+export {GlobalProvider};
 
 
 //contest, questionsDetails, question, languages
