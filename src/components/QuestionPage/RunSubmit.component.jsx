@@ -216,7 +216,7 @@ export default function RunSubmit(props) {
                               >
                                   <Button disabled={outputLoading}>
                                       {outputLoading ? <LoadingOutlined/> : <CaretRightOutlined/>}
-                                      Run wihtout
+                                      Run
                                   </Button>
                               </Popconfirm>
 
