@@ -27,7 +27,7 @@ const Login = (props) => {
         setStatus('validating')
         setErrors('')
         try {
-            const res = await axios.post(`${process.env.REACT_APP_BASE_URL}/login `, values, {headers: {}})
+            const res = await axios.post(`${process.env.REACT_APP_BASE_URL}/login/ `, values, {headers: {}})
             setStatus('success')
             setErrors('')
             console.log(res.data.access)
