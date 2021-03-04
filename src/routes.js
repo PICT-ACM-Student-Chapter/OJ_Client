@@ -32,7 +32,8 @@ const Routes = (props) => {
         exact: false
     })
 
-    let prevCont
+    // eslint-disable-next-line
+    let prevCont;
     React.useEffect(() => {
         if (globalContext.contests && match) {
             const contestId = match.params.contestId
@@ -40,6 +41,7 @@ const Routes = (props) => {
         }
         if(match && globalContext.contests && checkContest(match.params.contestId) === 0) {
             addRestrictions(match.params.contestId)
+            // eslint-disable-next-line
             prevCont = match.params.contestId
         }else
             removeRestrictions(prevCont)
