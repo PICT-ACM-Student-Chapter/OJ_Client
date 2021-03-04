@@ -17,6 +17,7 @@ import {useLocation} from "react-router";
 import Error403 from "./pages/403.page";
 import Error404 from "./pages/404.page";
 import Error500 from "./pages/500.page";
+import {addRestrictions, removeRestrictions} from "./utils/restrictions";
 
 
 const Routes = (props) => {
@@ -31,11 +32,17 @@ const Routes = (props) => {
         exact: false
     })
 
+    let prevCont
     React.useEffect(() => {
         if (globalContext.contests && match) {
             const contestId = match.params.contestId
             setContestStatus(checkContest(contestId))
         }
+        if(match && globalContext.contests && checkContest(match.params.contestId) === 0) {
+            addRestrictions(match.params.contestId)
+            prevCont = match.params.contestId
+        }else
+            removeRestrictions(prevCont)
         // eslint-disable-next-line
     }, [globalContext.contests, location.pathname, match])
 
@@ -46,8 +53,11 @@ const Routes = (props) => {
         1: Contest ended
         -1: Contest not started
         -2: Invalid contest
+        -10: Restrictions fail
          */
         for (let c of globalContext.contests) {
+            if(parseInt(localStorage.getItem(`${match.params.contestId}_warnings`)) >= 3)
+                return -10
             if (c.contest_id?.id === contestId && new Date(c.contest_id.end_time) < new Date())
                 return 1;
             if (c.contest_id?.id === contestId && new Date(c.contest_id.start_time) > new Date())
@@ -86,6 +96,8 @@ const Routes = (props) => {
                     </> : <>
                         {contestStatus === 1 &&
                         <ContestOverPage contestId={match && match.params.contestId}/>}
+                        {contestStatus === -10 &&
+                        <Error403 contestId={match && match.params.contestId} message={"You are disqualified as you have attempted to exit the MCQ platform more that 3 times."}/>}
                         {contestStatus === -1 &&
                         <Error403 contestId={match && match.params.contestId}/>}
                         {contestStatus === -2 &&
