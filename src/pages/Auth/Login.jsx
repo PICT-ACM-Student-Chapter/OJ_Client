@@ -67,17 +67,17 @@ const Login = (props) => {
                 <Typography.Title align={'center'}>Login</Typography.Title>
                 <br/><br/>
                 <Form.Item
-                    name="username"
+                    name="email"
                     rules={[
                         {
                             required: true,
-                            message: 'Please input your Username!',
+                            message: 'Please input your Email!',
                         },
                     ]}
                     validateStatus={status}
                     hasFeedback={true}
                 >
-                    <Input size='large' prefix={<UserOutlined className="site-form-item-icon"/>} placeholder="Username"
+                    <Input size='large' prefix={<UserOutlined className="site-form-item-icon"/>} placeholder="Email"
                            errors={'dd'}/>
                 </Form.Item>
                 <Form.Item
