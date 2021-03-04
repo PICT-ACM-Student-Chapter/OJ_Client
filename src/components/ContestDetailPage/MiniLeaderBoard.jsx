@@ -112,7 +112,7 @@ function MiniLeaderBoard(props) {
             <br/><br/>
 
             <Button size='large' block onClick={() => {
-                history.push(`/leaderboard/${props.match.params.contestId}`)
+                history.push(`/leaderboard/${props.match.params.contestId}?back=${props.back}`)
             }}>
                 Full Leaderboard
             </Button>

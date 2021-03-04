@@ -1,11 +1,12 @@
-import {Card, Table, Tag, Typography} from 'antd'
+import {Button, Card, Col, Row, Table, Tag, Typography} from 'antd'
 import React, {useContext, useEffect, useState} from 'react'
 import axios from "axios";
 import UserContext from "../../context/User";
 import "./leaderboard.css"
-import {TrophyOutlined} from "@ant-design/icons";
+import {LeftOutlined, TrophyOutlined} from "@ant-design/icons";
 import {Link} from "react-router-dom";
 import GlobalContext from "../../context/GlobalContext";
+import {useLocation} from "react-router";
 
 const defaultCols = [
     {
@@ -36,6 +37,10 @@ const defaultCols = [
         fixed: 'left',
         align: 'center'
     }]
+
+function useQuery() {
+    return new URLSearchParams(useLocation().search);
+}
 
 function LeaderBoard(props) {
     const [loading, setLoading] = useState(true)
@@ -88,7 +93,8 @@ function LeaderBoard(props) {
             scoreSum += que.score
             //Set Column for leaderboard table
             col.push({
-                title: <Link to={`/contests/${props.match.params.contestId}/${que.id}`}><Typography.Title level={5}>{`${que.id}`}</Typography.Title></Link>,
+                title: <Link to={`/contests/${props.match.params.contestId}/${que.id}`}><Typography.Title
+                    level={5}>{`${que.id}`}</Typography.Title></Link>,
                 dataIndex: `question${que.id}`,
                 key: `question${i}`,
                 width: '15rem',
@@ -146,30 +152,50 @@ function LeaderBoard(props) {
         }
         setData(lb)
     }
+    let query = useQuery();
 
 
     return (
         <div style={{padding: "2% 4%"}}>
-            <Typography.Title>Leaderboard</Typography.Title>
-            <Typography.Title type={'secondary'} level={3}>{globalContext.contest?.name || props.match.params.contestId || ''}</Typography.Title>
-            <br/>
-            <Card style={{width: '12rem'}} bodyStyle={{padding: '12px 24px'}}>
-                <div className={'ant-statistic'}>
-                    <div className={'ant-statistic-title'}>
-                        Current Rank
-                    </div>
-                    <div className={'ant-statistic-content'}>
-                        <div className={'ant-statistic-content-prefix'}
-                             style={{marginRight: '1rem'}}>
-                            <TrophyOutlined/>
+            {query.get('back') ?
+                <Button icon={<LeftOutlined/>} onClick={
+                    () => {
+
+                        props.history.push(`${query.get('back')}`)
+                    }
+                }>Back</Button>
+
+                :
+                <></>
+            }
+            <br/><br/>
+            <Row justify="space-around" align="middle">
+                <Col xs={24} sm={24} md={14} lg={14} xl={14}>
+                    <Typography.Title>Leaderboard</Typography.Title>
+                    <Typography.Title type={'secondary'}
+                                      level={3}>{globalContext.contest?.name || props.match.params.contestId || ''}</Typography.Title>
+                </Col>
+                <Col xs={24} sm={24} md={10} lg={10} xl={10}>
+                    <br/>
+                    <Card style={{width: '12rem'}} bodyStyle={{padding: '12px 24px'}}>
+                        <div className={'ant-statistic'}>
+                            <div className={'ant-statistic-title'}>
+                                Current Rank
+                            </div>
+                            <div className={'ant-statistic-content'}>
+                                <div className={'ant-statistic-content-prefix'}
+                                     style={{marginRight: '1rem'}}>
+                                    <TrophyOutlined/>
+                                </div>
+                                <div className={'ant-statistic-content-value'}>
+                                    {userContext.rank}
+                                </div>
+                            </div>
+                            Score: {userContext.score}/{totalScore || ''}
                         </div>
-                        <div className={'ant-statistic-content-value'}>
-                            {userContext.rank}
-                        </div>
-                    </div>
-                    Score: {userContext.score}/{totalScore || ''}
-                </div>
-            </Card>
+                    </Card>
+                </Col>
+            </Row>
             <br/><br/>
             *Updated every minute
             <br/>

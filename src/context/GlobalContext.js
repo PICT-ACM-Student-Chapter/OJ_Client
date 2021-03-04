@@ -115,7 +115,7 @@ class GlobalProvider extends Component {
             ques.sort((a, b) => parseInt(a.contest_que.order) - parseInt(b.contest_que.order))
             this.setState({allQuestions: ques});
         })
-            .then(ques => {
+            .then( _ => {
                     setIsQueLoading(false)
                 }
             )
