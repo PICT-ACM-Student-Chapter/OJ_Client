@@ -56,7 +56,7 @@ const ContestDetail = (props) => {
 
             // eslint-disable-next-line
             getAllQuestions(contestId, setIsQueLoading)
-
+            console.log(props.location.pathname)
             // axios.get(`${process.env.REACT_APP_BASE_URL}/contests/${contestId}/questions`, {
             //     headers: {
             //         'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -173,7 +173,6 @@ const ContestDetail = (props) => {
                                                             <Col lg={12} onClick={() => {
                                                                 props.history.push({
                                                                     path: `/contests/${contestId}/${ques.id}`,
-                                                                    state: {isReverseCoding: ques.contest_que.is_reverse_coding}
                                                                 })
                                                             }}>
                                                                 <h2><Link
@@ -193,14 +192,13 @@ const ContestDetail = (props) => {
                                                                     <Link
                                                                         to={{
                                                                             pathname: `/contests/${contestId}/${ques.id}`,
-                                                                            state: {isReverseCoding: ques.contest_que.is_reverse_coding}
                                                                         }}>
                                                                         <Button size='large' type={'primary'}>
                                                                             Solve
                                                                         </Button>
                                                                     </Link>
                                                                     <Link
-                                                                        to={`/contests/${contestId}/${ques.id}/submissions?name=${ques.name}`}>
+                                                                        to={`/contests/${contestId}/${ques.id}/submissions?name=${ques.name}&back=${props.location.pathname}`}>
                                                                         <Button size='large'>
                                                                             My Submissions
                                                                         </Button>

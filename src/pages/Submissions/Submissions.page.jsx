@@ -6,7 +6,7 @@ import SyntaxHighlighter from 'react-syntax-highlighter';
 import {vs, vs2015} from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import {b64Decode, parseDate} from "../../utils/utils";
 import {useLocation} from "react-router";
-import {ForkOutlined} from "@ant-design/icons";
+import {ForkOutlined, LeftOutlined} from "@ant-design/icons";
 import "./Submission.css"
 import SubmissionDetail from "./SubmissionDetail.component";
 import GlobalContext from "../../context/GlobalContext";
@@ -209,6 +209,20 @@ function Submissions(props) {
 
     return (
         <div style={{padding: "2% 4%"}}>
+            { query.get('back') ?
+                <Button icon={<LeftOutlined />} onClick={
+                    () => {
+
+                        props.history.push(`${query.get('back')}`)
+                    }
+                }>Back</Button>
+
+                :
+                <></>
+            }
+
+            <br/><br/>
+
             <Typography.Title>Submissions</Typography.Title>
             <Typography.Title type={'secondary'} level={3}>{query.get("name") || ""}</Typography.Title>
             <br/><br/><br/>

@@ -74,7 +74,7 @@ function QuestionDetail(props) {
             if (question.id === props.match.params.questionId) {
                 setIsReverseCode(question.contest_que.is_reverse_coding)
             }
-        return null
+            return null
         })
 
     }
@@ -332,8 +332,11 @@ function QuestionDetail(props) {
                             </Col>
                             <Col align='right' span={12}>
                                 <Space>
-                                    <Link to={`${window.location.pathname}/submissions`}><Button
-                                        icon={<ProfileOutlined/>} size={'medium'}>My Submissions</Button></Link>
+                                    <Link
+                                        to={`${props.location.pathname}/submissions?name=${question.name}&back=${props.location.pathname}`}>
+
+                                        <Button
+                                            icon={<ProfileOutlined/>} size={'medium'}>My Submissions</Button></Link>
                                     <Link to={`/leaderboard/${props.match.params.contestId}`}><Button
                                         icon={<BarChartOutlined/>} type='primary'
                                         size={'medium'}>Leaderboard</Button></Link>
