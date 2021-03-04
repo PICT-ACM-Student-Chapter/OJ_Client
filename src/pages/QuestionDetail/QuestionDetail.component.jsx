@@ -8,6 +8,7 @@ import {
     BarChartOutlined,
     CaretRightOutlined,
     HourglassOutlined,
+    LeftOutlined,
     LoadingOutlined,
     ProfileOutlined
 } from "@ant-design/icons";
@@ -18,12 +19,16 @@ import GlobalContext from "../../context/GlobalContext";
 import {b64Decode, b64Encode, sleep} from "../../utils/utils";
 import axios from "axios";
 import {Link} from "react-router-dom";
+import {useLocation} from "react-router";
 
 const {Option} = Select;
 const {Countdown} = Statistic;
 
 const RUN_INTERVAL = 1  // In secs
 
+function useQuery() {
+    return new URLSearchParams(useLocation().search);
+}
 
 function QuestionDetail(props) {
 
@@ -46,7 +51,7 @@ function QuestionDetail(props) {
     const [outputRC, setOutputRC] = useState("")
     const [linkTo, setLinkTo] = useState("")
 
-    const {contest, allQuestions} = globalContext
+    const {contest, allQuestions, getAllQuestions} = globalContext
 
     let savedCodes = JSON.parse(localStorage.getItem(`codes${props.match.params.questionId}`) || '{}')
 
@@ -67,7 +72,18 @@ function QuestionDetail(props) {
             localStorage.setItem('preferredLanguage', currentLanguage.id)
     }, [currentLanguage])
 
-    const isReverseCoding = (question) => {
+    useEffect(() => {
+        isReverseCoding()
+        // eslint-disable-next-line
+    }, [allQuestions])
+
+    const isReverseCoding = () => {
+
+        if (allQuestions.length === 0) {
+            getAllQuestions(props.match.params.contestId, (() => {
+            }))
+            return
+        }
 
         allQuestions.map((question) => {
 
@@ -157,6 +173,9 @@ function QuestionDetail(props) {
         }
     }
 
+    let query = useQuery();
+
+
     return (
         <div>
             <Helmet>
@@ -168,9 +187,30 @@ function QuestionDetail(props) {
                        style={{position: "relative", width: '100%', height: '88vh', overflowY: 'hidden'}}>
                 <div>
                     <Card className='question-card' title={<>
-                        <Row justify="space-around" align="middle" style={{borderBottom: "0.5px solid #333333"}}>
+
+                        {query.get('back') ?
+                            <Button icon={<LeftOutlined/>} onClick={
+                                () => {
+                                    props.history.push(`${query.get('back')}`)
+                                }
+                            }>Back
+                            </Button>
+
+                            :
+                            <>
+                                <Button icon={<LeftOutlined/>} onClick={
+                                    () => {
+                                        props.history.push(`${linkTo}`)
+                                    }
+                                }>Back
+                                </Button>
+                            </>
+                        }
+                        <Row justify="space-around" align="middle">
+
+
                             <Col>
-                                <Breadcrumb style={{fontSize: "large"}}>
+                                <Breadcrumb style={{fontSize: "x-large"}}>
                                     <Breadcrumb.Item>
                                         <Link to={{pathname: linkTo}}>Questions</Link>
                                     </Breadcrumb.Item>
@@ -181,6 +221,8 @@ function QuestionDetail(props) {
                                 </Breadcrumb>
                             </Col>
                         </Row>
+                        <br/>
+                        <div style={{borderBottom: "0.5px solid #333333"}}></div>
                         <br/>
                         <Row justify="space-around" align="middle">
                             <Col span={16}>
@@ -218,11 +260,11 @@ function QuestionDetail(props) {
                             <br/>
 
                             {isReverseCode &&
-                            <>
+                            <div style={{padding:"0.5rem"}}>
                                 <Typography.Title level={3}>Run Testcase</Typography.Title>
                                 <br/>
-                                <Row gutter={24}>
-                                    <Col xs={18} sm={18} md={18} lg={18} xl={18}>
+                                <Row gutter={24} justify="space-around" align="middle">
+                                    <Col xs={24} sm={24} md={12} lg={12} xl={12}>
                                         <Input.TextArea
                                             placeholder="    ENTER INPUT HERE"
                                             disabled={runRc}
@@ -251,8 +293,8 @@ function QuestionDetail(props) {
 
                                 </Row>
                                 <br/>
-                                <Row>
-                                    <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                                <Row justify="space-around" align="middle">
+                                    <Col xs={24} sm={24} md={22} lg={22} xl={22}>
                                         <Input.TextArea placeholder="    OUTPUT SHOWN HERE"
                                                         value={outputRC}
                                                         readonly
@@ -265,7 +307,7 @@ function QuestionDetail(props) {
                                     </Col>
                                 </Row>
 
-                            </>
+                            </div>
                             }
                             <br/><br/>
                             <>
@@ -337,7 +379,8 @@ function QuestionDetail(props) {
 
                                         <Button
                                             icon={<ProfileOutlined/>} size={'medium'}>My Submissions</Button></Link>
-                                    <Link to={`/leaderboard/${props.match.params.contestId}`}><Button
+                                    <Link
+                                        to={`/leaderboard/${props.match.params.contestId}?back=${props.location.pathname}`}><Button
                                         icon={<BarChartOutlined/>} type='primary'
                                         size={'medium'}>Leaderboard</Button></Link>
                                 </Space>
@@ -350,7 +393,12 @@ function QuestionDetail(props) {
                         <div style={{width: '100%', position: 'absolute'}}>
                             <Card width={'100%'} className={'editor-card'}
                                   style={{height: '71vh'}}>
-                                {JSON.stringify(currentLanguage) === '{}' ? <></> :
+                                {JSON.stringify(currentLanguage) === '{}' ?
+                                    <div style={{ position:'absolute', top:'10%', left:'20%', tranform:'translate(-50%,-50%)'  }}>
+                                        <h1 style={{fontSize: "x-large", marginLeft: "15%"}}>Please Select a language</h1>
+                                        <br/>
+                                        <img src="/select.svg" alt="" style={{width:"80%"}}/>
+                                    </div> :
                                     <Editor
                                         loading={<Spin size={'large'} tip={'Loading Editor'}/>}
                                         language={currentLanguage.monaco_lang_code}

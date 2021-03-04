@@ -171,12 +171,12 @@ const ContestDetail = (props) => {
                                                     <Card bordered={false}>
                                                         <Row align="middle">
                                                             <Col lg={12} onClick={() => {
-                                                                props.history.push({
-                                                                    path: `/contests/${contestId}/${ques.id}`,
-                                                                })
+                                                                // props.history.push({
+                                                                //     path: `/contests/${contestId}/${ques.id}?back=${props.location.pathname}`,
+                                                                // })
                                                             }}>
                                                                 <h2><Link
-                                                                    to={`/contests/${contestId}/${ques.id}`}> {ques.name}</Link>
+                                                                    to={`/contests/${contestId}/${ques.id}?back=${props.location.pathname}`}> {ques.name}</Link>
                                                                 </h2>
                                                             </Col>
                                                             <Col lg={12} align={'right'}>
@@ -190,9 +190,8 @@ const ContestDetail = (props) => {
                                                                         Score: {ques.user_score.score} / {ques.score}
                                                                     </Tag>
                                                                     <Link
-                                                                        to={{
-                                                                            pathname: `/contests/${contestId}/${ques.id}`,
-                                                                        }}>
+                                                                        to={`/contests/${contestId}/${ques.id}?back=${props.location.pathname}`
+                                                                        }>
                                                                         <Button size='large' type={'primary'}>
                                                                             Solve
                                                                         </Button>
@@ -227,7 +226,7 @@ const ContestDetail = (props) => {
                                 <Divider type="vertical" style={{height: "100%"}}/>
                             </Col>
                             <Col xs={24} sm={24} md={24} lg={8} xl={8}>
-                                <MiniLeaderBoard match={props.match}/>
+                                <MiniLeaderBoard match={props.match} back={props.location.pathname}/>
                             </Col>
                         </Row></>
                     }
