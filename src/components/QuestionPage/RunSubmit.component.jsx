@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import {Button, Card, Input, message, Popconfirm, Space} from "antd";
 import {CaretRightOutlined, DownOutlined, LoadingOutlined, UpOutlined} from "@ant-design/icons";
 import RunOutputComponent from "./RunOutput.component";
@@ -19,6 +19,7 @@ export default function RunSubmit(props) {
     const [output, setOutput] = useState({});
 
     const [submissionLoading, setSubmissionLoading] = useState(false);
+    const [subButtonLoading, setSubButtonLoading] = useState(false);
 
     // eslint-disable-next-line
     const [submission, setSubmission] = useState({});
@@ -92,6 +93,8 @@ export default function RunSubmit(props) {
         if (totalJudged !== res.data.verdicts.length && ref.current) {
             await sleep(SUBMIT_INTERVAL * 1000)
             checkSubmit(id)
+        } else {
+            setSubButtonLoading(false)
         }
 
     }
@@ -144,7 +147,7 @@ export default function RunSubmit(props) {
         }
         setActiveTab('submit')
         setSubmissionLoading(true)
-
+        setSubButtonLoading(true)
         const data = {
             lang_id: props.getLang().id,
             code: b64Encode(props.getCode())
@@ -200,18 +203,42 @@ export default function RunSubmit(props) {
                   className='button-group-card' onTabChange={setActiveTab} activeTabKey={activeTab}
                   extra={
                       <Space style={{position: 'absolute', right: 16, zIndex: 10}}>
-                          <Button disabled={outputLoading} onClick={() => handleRun(null)}>
-                              {outputLoading ? <LoadingOutlined/> : <CaretRightOutlined/>}
-                              Run
-                          </Button>
+
+                          {input === "" ?
+
+                              <Popconfirm
+                                  placement="topRight"
+                                  title={'Are you sure you want to RUN without Input?'}
+                                  onConfirm={()=>{handleRun(null)}}
+                                  okText="Yes"
+                                  cancelText="No"
+                                  disabled={outputLoading}
+                              >
+                                  <Button disabled={outputLoading}>
+                                      {outputLoading ? <LoadingOutlined/> : <CaretRightOutlined/>}
+                                      Run
+                                  </Button>
+                              </Popconfirm>
+
+                              :
+
+                              <Button disabled={outputLoading} onClick={() => handleRun(null)}>
+                                  {outputLoading ? <LoadingOutlined/> : <CaretRightOutlined/>}
+                                  Run
+                              </Button>
+
+                          }
+
+
                           <Popconfirm
                               placement="topRight"
                               title={'Are you sure you want to submit?'}
                               onConfirm={handleSubmit}
                               okText="Yes"
                               cancelText="No"
+                              disabled={subButtonLoading}
                           >
-                              <Button type={'primary'}>Submit</Button>
+                              <Button type={'primary'} disabled={subButtonLoading}>Submit</Button>
                           </Popconfirm>
                           <Button onClick={_ => setTerminalOpen(!isTerminalOpen)} shape={'circle'}
                                   icon={<DownOutlined/>}/>

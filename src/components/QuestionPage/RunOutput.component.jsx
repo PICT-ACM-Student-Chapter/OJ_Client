@@ -22,8 +22,14 @@ export default function RunOutputComponent(props) {
         {outputLoading && <Skeleton active/>}
         {output.status && !outputLoading && <div>
             <Space style={{fontSize: '1rem', marginBottom: '1rem'}}>
-                <Typography.Text
-                    type={statusColor[output.status] || 'warning'}>{output.status || ''}&nbsp;&nbsp;</Typography.Text>
+                { output.status === "AC" ?
+                    <Typography.Text
+                        type={statusColor[output.status]}>Execution Success &nbsp;&nbsp;</Typography.Text>
+                    :
+                    <Typography.Text
+                        type={statusColor[output.status] || 'warning'}>{output.status || ''}&nbsp;&nbsp;</Typography.Text>
+                }
+
                 <Typography.Text
                     type={'secondary'}>Runtime: {`${output.exec_time || '--'} s`}</Typography.Text>
             </Space>

@@ -64,21 +64,21 @@ function MiniLeaderBoard(props) {
 
     const generateData = (leaderBoard) => {
         //Create leaderboard data
-
+        let lb1=[];
+        let size;
         const lb = leaderBoard.map((row, i) => {
-
-            if (i < 7) {
                 return {
                     name: row.user_id.username,
                     score: row.total_score,
                     penalty: row.total_penalty
                 }
-            }
 
-            return null
         })
 
+
         lb.sort((a, b) => ((a.score === b.score) ? (a.penalty - b.penalty) : (b.score - a.score)))
+
+        console.log(lb, "line 83")
 
         for (let i = 0; i < lb.length; i++) {
             if (userContext.user.username === lb[i].name) {
@@ -87,7 +87,17 @@ function MiniLeaderBoard(props) {
             }
             lb[i].rank = i + 1;
         }
-        setData(lb)
+
+        if(lb.length < 7){
+            size = lb.length
+        }else{
+            size = 7
+        }
+        for (let i = 0; i < size; i++) {
+            lb1[i] = lb[i];
+        }
+        console.log(lb1)
+        setData(lb1)
     }
 
 

@@ -35,7 +35,7 @@ function QuestionDetail(props) {
     // eslint-disable-next-line
     const [started, setStarted] = useState(false)
 
-    const [isReverseCode, setIsReverseCode] = useState("")
+    const [isReverseCode, setIsReverseCode] = useState(false)
     const [inputRC, setInputRC] = useState("")
     // const [languages, setLanguages] = useState([])
     const [currentLanguage, setCurrentLanguage] = useState({})
@@ -46,23 +46,19 @@ function QuestionDetail(props) {
     const [outputRC, setOutputRC] = useState("")
     const [linkTo, setLinkTo] = useState("")
 
-    const {contest} = globalContext
+    const {contest, allQuestions} = globalContext
 
     let savedCodes = JSON.parse(localStorage.getItem(`codes${props.match.params.questionId}`) || '{}')
 
 
     useEffect(() => {
-        if (props.location.state) {
-            setIsReverseCode(props.location.state.isReverseCoding)
-            console.log(props.location.state.isReverseCoding)
-        } else {
-            props.history.push(`/contests/${props.match.params.contestId}`)
-        }
+
         setLinkTo(`/contests/${props.match.params.contestId}`)
         console.log(question)
         getAllLanguages()
         getQuestionDetail(props.match.params.questionId, setLoading, setTCsLoading, setCurrentLanguage)
         globalContext.getContestDetail(props.match.params.contestId, setStarted, setStarted)
+        isReverseCoding()
         // eslint-disable-next-line
     }, [props.match.params.questionId])
 
@@ -70,6 +66,19 @@ function QuestionDetail(props) {
         if (currentLanguage.id)
             localStorage.setItem('preferredLanguage', currentLanguage.id)
     }, [currentLanguage])
+
+    const isReverseCoding = (question) => {
+
+        allQuestions.map((question) => {
+
+            if (question.id === props.match.params.questionId) {
+                setIsReverseCode(question.contest_que.is_reverse_coding)
+            }
+            return null
+        })
+
+    }
+
 
     function handleEditorMount(_, e) {
         setEditor(e)
@@ -166,7 +175,7 @@ function QuestionDetail(props) {
                                         <Link to={{pathname: linkTo}}>Questions</Link>
                                     </Breadcrumb.Item>
                                     <Breadcrumb.Item>
-                                        <span>{question.name || "" }</span>
+                                        <span>{question.name || ""}</span>
                                     </Breadcrumb.Item>
 
                                 </Breadcrumb>
@@ -175,7 +184,7 @@ function QuestionDetail(props) {
                         <br/>
                         <Row justify="space-around" align="middle">
                             <Col span={16}>
-                                <Typography.Title>{ question.name || ""}</Typography.Title>
+                                <Typography.Title>{question.name || ""}</Typography.Title>
                             </Col>
                             <Col align='right' span={8}>
                                 {
@@ -323,8 +332,11 @@ function QuestionDetail(props) {
                             </Col>
                             <Col align='right' span={12}>
                                 <Space>
-                                    <Link to={`${window.location.pathname}/submissions`}><Button
-                                        icon={<ProfileOutlined/>} size={'medium'}>My Submissions</Button></Link>
+                                    <Link
+                                        to={`${props.location.pathname}/submissions?name=${question.name}&back=${props.location.pathname}`}>
+
+                                        <Button
+                                            icon={<ProfileOutlined/>} size={'medium'}>My Submissions</Button></Link>
                                     <Link to={`/leaderboard/${props.match.params.contestId}`}><Button
                                         icon={<BarChartOutlined/>} type='primary'
                                         size={'medium'}>Leaderboard</Button></Link>
