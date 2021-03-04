@@ -175,7 +175,7 @@ function LeaderBoard(props) {
                     <Typography.Title type={'secondary'}
                                       level={3}>{globalContext.contest?.name || props.match.params.contestId || ''}</Typography.Title>
                 </Col>
-                <Col xs={24} sm={24} md={10} lg={10} xl={10}>
+                <Col align="right" xs={24} sm={24} md={10} lg={10} xl={10}>
                     <br/>
                     <Card style={{width: '12rem'}} bodyStyle={{padding: '12px 24px'}}>
                         <div className={'ant-statistic'}>

@@ -254,7 +254,7 @@ function QuestionDetail(props) {
                 )}
                 <Row justify="space-around" align="middle">
                   <Col>
-                    <Breadcrumb style={{ fontSize: "x-large" }}>
+                    <Breadcrumb separator=">" style={{ fontSize: "x-large" }}>
                       <Breadcrumb.Item>
                         <Link to={{ pathname: linkTo }}>Questions</Link>
                       </Breadcrumb.Item>
@@ -265,13 +265,13 @@ function QuestionDetail(props) {
                   </Col>
                 </Row>
                 <br />
-                <div style={{ borderBottom: "0.5px solid #333333" }}></div>
+                <div style={{ borderBottom: "0.5px solid #333330" }}></div>
                 <br />
                 <Row justify="space-around" align="middle">
-                  <Col span={16}>
+                  <Col xs={24} sm={24} md={24} lg={16} xl={16}>
                     <Typography.Title>{question.name || ""}</Typography.Title>
                   </Col>
-                  <Col align="right" span={8}>
+                  <Col align="right" xs={24} sm={24} md={24} lg={8} xl={8}>
                     {contest ? (
                       <Card
                         style={{ width: "12rem" }}
