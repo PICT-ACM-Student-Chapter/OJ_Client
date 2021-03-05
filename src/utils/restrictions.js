@@ -33,7 +33,7 @@ function tabExitHandler(contestId) {
 
 
         let warningNo = parseInt(localStorage.getItem(`${contestId}_warnings`)) || 0
-        if (warningNo === 3) {
+        if (warningNo === 5) {
             alert("You are disqualified as you have attempted to exit the MCQ platform more that 3 times.")
             window.location.pathname = "/contests"
             return
