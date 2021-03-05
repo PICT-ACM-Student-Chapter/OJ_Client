@@ -4,9 +4,6 @@ export function addRestrictions(contestId) {
     // Disable ctrl+c ctrl+v
     window.document.addEventListener('keydown', keystrokesHandler);
 
-    window.document.onpointerleave = function () {
-        tabExitHandler(contestId)
-    }
 }
 
 export function removeRestrictions(contestId) {
@@ -15,8 +12,6 @@ export function removeRestrictions(contestId) {
     // Disable ctrl+c ctrl+v
     window.document.removeEventListener('keydown', keystrokesHandler);
 
-    window.document.onpointerleave = function () {
-    }
 }
 
 function rightClickHandler(e) {

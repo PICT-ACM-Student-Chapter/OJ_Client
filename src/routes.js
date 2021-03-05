@@ -17,6 +17,7 @@ import {useLocation} from "react-router";
 import Error403 from "./pages/403.page";
 import Error404 from "./pages/404.page";
 import Error500 from "./pages/500.page";
+import {addRestrictions, removeRestrictions} from "./utils/restrictions";
 // import {addRestrictions, removeRestrictions} from "./utils/restrictions";
 
 
@@ -39,12 +40,12 @@ const Routes = (props) => {
             const contestId = match.params.contestId
             setContestStatus(checkContest(contestId))
         }
-        // if(match && globalContext.contests && checkContest(match.params.contestId) === 0) {
-        //     addRestrictions(match.params.contestId)
-        //     // eslint-disable-next-line
-        //     prevCont = match.params.contestId
-        // }else
-        //     removeRestrictions(prevCont)
+        if(match && globalContext.contests && checkContest(match.params.contestId) === 0) {
+            addRestrictions(match.params.contestId)
+            // eslint-disable-next-line
+            prevCont = match.params.contestId
+        }else
+            removeRestrictions(prevCont)
         // eslint-disable-next-line
     }, [globalContext.contests, location.pathname, match])
 
