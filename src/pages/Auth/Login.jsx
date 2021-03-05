@@ -106,6 +106,9 @@ const Login = (props) => {
                     </Button>
                     <br/><br/>
                 </Form.Item>
+                <div style={{textAlign: 'center'}}>
+                    <Typography.Link href="https://pulzion.in/forgot-password">Forgot Password?</Typography.Link>
+                </div>
             </Form>
         </div>
 
