@@ -23,18 +23,18 @@ function keystrokesHandler(e) {
         e.preventDefault();
 }
 
-function tabExitHandler(contestId) {
-    setTimeout(() => {
-
-
-        let warningNo = parseInt(localStorage.getItem(`${contestId}_warnings`)) || 0
-        if (warningNo === 5) {
-            alert("You are disqualified as you have attempted to exit the MCQ platform more that 5 times.")
-            window.location.pathname = "/contests"
-            return
-        }
-        warningNo++;
-        alert(`Please don't exit the MCQ Platform. Warning ${warningNo} of 5. You will be disqualified after 5 such attempts`)
-        localStorage.setItem(`${contestId}_warnings`, warningNo)
-    }, 500)
-}
+// function tabExitHandler(contestId) {
+//     setTimeout(() => {
+//
+//
+//         let warningNo = parseInt(localStorage.getItem(`${contestId}_warnings`)) || 0
+//         if (warningNo === 5) {
+//             alert("You are disqualified as you have attempted to exit the MCQ platform more that 5 times.")
+//             window.location.pathname = "/contests"
+//             return
+//         }
+//         warningNo++;
+//         alert(`Please don't exit the MCQ Platform. Warning ${warningNo} of 5. You will be disqualified after 5 such attempts`)
+//         localStorage.setItem(`${contestId}_warnings`, warningNo)
+//     }, 500)
+// }
