@@ -238,9 +238,9 @@ export default function RunSubmit(props) {
                   }}
                   okText="Yes"
                   cancelText="No"
-                  disabled={outputLoading}
+                  disabled={outputLoading || subButtonLoading}
                 >
-                  <Button disabled={outputLoading}>
+                  <Button disabled={outputLoading || subButtonLoading}>
                     {outputLoading ? (
                       <LoadingOutlined />
                     ) : (
@@ -251,7 +251,7 @@ export default function RunSubmit(props) {
                 </Popconfirm>
               ) : (
                 <Button
-                  disabled={outputLoading}
+                  disabled={outputLoading || subButtonLoading}
                   onClick={() => handleRun(null)}
                 >
                   {outputLoading ? <LoadingOutlined /> : <CaretRightOutlined />}
@@ -265,9 +265,9 @@ export default function RunSubmit(props) {
                 onConfirm={handleSubmit}
                 okText="Yes"
                 cancelText="No"
-                disabled={subButtonLoading}
+                disabled={subButtonLoading || outputLoading}
               >
-                <Button type={"primary"} disabled={subButtonLoading}>
+                <Button type={"primary"} disabled={subButtonLoading || outputLoading}>
                   Submit
                 </Button>
               </Popconfirm>
