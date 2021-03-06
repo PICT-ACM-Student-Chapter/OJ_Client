@@ -142,6 +142,9 @@ export default function RunSubmit(props) {
       const subId = res.data.id;
       checkRun(subId);
     } catch (e) {
+      if(e?.response?.status === 429){
+        message.error("Too fast? Maximum Runs limit per minute exceeded. Please try after a minute")
+      }
       setOutputLoading(false);
     }
   };
@@ -186,6 +189,11 @@ export default function RunSubmit(props) {
       setTestCases(res.data.verdicts);
       checkSubmit(subId);
     } catch (e) {
+      if(e?.response?.status === 429){
+        message.error("Too fast? Maximum Submissions limit per minute exceeded. Please try after a minute")
+      }
+      setSubButtonLoading(false)
+      setOutputLoading(false)
       setSubmissionLoading(false);
     }
   };

@@ -1,5 +1,19 @@
 import React, {useContext, useEffect, useState} from "react";
-import {Breadcrumb, Button, Card, Col, Input, Row, Select, Skeleton, Space, Spin, Statistic, Typography,} from "antd";
+import {
+    Breadcrumb,
+    Button,
+    Card,
+    Col,
+    Input,
+    message,
+    Row,
+    Select,
+    Skeleton,
+    Space,
+    Spin,
+    Statistic,
+    Typography,
+} from "antd";
 import Editor from "@monaco-editor/react";
 import ThemeContext from "../../context/ThemeContext";
 import "./QuestionDetail.style.css";
@@ -187,6 +201,9 @@ function QuestionDetail(props) {
 
             checkRCRun(subId);
         } catch (e) {
+            if(e?.response?.status === 429){
+                message.error("Too fast? Maximum Runs limit per minute exceeded. Please try after a minute")
+            }
             setRunRc(false);
         }
     };
