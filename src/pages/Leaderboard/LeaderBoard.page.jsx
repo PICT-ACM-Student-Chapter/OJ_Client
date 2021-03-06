@@ -197,11 +197,11 @@ function LeaderBoard(props) {
                 </Col>
             </Row>
             <br/><br/>
-            *Updated every minute
+            <b>*Updated every minute</b>
             <br/>
             <Table bordered
                    rowClassName={(record, index) => userContext.user !== null ? record.name === userContext.user.username ? 'table-row' : console.log(record) : null}
-
+                   style={{overflowX: 'scroll'}}
                    dataSource={data} columns={columns} loading={loading} pagination={false}/>
         </div>
     )
