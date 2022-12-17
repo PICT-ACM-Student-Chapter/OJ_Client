@@ -1,0 +1,28 @@
+version: "3"
+
+services:
+  client:
+    container_name: OJclient
+    build: .
+    stdin_open: true
+    tty: true
+    working_dir: /src
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./:/src
+    command: >
+      sh -c "npm install -g npm@latest && npm install --legacy-peer-deps && npm start"
+volumes:
+  run_vol:
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+  cache_vol:
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+  tmp_vol:
+    driver_opts:
+      type: tmpfs
+      device: tmpfs

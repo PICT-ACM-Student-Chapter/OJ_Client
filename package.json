@@ -1,82 +1,82 @@
 {
-  "name": "oj_client",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "-": "0.0.1",
-    "@ant-design/icons": "^4.3.0",
-    "@ant-design/pro-layout": "^6.5.16",
-    "@ant-design/pro-skeleton": "^1.0.0-beta.2",
-    "@craco/craco": "^5.8.0",
-    "@monaco-editor/react": "^3.7.1",
-    "@sentry/react": "^5.29.2",
-    "@sentry/tracing": "^5.29.2",
-    "@testing-library/jest-dom": "^5.11.4",
-    "@testing-library/react": "^11.1.0",
-    "@testing-library/user-event": "^12.1.10",
-    "antd": "^4.8.2",
-    "axios": "^0.21.0",
-    "axios-auth-refresh": "^3.0.0",
-    "classnames": "^2.2.6",
-    "craco-antd": "^1.18.1",
-    "craco-less": "^1.17.1",
-    "enquire-js": "^0.2.1",
-    "g": "^2.0.1",
-    "jwt-decode": "^3.1.2",
-    "nodemon": "^2.0.6",
-    "postcss": "^8.1.10",
-    "query-string": "^6.13.7",
-    "rc-queue-anim": "^1.8.5",
-    "rc-texty": "^0.2.0",
-    "react": "^16.14.0",
-    "react-css-theme-switcher": "^0.1.6",
-    "react-dom": "^16.14.0",
-    "react-gravatar": "^2.6.3",
-    "react-helmet": "^6.1.0",
-    "react-markdown": "^5.0.3",
-    "react-mathjax": "^1.0.1",
-    "react-router": "^5.2.0",
-    "react-router-dom": "^5.2.0",
-    "react-scripts": "4.0.0",
-    "react-split-pane": "^0.1.92",
-    "react-syntax-highlighter": "^15.4.3",
-    "remark-gfm": "^1.0.0",
-    "remark-math": "^4.0.0",
-    "web-vitals": "^0.2.4"
-  },
-  "scripts": {
-    "start": "craco start",
-    "build": "craco build",
-    "test": "craco test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "devDependencies": {
-    "autoprefixer": "^10.0.4",
-    "gulp": "^4.0.2",
-    "gulp-csso": "^4.0.1",
-    "gulp-debug": "^4.0.0",
-    "gulp-less": "^4.0.1",
-    "gulp-postcss": "^9.0.0",
-    "less-plugin-npm-import": "^2.1.0",
-    "monaco-editor-webpack-plugin": "^2.0.0",
-    "react-snap": "^1.23.0"
-  }
+    "name": "oj_client",
+    "version": "0.1.0",
+    "private": true,
+    "dependencies": {
+        "-": "0.0.1",
+        "@ant-design/icons": "^4.3.0",
+        "@ant-design/pro-layout": "^6.5.16",
+        "@ant-design/pro-skeleton": "^1.0.0-beta.2",
+        "@craco/craco": "^5.8.0",
+        "@monaco-editor/react": "^3.7.1",
+        "@sentry/react": "^5.29.2",
+        "@sentry/tracing": "^5.29.2",
+        "@testing-library/jest-dom": "^5.11.4",
+        "@testing-library/react": "^11.1.0",
+        "@testing-library/user-event": "^12.1.10",
+        "antd": "^4.8.2",
+        "axios": "^0.21.0",
+        "axios-auth-refresh": "^3.0.0",
+        "classnames": "^2.2.6",
+        "craco-antd": "^1.18.1",
+        "craco-less": "^1.17.1",
+        "enquire-js": "^0.2.1",
+        "g": "^2.0.1",
+        "jwt-decode": "^3.1.2",
+        "nodemon": "^2.0.6",
+        "postcss": "^8.1.10",
+        "query-string": "^6.13.7",
+        "rc-queue-anim": "^1.8.5",
+        "rc-texty": "^0.2.0",
+        "react": "^16.14.0",
+        "react-css-theme-switcher": "^0.1.6",
+        "react-dom": "^16.14.0",
+        "react-gravatar": "^2.6.3",
+        "react-helmet": "^6.1.0",
+        "react-markdown": "^5.0.3",
+        "react-mathjax": "^1.0.1",
+        "react-router": "^5.2.0",
+        "react-router-dom": "^5.2.0",
+        "react-scripts": "4.0.0",
+        "react-split-pane": "^0.1.92",
+        "react-syntax-highlighter": "^15.4.3",
+        "remark-gfm": "^1.0.0",
+        "remark-math": "^4.0.0",
+        "web-vitals": "^0.2.4"
+    },
+    "scripts": {
+        "start": "craco start",
+        "build": "craco build",
+        "test": "craco test",
+        "eject": "react-scripts eject"
+    },
+    "eslintConfig": {
+        "extends": [
+            "react-app",
+            "react-app/jest"
+        ]
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    },
+    "devDependencies": {
+        "autoprefixer": "^10.0.4",
+        "gulp": "^4.0.2",
+        "gulp-csso": "^4.0.1",
+        "gulp-debug": "^4.0.0",
+        "gulp-less": "^4.0.1",
+        "gulp-postcss": "^9.0.0",
+        "less-plugin-npm-import": "^2.1.0",
+        "monaco-editor-webpack-plugin": "^2.0.0",
+        "react-snap": "^1.23.0"
+    }
 }
