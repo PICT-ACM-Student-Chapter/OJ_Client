@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
     Breadcrumb,
     Button,
@@ -17,7 +17,7 @@ import {
 import Editor from "@monaco-editor/react";
 import ThemeContext from "../../context/ThemeContext";
 import "./QuestionDetail.style.css";
-import {Helmet} from "react-helmet";
+import { Helmet } from "react-helmet";
 import {
     BarChartOutlined,
     CaretRightOutlined,
@@ -30,13 +30,13 @@ import SplitPane from "react-split-pane";
 import RunSubmit from "../../components/QuestionPage/RunSubmit.component";
 import MarkdownMathJaxComponent from "../../components/MarkdownMathJax.component";
 import GlobalContext from "../../context/GlobalContext";
-import {b64Decode, b64Encode, sleep} from "../../utils/utils";
+import { b64Decode, b64Encode, sleep } from "../../utils/utils";
 import axios from "axios";
-import {Link} from "react-router-dom";
-import {useLocation} from "react-router";
+import { Link } from "react-router-dom";
+import { useLocation } from "react-router";
 
-const {Option} = Select;
-const {Countdown} = Statistic;
+const { Option } = Select;
+const { Countdown } = Statistic;
 
 const RUN_INTERVAL = 1; // In secs
 
@@ -54,6 +54,7 @@ function QuestionDetail(props) {
     const [started, setStarted] = useState(false);
 
     const [isReverseCode, setIsReverseCode] = useState(false);
+    const [isHack, setIsHack] = useState(false);
     const [inputRC, setInputRC] = useState("");
     // const [languages, setLanguages] = useState([])
     const [currentLanguage, setCurrentLanguage] = useState({});
@@ -65,12 +66,14 @@ function QuestionDetail(props) {
         getQuestionDetail,
         question,
         setIsContestLive,
+        getHackDetails,
+        hackDetails,
     } = globalContext;
     const [runRc, setRunRc] = useState(false);
     const [outputRC, setOutputRC] = useState("");
     const [linkTo, setLinkTo] = useState("");
 
-    const {contest, allQuestions, getAllQuestions} = globalContext;
+    const { contest, allQuestions, getAllQuestions } = globalContext;
 
     let savedCodes = JSON.parse(
         localStorage.getItem(`codes${props.match.params.questionId}`) || "{}"
@@ -96,19 +99,55 @@ function QuestionDetail(props) {
     }, [props.match.params.questionId]);
 
     useEffect(() => {
-        if (currentLanguage.id)
+        getAllLanguages();
+        getHackDetails(
+            props.match.params.questionId,
+            setLoading,
+            setTCsLoading,
+            setCurrentLanguage
+        );
+    }, [isHack]);
+
+    useEffect(() => {
+        console.log("Updated Hack Details", hackDetails);
+    }, [hackDetails]);
+
+    useEffect(() => {
+        if (currentLanguage.id) {
             localStorage.setItem("preferredLanguage", currentLanguage.id);
+            getAllLanguages();
+            getHackDetails(
+                props.match.params.questionId,
+                setLoading,
+                setTCsLoading,
+                setCurrentLanguage
+            );
+        }
     }, [currentLanguage]);
 
     useEffect(() => {
         isReverseCoding();
+        isHacking();
         // eslint-disable-next-line
     }, [allQuestions]);
 
+    const isHacking = () => {
+        if (allQuestions.length === 0) {
+            getAllQuestions(props.match.params.contestId, () => {});
+            return;
+        }
+
+        allQuestions.map((question) => {
+            if (question.id === props.match.params.questionId) {
+                setIsHack(question.contest_que.is_hacking);
+            }
+            return null;
+        });
+    };
+
     const isReverseCoding = () => {
         if (allQuestions.length === 0) {
-            getAllQuestions(props.match.params.contestId, () => {
-            });
+            getAllQuestions(props.match.params.contestId, () => {});
             return;
         }
 
@@ -127,7 +166,7 @@ function QuestionDetail(props) {
             if (e.getModel().getValue() !== "") {
                 savedCodes[
                     parseInt(localStorage.getItem("preferredLanguage"))
-                    ] = e.getModel().getValue();
+                ] = e.getModel().getValue();
                 localStorage.setItem(
                     `codes${props.match.params.questionId}`,
                     JSON.stringify(savedCodes)
@@ -201,8 +240,10 @@ function QuestionDetail(props) {
 
             checkRCRun(subId);
         } catch (e) {
-            if(e?.response?.status === 429){
-                message.error("Too fast? Maximum Runs limit per minute exceeded. Please try after a minute")
+            if (e?.response?.status === 429) {
+                message.error(
+                    "Too fast? Maximum Runs limit per minute exceeded. Please try after a minute"
+                );
             }
             setRunRc(false);
         }
@@ -213,11 +254,11 @@ function QuestionDetail(props) {
     return (
         <div>
             <Helmet>
-                <meta charSet="utf-8"/>
+                <meta charSet="utf-8" />
                 <title>{`${
                     loading ? "Loading Question..." : question.name
                 } - PASC OJ`}</title>
-                <link rel="canonical" href="http://mysite.com/example"/>
+                <link rel="canonical" href="http://mysite.com/example" />
             </Helmet>
             <SplitPane
                 split={"vertical"}
@@ -238,9 +279,11 @@ function QuestionDetail(props) {
                             <>
                                 {query.get("back") ? (
                                     <Button
-                                        icon={<LeftOutlined/>}
+                                        icon={<LeftOutlined />}
                                         onClick={() => {
-                                            props.history.push(`${query.get("back")}`);
+                                            props.history.push(
+                                                `${query.get("back")}`
+                                            );
                                         }}
                                     >
                                         Back
@@ -248,7 +291,7 @@ function QuestionDetail(props) {
                                 ) : (
                                     <>
                                         <Button
-                                            icon={<LeftOutlined/>}
+                                            icon={<LeftOutlined />}
                                             onClick={() => {
                                                 props.history.push(`${linkTo}`);
                                             }}
@@ -259,38 +302,71 @@ function QuestionDetail(props) {
                                 )}
                                 <Row justify="space-around" align="middle">
                                     <Col>
-                                        <Breadcrumb separator=">" style={{fontSize: "x-large"}}>
+                                        <Breadcrumb
+                                            separator=">"
+                                            style={{ fontSize: "x-large" }}
+                                        >
                                             <Breadcrumb.Item>
-                                                <Link to={{pathname: linkTo}}>Questions</Link>
+                                                <Link to={{ pathname: linkTo }}>
+                                                    Questions
+                                                </Link>
                                             </Breadcrumb.Item>
                                             <Breadcrumb.Item>
-                                                <span>{question.name || ""}</span>
+                                                <span>
+                                                    {question.name || ""}
+                                                </span>
                                             </Breadcrumb.Item>
                                         </Breadcrumb>
                                     </Col>
                                 </Row>
-                                <br/>
-                                <div style={{borderBottom: "0.5px solid #333330"}}></div>
-                                <br/>
+                                <br />
+                                <div
+                                    style={{
+                                        borderBottom: "0.5px solid #333330",
+                                    }}
+                                ></div>
+                                <br />
                                 <Row justify="space-around" align="middle">
-                                    <Col xs={24} sm={24} md={24} lg={16} xl={16}>
-                                        <Typography.Title>{question.name || ""}</Typography.Title>
+                                    <Col
+                                        xs={24}
+                                        sm={24}
+                                        md={24}
+                                        lg={16}
+                                        xl={16}
+                                    >
+                                        <Typography.Title>
+                                            {question.name || ""}
+                                        </Typography.Title>
                                     </Col>
-                                    <Col align="right" xs={24} sm={24} md={24} lg={8} xl={8}>
+                                    <Col
+                                        align="right"
+                                        xs={24}
+                                        sm={24}
+                                        md={24}
+                                        lg={8}
+                                        xl={8}
+                                    >
                                         {contest ? (
                                             <Card
-                                                style={{width: "12rem"}}
-                                                bodyStyle={{padding: "12px 24px"}}
+                                                style={{ width: "12rem" }}
+                                                bodyStyle={{
+                                                    padding: "12px 24px",
+                                                }}
                                             >
                                                 <Countdown
-                                                    prefix={<HourglassOutlined/>}
+                                                    prefix={
+                                                        <HourglassOutlined />
+                                                    }
                                                     title="Time Left"
                                                     value={contest.end_time}
                                                     onFinish={(_) => {
                                                         setIsContestLive(false);
                                                     }}
                                                 />
-                                                Ends: {new Date(contest.end_time).toLocaleTimeString()}
+                                                Ends:{" "}
+                                                {new Date(
+                                                    contest.end_time
+                                                ).toLocaleTimeString()}
                                             </Card>
                                         ) : null}
                                     </Col>
@@ -298,46 +374,82 @@ function QuestionDetail(props) {
                             </>
                         }
                     >
-                        <Skeleton loading={loading} paragraph={{rows: 20}} active/>
+                        <Skeleton
+                            loading={loading}
+                            paragraph={{ rows: 20 }}
+                            active
+                        />
                         {!loading && (
                             <div>
                                 <MarkdownMathJaxComponent className="markdown">
                                     {question.description}
                                 </MarkdownMathJaxComponent>
-                                <br/>
-                                <Typography.Title level={3}>Input Format</Typography.Title>
+                                <br />
+                                <Typography.Title level={3}>
+                                    Input Format
+                                </Typography.Title>
                                 <MarkdownMathJaxComponent className="markdown">
                                     {question.input_format}
                                 </MarkdownMathJaxComponent>
-                                <Typography.Title level={3}>Output Format</Typography.Title>
+                                <Typography.Title level={3}>
+                                    Output Format
+                                </Typography.Title>
                                 <MarkdownMathJaxComponent className="markdown">
                                     {question.output_format}
                                 </MarkdownMathJaxComponent>
-                                <Typography.Title level={3}>Constraints</Typography.Title>
+                                <Typography.Title level={3}>
+                                    Constraints
+                                </Typography.Title>
                                 <MarkdownMathJaxComponent className="markdown">
                                     {question.constraints}
                                 </MarkdownMathJaxComponent>
-                                <br/>
+                                <br />
 
                                 {isReverseCode && (
-                                    <div style={{padding: "0.5rem"}}>
-                                        <Typography.Title level={3}>Run Testcase</Typography.Title>
-                                        <br/>
-                                        <Row gutter={24} justify="space-around" align="middle">
-                                            <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+                                    <div style={{ padding: "0.5rem" }}>
+                                        <Typography.Title level={3}>
+                                            Run Testcase
+                                        </Typography.Title>
+                                        <br />
+                                        <Row
+                                            gutter={24}
+                                            justify="space-around"
+                                            align="middle"
+                                        >
+                                            <Col
+                                                xs={24}
+                                                sm={24}
+                                                md={12}
+                                                lg={12}
+                                                xl={12}
+                                            >
                                                 <Input.TextArea
                                                     placeholder="    ENTER INPUT HERE"
                                                     disabled={runRc}
                                                     onChange={(e) => {
-                                                        setInputRC(e.target.value);
+                                                        setInputRC(
+                                                            e.target.value
+                                                        );
                                                     }}
-                                                    autoSize={{minRows: 1, maxRows: 7}}
-                                                    style={{fontFamily: "monospace", fontSize: "17px"}}
+                                                    autoSize={{
+                                                        minRows: 1,
+                                                        maxRows: 7,
+                                                    }}
+                                                    style={{
+                                                        fontFamily: "monospace",
+                                                        fontSize: "17px",
+                                                    }}
                                                     required
                                                 />
                                             </Col>
 
-                                            <Col xs={6} sm={6} md={6} lg={6} xl={6}>
+                                            <Col
+                                                xs={6}
+                                                sm={6}
+                                                md={6}
+                                                lg={6}
+                                                xl={6}
+                                            >
                                                 <Button
                                                     disabled={runRc || !inputRC}
                                                     size="large"
@@ -345,85 +457,138 @@ function QuestionDetail(props) {
                                                     onClick={() => {
                                                         handleRCRun();
                                                     }}
-                                                    style={{width: "100%"}}
+                                                    style={{ width: "100%" }}
                                                 >
-                                                    {runRc ? <LoadingOutlined/> : <CaretRightOutlined/>}
+                                                    {runRc ? (
+                                                        <LoadingOutlined />
+                                                    ) : (
+                                                        <CaretRightOutlined />
+                                                    )}
                                                     Run
                                                 </Button>
                                             </Col>
                                         </Row>
-                                        <br/>
-                                        <Row justify="space-around" align="middle">
-                                            <Col xs={24} sm={24} md={22} lg={22} xl={22}>
+                                        <br />
+                                        <Row
+                                            justify="space-around"
+                                            align="middle"
+                                        >
+                                            <Col
+                                                xs={24}
+                                                sm={24}
+                                                md={22}
+                                                lg={22}
+                                                xl={22}
+                                            >
                                                 <Input.TextArea
                                                     placeholder="    OUTPUT SHOWN HERE"
                                                     value={outputRC}
                                                     readonly
-                                                    autoSize={{minRows: 1, maxRows: 7}}
-                                                    style={{fontFamily: "monospace", fontSize: "17px"}}
+                                                    autoSize={{
+                                                        minRows: 1,
+                                                        maxRows: 7,
+                                                    }}
+                                                    style={{
+                                                        fontFamily: "monospace",
+                                                        fontSize: "17px",
+                                                    }}
                                                 />
                                             </Col>
                                         </Row>
                                     </div>
                                 )}
-                                <br/>
-                                <br/>
+                                <br />
+                                <br />
                                 <>
                                     <Typography.Title level={3}>
                                         Sample Testcase(s)
                                     </Typography.Title>
                                     {question.test_cases &&
-                                    question.test_cases.map(({input, output, id}) => (
-                                        <div key={id}>
-                                            <Row gutter={16}>
-                                                <Col xs={24} sm={24} md={24} lg={12} xl={12}>
-                                                    <Card
-                                                        className="test-case-card"
-                                                        type="inner"
-                                                        loading={tcsLoading}
-                                                        title={
-                                                            <Typography.Title level={4}>
-                                                                Input
-                                                            </Typography.Title>
-                                                        }
-                                                        extra={
-                                                            <Button
-                                                                disabled={inputTC}
-                                                                onClick={() => {
-                                                                    setInputTC(input);
-                                                                }}
+                                        question.test_cases.map(
+                                            ({ input, output, id }) => (
+                                                <div key={id}>
+                                                    <Row gutter={16}>
+                                                        <Col
+                                                            xs={24}
+                                                            sm={24}
+                                                            md={24}
+                                                            lg={12}
+                                                            xl={12}
+                                                        >
+                                                            <Card
+                                                                className="test-case-card"
+                                                                type="inner"
+                                                                loading={
+                                                                    tcsLoading
+                                                                }
+                                                                title={
+                                                                    <Typography.Title
+                                                                        level={
+                                                                            4
+                                                                        }
+                                                                    >
+                                                                        Input
+                                                                    </Typography.Title>
+                                                                }
+                                                                extra={
+                                                                    <Button
+                                                                        disabled={
+                                                                            inputTC
+                                                                        }
+                                                                        onClick={() => {
+                                                                            setInputTC(
+                                                                                input
+                                                                            );
+                                                                        }}
+                                                                    >
+                                                                        {inputTC ? (
+                                                                            <LoadingOutlined />
+                                                                        ) : (
+                                                                            <CaretRightOutlined />
+                                                                        )}
+                                                                        Run
+                                                                    </Button>
+                                                                }
                                                             >
-                                                                {inputTC ? (
-                                                                    <LoadingOutlined/>
-                                                                ) : (
-                                                                    <CaretRightOutlined/>
-                                                                )}
-                                                                Run
-                                                            </Button>
-                                                        }
-                                                    >
-                                                        <pre>{input}</pre>
-                                                    </Card>
-                                                </Col>
-                                                <Col xs={24} sm={24} md={24} lg={12} xl={12}>
-                                                    <Card
-                                                        className="test-case-card"
-                                                        type="inner"
-                                                        loading={tcsLoading}
-                                                        title={
-                                                            <Typography.Title level={4}>
-                                                                Output
-                                                            </Typography.Title>
-                                                        }
-                                                        // extra={<a href="#">Copy</a>}
-                                                    >
-                                                        <pre>{output}</pre>
-                                                    </Card>
-                                                </Col>
-                                            </Row>
-                                            <br/>
-                                        </div>
-                                    ))}
+                                                                <pre>
+                                                                    {input}
+                                                                </pre>
+                                                            </Card>
+                                                        </Col>
+                                                        <Col
+                                                            xs={24}
+                                                            sm={24}
+                                                            md={24}
+                                                            lg={12}
+                                                            xl={12}
+                                                        >
+                                                            <Card
+                                                                className="test-case-card"
+                                                                type="inner"
+                                                                loading={
+                                                                    tcsLoading
+                                                                }
+                                                                title={
+                                                                    <Typography.Title
+                                                                        level={
+                                                                            4
+                                                                        }
+                                                                    >
+                                                                        Output
+                                                                    </Typography.Title>
+                                                                }
+                                                                // extra={<a href="#">Copy</a>}
+                                                            >
+                                                                <pre>
+                                                                    {output}
+                                                                </pre>
+                                                            </Card>
+                                                        </Col>
+                                                    </Row>
+                                                    <br />
+                                                </div>
+                                            )
+                                        )}
                                 </>
                             </div>
                         )}
@@ -431,7 +596,7 @@ function QuestionDetail(props) {
                 </div>
                 <div>
                     <Card
-                        style={{marginBottom: "16px", position: "relative"}}
+                        style={{ marginBottom: "16px", position: "relative" }}
                         className="button-group-card"
                     >
                         <Row justify="space-around" align="middle">
@@ -439,13 +604,15 @@ function QuestionDetail(props) {
                                 Languages: &nbsp;
                                 {languages ? (
                                     <Select
-                                        style={{width: 120}}
+                                        style={{ width: 120 }}
                                         size="large"
                                         value={currentLanguage.id}
                                         onChange={handleSelectLanguage}
                                     >
                                         {languages.map((lang) => (
-                                            <Option value={lang.id}>{lang.name}</Option>
+                                            <Option value={lang.id}>
+                                                {lang.name}
+                                            </Option>
                                         ))}
                                     </Select>
                                 ) : null}
@@ -455,7 +622,10 @@ function QuestionDetail(props) {
                                     <Link
                                         to={`${props.location.pathname}/submissions?name=${question.name}&back=${props.location.pathname}`}
                                     >
-                                        <Button icon={<ProfileOutlined/>} size={"medium"}>
+                                        <Button
+                                            icon={<ProfileOutlined />}
+                                            size={"medium"}
+                                        >
                                             My Submissions
                                         </Button>
                                     </Link>
@@ -463,7 +633,7 @@ function QuestionDetail(props) {
                                         to={`/leaderboard/${props.match.params.contestId}?back=${props.location.pathname}`}
                                     >
                                         <Button
-                                            icon={<BarChartOutlined/>}
+                                            icon={<BarChartOutlined />}
                                             type="primary"
                                             size={"medium"}
                                         >
@@ -474,12 +644,12 @@ function QuestionDetail(props) {
                             </Col>
                         </Row>
                     </Card>
-                    <div style={{position: "relative", height: "88vh"}}>
-                        <div style={{width: "100%", position: "absolute"}}>
+                    <div style={{ position: "relative", height: "88vh" }}>
+                        <div style={{ width: "100%", position: "absolute" }}>
                             <Card
                                 width={"100%"}
                                 className={"editor-card"}
-                                style={{height: "66vh"}}
+                                style={{ height: "66vh" }}
                             >
                                 {JSON.stringify(currentLanguage) === "{}" ? (
                                     <div
@@ -490,16 +660,32 @@ function QuestionDetail(props) {
                                             tranform: "translate(-50%,-50%)",
                                         }}
                                     >
-                                        <h1 style={{fontSize: "x-large", marginLeft: "15%"}}>
+                                        <h1
+                                            style={{
+                                                fontSize: "x-large",
+                                                marginLeft: "15%",
+                                            }}
+                                        >
                                             Please Select a language
                                         </h1>
-                                        <br/>
-                                        <img src="/select.svg" alt="" style={{width: "80%"}}/>
+                                        <br />
+                                        <img
+                                            src="/select.svg"
+                                            alt=""
+                                            style={{ width: "80%" }}
+                                        />
                                     </div>
                                 ) : (
                                     <Editor
-                                        loading={<Spin size={"large"} tip={"Loading Editor"}/>}
-                                        language={currentLanguage.monaco_lang_code}
+                                        loading={
+                                            <Spin
+                                                size={"large"}
+                                                tip={"Loading Editor"}
+                                            />
+                                        }
+                                        language={
+                                            currentLanguage.monaco_lang_code
+                                        }
                                         theme={theme.theme}
                                         editorDidMount={handleEditorMount}
                                         options={{

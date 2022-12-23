@@ -1,60 +1,61 @@
-import React, {useContext, useEffect} from 'react';
-import './css/login.css';
-import {Button, Form, Input, message, Typography} from 'antd';
-import {LockOutlined, UserOutlined} from '@ant-design/icons';
-import axios from 'axios'
+import React, { useContext, useEffect } from "react";
+import "./css/login.css";
+import { Button, Form, Input, message, Typography } from "antd";
+import { LockOutlined, UserOutlined } from "@ant-design/icons";
+import axios from "axios";
 import * as queryString from "query-string";
 import jwt_decode from "jwt-decode";
 import UserContext from "../../context/User";
 import GlobalContext from "../../context/GlobalContext";
 
-
 const Login = (props) => {
     const userContext = useContext(UserContext);
     const globalContext = useContext(GlobalContext);
 
-    const [errors, setErrors] = React.useState('')
-    const [status, setStatus] = React.useState('')
+    const [errors, setErrors] = React.useState("");
+    const [status, setStatus] = React.useState("");
 
-    useEffect(()=>{
-        userContext.dispose()
-        globalContext.dispose()
+    useEffect(() => {
+        userContext.dispose();
+        globalContext.dispose();
         //eslint-disable-next-line
-    },[])
+    }, []);
 
-
-    const onFinish = async values => {
-        setStatus('validating')
-        setErrors('')
+    const onFinish = async (values) => {
+        setStatus("validating");
+        setErrors("");
         try {
-            const res = await axios.post(`${process.env.REACT_APP_BASE_URL}/login/ `, values, {headers: {}})
-            setStatus('success')
-            setErrors('')
-            console.log(res.data.access)
-            localStorage.setItem('token', res.data.access)
-            localStorage.setItem('refresh-token', res.data.refresh)
+            console.log(process.env.REACT_APP_BASE_URL);
+            const res = await axios.post(
+                `${process.env.REACT_APP_BASE_URL}/login/ `,
+                values,
+                { headers: {} }
+            );
+            setStatus("success");
+            setErrors("");
+            console.log(res.data.access);
+            localStorage.setItem("token", res.data.access);
+            localStorage.setItem("refresh-token", res.data.refresh);
             let decoded = jwt_decode(res.data.access);
-            userContext.loadUser(decoded.user_id)
+            userContext.loadUser(decoded.user_id);
 
-            message.success('Login Successful !!');
+            message.success("Login Successful !!");
 
-            globalContext.getContests(()=>{})
+            globalContext.getContests(() => {});
 
             const qs = queryString.parse(props.history.location.search);
             if (qs.redirect) {
-                props.history.push(qs.redirect)
-            } else
-                props.history.push('/contests')
-
+                props.history.push(qs.redirect);
+            } else props.history.push("/contests");
         } catch (e) {
-            setStatus('error')
-            setErrors('\nInvalid Email or Password!')
-            message.error('Login Error !!');
+            setStatus("error");
+            setErrors("\nInvalid Email or Password!");
+            message.error("Login Error !!");
         }
     };
 
     return (
-        <div className='login-container'>
+        <div className="login-container">
             <Form
                 name="normal_login"
                 className="login-form"
@@ -62,30 +63,36 @@ const Login = (props) => {
                     remember: true,
                 }}
                 onFinish={onFinish}
-
             >
-                <Typography.Title align={'center'}>Login</Typography.Title>
-                <br/><br/>
+                <Typography.Title align={"center"}>Login</Typography.Title>
+                <br />
+                <br />
                 <Form.Item
                     name="email"
                     rules={[
                         {
                             required: true,
-                            message: 'Please input your Email!',
+                            message: "Please input your Email!",
                         },
                     ]}
                     validateStatus={status}
                     hasFeedback={true}
                 >
-                    <Input size='large' prefix={<UserOutlined className="site-form-item-icon"/>} placeholder="Email"
-                           errors={'dd'}/>
+                    <Input
+                        size="large"
+                        prefix={
+                            <UserOutlined className="site-form-item-icon" />
+                        }
+                        placeholder="Email"
+                        errors={"dd"}
+                    />
                 </Form.Item>
                 <Form.Item
                     name="password"
                     rules={[
                         {
                             required: true,
-                            message: 'Please input your Password!',
+                            message: "Please input your Password!",
                         },
                     ]}
                     validateStatus={status}
@@ -93,26 +100,35 @@ const Login = (props) => {
                     help={errors}
                 >
                     <Input
-                        size='large'
-                        prefix={<LockOutlined className="site-form-item-icon"/>}
+                        size="large"
+                        prefix={
+                            <LockOutlined className="site-form-item-icon" />
+                        }
                         type="password"
                         placeholder="Password"
                     />
                 </Form.Item>
 
                 <Form.Item>
-                    <Button size='large' type="primary" htmlType="submit" className="login-form-button">
+                    <Button
+                        size="large"
+                        type="primary"
+                        htmlType="submit"
+                        className="login-form-button"
+                    >
                         Log in
                     </Button>
-                    <br/><br/>
+                    <br />
+                    <br />
                 </Form.Item>
-                <div style={{textAlign: 'center'}}>
-                    <Typography.Link href="https://pulzion.in/forgot-password">Forgot Password?</Typography.Link>
+                <div style={{ textAlign: "center" }}>
+                    <Typography.Link href="https://pulzion.in/forgot-password">
+                        Forgot Password?
+                    </Typography.Link>
                 </div>
             </Form>
         </div>
-
     );
 };
 
-export default Login
+export default Login;

@@ -1,17 +1,15 @@
 export function addRestrictions(contestId) {
     // Disable right click
-    window.document.addEventListener('contextmenu', rightClickHandler);
+    window.document.addEventListener("contextmenu", rightClickHandler);
     // Disable ctrl+c ctrl+v
-    window.document.addEventListener('keydown', keystrokesHandler);
-
+    window.document.addEventListener("keydown", keystrokesHandler);
 }
 
 export function removeRestrictions(contestId) {
     // Disable right click
-    window.document.removeEventListener('contextmenu', rightClickHandler);
+    window.document.removeEventListener("contextmenu", rightClickHandler);
     // Disable ctrl+c ctrl+v
-    window.document.removeEventListener('keydown', keystrokesHandler);
-
+    window.document.removeEventListener("keydown", keystrokesHandler);
 }
 
 function rightClickHandler(e) {
@@ -19,7 +17,11 @@ function rightClickHandler(e) {
 }
 
 function keystrokesHandler(e) {
-    if (e.key && ['c', 'x', 'v', 'u', 'i'].includes(e.key.toLowerCase()) && e.ctrlKey)
+    if (
+        e.key &&
+        ["c", "x", "v", "u", "i"].includes(e.key.toLowerCase()) &&
+        e.ctrlKey
+    )
         e.preventDefault();
 }
 
