@@ -89,7 +89,7 @@ const Routes = (props) => {
                                 <img
                                     style={{ width: "auto" }}
                                     src={
-                                        "https://pict.acm.org/assets/images/navbar/Logo-name.png"
+                                        "https://pict.acm.org/static/logo-61e5ab630d7c60480cb27df8e79abd63.png"
                                     }
                                     alt={"Logo"}
                                 />

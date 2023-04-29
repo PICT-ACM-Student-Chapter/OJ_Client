@@ -122,7 +122,7 @@ const Login = (props) => {
                     <br />
                 </Form.Item>
                 <div style={{ textAlign: "center" }}>
-                    <Typography.Link href="https://pulzion.in/forgot-password">
+                    <Typography.Link href="https://pulzion.co.in/forgotpassword">
                         Forgot Password?
                     </Typography.Link>
                 </div>
