@@ -21,6 +21,7 @@ import { Helmet } from "react-helmet";
 import {
   BarChartOutlined,
   CaretRightOutlined,
+  HistoryOutlined,
   HourglassOutlined,
   LeftOutlined,
   LoadingOutlined,
@@ -54,7 +55,7 @@ function QuestionDetail(props) {
   const [started, setStarted] = useState(false);
 
   const [isReverseCode, setIsReverseCode] = useState(false);
-  const [isHack, setIsHack] = useState(false);
+  const [isBugoff, setIsBugoff] = useState(false);
   const [inputRC, setInputRC] = useState("");
   // const [languages, setLanguages] = useState([])
   const [currentLanguage, setCurrentLanguage] = useState({});
@@ -66,8 +67,8 @@ function QuestionDetail(props) {
     getQuestionDetail,
     question,
     setIsContestLive,
-    getHackDetails,
-    hackDetails,
+    getBugoffQuestionDetails,
+    bugoffDetails,
   } = globalContext;
   const [runRc, setRunRc] = useState(false);
   const [outputRC, setOutputRC] = useState("");
@@ -99,24 +100,25 @@ function QuestionDetail(props) {
   }, [props.match.params.questionId]);
 
   useEffect(() => {
+    console.log("HOLAA")
     getAllLanguages();
-    getHackDetails(
+    getBugoffQuestionDetails(
       props.match.params.questionId,
       setLoading,
       setTCsLoading,
       setCurrentLanguage
     );
-  }, [isHack]);
+  }, [isBugoff]);
 
   useEffect(() => {
-    console.log("Updated Hack Details", hackDetails);
-  }, [hackDetails]);
+    console.log("Updated Hack Details", bugoffDetails);
+  }, [bugoffDetails]);
 
   useEffect(() => {
     if (currentLanguage.id) {
       localStorage.setItem("preferredLanguage", currentLanguage.id);
       getAllLanguages();
-      getHackDetails(
+      getBugoffQuestionDetails(
         props.match.params.questionId,
         setLoading,
         setTCsLoading,
@@ -127,11 +129,11 @@ function QuestionDetail(props) {
 
   useEffect(() => {
     isReverseCoding();
-    isHacking();
+    checkIsBugoff();
     // eslint-disable-next-line
   }, [allQuestions]);
 
-  const isHacking = () => {
+  const checkIsBugoff = () => {
     if (allQuestions.length === 0) {
       getAllQuestions(props.match.params.contestId, () => {});
       return;
@@ -139,7 +141,7 @@ function QuestionDetail(props) {
 
     allQuestions.map((question) => {
       if (question.id === props.match.params.questionId) {
-        setIsHack(question.contest_que.is_hacking);
+        setIsBugoff(question.contest_que.is_bugoff);
       }
       return null;
     });
@@ -250,7 +252,14 @@ function QuestionDetail(props) {
   };
 
   let query = useQuery();
+  //On reset click
+  const onReset=()=>{
+    const resetcode=localStorage.getItem("incorrect_code" + props.match.params.questionId)
+    editor.getModel().setValue(resetcode || "");
+  }
 
+
+  
   return (
     <div>
       <Helmet>
@@ -268,8 +277,11 @@ function QuestionDetail(props) {
         style={{
           position: "relative",
           width: "100%",
-          height: "88vh",
-          overflowY: "hidden",
+          height: "90.5vh",
+          overflow: "hidden",
+        }}
+        paneStyle={{
+          overflow: "scroll" 
         }}
       >
         <div>
@@ -469,6 +481,7 @@ function QuestionDetail(props) {
                           </Col>
                           <Col xs={24} sm={24} md={24} lg={12} xl={12}>
                             <Card
+                            style={{overflow:"scroll"}}
                               className="test-case-card"
                               type="inner"
                               loading={tcsLoading}
@@ -493,7 +506,7 @@ function QuestionDetail(props) {
         </div>
         <div>
           <Card
-            style={{ marginBottom: "16px", position: "relative" }}
+            style={{ marginBottom: "16px", position: "relative"}}
             className="button-group-card"
           >
             <Row justify="space-around" align="middle">
@@ -517,6 +530,7 @@ function QuestionDetail(props) {
                   <Link
                     to={`${props.location.pathname}/submissions?name=${question.name}&back=${props.location.pathname}`}
                   >
+                    {/* <HistoryOutlined /> */}
                     <Button icon={<ProfileOutlined />} size={"medium"}>
                       My Submissions
                     </Button>
@@ -532,6 +546,9 @@ function QuestionDetail(props) {
                       Leaderboard
                     </Button>
                   </Link>
+                {
+                  isBugoff?  <Button icon={<HistoryOutlined />} onClick={onReset} size={"medium"}>Reset</Button>:<></>
+                }
                 </Space>
               </Col>
             </Row>

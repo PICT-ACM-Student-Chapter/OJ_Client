@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {Card, Skeleton, Space, Typography} from "antd";
 import {b64Decode} from "../../utils/utils";
 
@@ -21,7 +21,7 @@ export default function RunOutputComponent(props) {
             the code to see the output</Typography.Title></div>}
         {outputLoading && <Skeleton active/>}
         {output.status && !outputLoading && <div>
-            <Space style={{fontSize: '1rem', marginBottom: '1rem'}}>
+            <Space style={{fontSize: '1rem', marginBottom: '1rem', overflow: "scroll"}}>
                 { output.status === "AC" ?
                     <Typography.Text
                         type={statusColor[output.status]}>Execution Success &nbsp;&nbsp;</Typography.Text>

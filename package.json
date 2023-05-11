@@ -42,7 +42,8 @@
         "react-syntax-highlighter": "^15.4.3",
         "remark-gfm": "^1.0.0",
         "remark-math": "^4.0.0",
-        "web-vitals": "^0.2.4"
+        "web-vitals": "^0.2.4",
+        "rehype-raw": "^6.1.1"
     },
     "scripts": {
         "start": "craco start",

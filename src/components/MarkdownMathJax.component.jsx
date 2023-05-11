@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import ReactMarkdown from 'react-markdown';
 import MathJax from 'react-mathjax';
 import RemarkMathPlugin from 'remark-math';
+import rehypeRaw from "rehype-raw";
 
 const MarkdownMathJaxComponent = (props) => {
     const [newProps, setNewProps] = useState({})
@@ -13,6 +14,7 @@ const MarkdownMathJaxComponent = (props) => {
             plugins: [
             RemarkMathPlugin,
         ],
+        rehypePlugins:[rehypeRaw],
             renderers: {
         ...props.renderers,
                 math: (props) =>

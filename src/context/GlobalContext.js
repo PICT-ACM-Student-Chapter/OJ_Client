@@ -20,7 +20,7 @@ class GlobalProvider extends Component {
         isContestLive: true,
         apiError: null,
         apiErrorMsg: "",
-        hackDetails: {},
+        bugoffDetails: {},
     };
 
     dispose = () => {
@@ -36,7 +36,7 @@ class GlobalProvider extends Component {
             isContestLive: true,
             apiError: null,
             apiErrorMsg: "",
-            hackDetails: {},
+            bugoffDetails: {},
         });
     };
 
@@ -203,13 +203,13 @@ class GlobalProvider extends Component {
         }
     };
 
-    getHackDetails = async (
+    getBugoffQuestionDetails = async (
         questionId,
         setLoading,
         setTCsLoading,
         setCurrentLanguage
     ) => {
-        let lang = 1;
+        let lang;
         if (localStorage.getItem("preferredLanguage")) {
             for (let i of this.state.languages)
                 if (
@@ -222,9 +222,14 @@ class GlobalProvider extends Component {
             setCurrentLanguage(this.state.languages[0]);
             lang = this.state.languages[0];
         }
+        console.log("Saved::::", JSON.parse(localStorage.getItem("codes"+questionId)))
+        let savedCodes = JSON.parse(localStorage.getItem("codes"+questionId))
+        console.log(this.state.bugoffDetails)
         if (
-            this.state.hackDetails === {} ||
-            this.state.questionID !== questionId
+            this.state.bugoffDetails === {} ||
+            this.state.questionID !== questionId || (
+                savedCodes ? !savedCodes[lang.id] : true
+            )
         ) {
             const reqConfig = {
                 headers: {
@@ -234,13 +239,19 @@ class GlobalProvider extends Component {
 
             try {
                 const res = await axios.get(
-                    `${process.env.REACT_APP_BASE_URL}/questions/${questionId}/${lang}`,
+                    `${process.env.REACT_APP_BASE_URL}/questions/${questionId}/${lang.id}`,
                     reqConfig
                 );
 
                 console.log("HAPPY HACKING: ", res.data);
+                let codeStorage = JSON.parse(localStorage.getItem("codes" + questionId)) || {}
+
+                codeStorage[parseInt(localStorage.getItem("preferredLanguage"))] = res.data.incorrect_code
+
+                localStorage.setItem("codes" + questionId, JSON.stringify(codeStorage))
+                localStorage.setItem("incorrect_code"+questionId, res.data.incorrect_code);
                 this.setState({
-                    hackDetails: res.data,
+                    bugoffDetails: res.data,
                     questionID: questionId,
                 });
                 setLoading(false);
@@ -274,7 +285,7 @@ class GlobalProvider extends Component {
             contest,
             languages,
             question,
-            hackDetails,
+            bugoffDetails,
             isContestLive,
             apiError,
             apiErrorMsg,
@@ -292,7 +303,7 @@ class GlobalProvider extends Component {
             setApiError,
             setApiErrorMsg,
             getAllQuestions,
-            getHackDetails,
+            getBugoffQuestionDetails,
         } = this;
 
         return (
@@ -307,7 +318,7 @@ class GlobalProvider extends Component {
                     apiError,
                     apiErrorMsg,
                     allQuestions,
-                    hackDetails,
+                    bugoffDetails,
                     dispose,
                     getContests,
                     setContests,
@@ -318,7 +329,7 @@ class GlobalProvider extends Component {
                     setApiError,
                     setApiErrorMsg,
                     getAllQuestions,
-                    getHackDetails,
+                    getBugoffQuestionDetails,
                 }}
             >
                 {" "}

@@ -36,7 +36,7 @@ const SubmitComponent = (props) => {
                               status={totalJudged !== testCases.length && "active"}/>
                     <Typography.Link>{passed} of {testCases.length} Test Cases passed</Typography.Link>
                     <br/><br/>
-                    <Row gutter={[32, 32]} justify="center" style={{justifyContent: "center"}}>
+                    <Row gutter={[32, 32]} justify="center" style={{justifyContent: "center", marginBottom: "50px", marginTop: 4}}>
                         {testCases.map((tc, i) => (
                             <Col key={tc.test_case}>
                                 <Card style={{height: '5.7rem', padding: '0 3rem 5rem 1rem'}}>

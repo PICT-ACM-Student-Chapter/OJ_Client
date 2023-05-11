@@ -9,17 +9,17 @@ import {GlobalProvider} from "./context/GlobalContext";
 import * as Sentry from "@sentry/react";
 import { Integrations } from "@sentry/tracing";
 
-Sentry.init({
-    dsn: "https://355e47afbedf42fa993aa6f022d2d326@o504182.ingest.sentry.io/5590697",
-    autoSessionTracking: true,
-    integrations: [
-        new Integrations.BrowserTracing(),
-    ],
+// Sentry.init({
+//     dsn: "https://355e47afbedf42fa993aa6f022d2d326@o504182.ingest.sentry.io/5590697",
+//     autoSessionTracking: true,
+//     integrations: [
+//         new Integrations.BrowserTracing(),
+//     ],
 
-    // We recommend adjusting this value in production, or using tracesSampler
-    // for finer control
-    tracesSampleRate: 1.0,
-});
+//     // We recommend adjusting this value in production, or using tracesSampler
+//     // for finer control
+//     tracesSampleRate: 1.0,
+// });
 
 const themes = {
     dark: `${process.env.PUBLIC_URL}/dark-theme.css`,

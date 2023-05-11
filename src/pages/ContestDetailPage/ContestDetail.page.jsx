@@ -202,6 +202,7 @@ const ContestDetail = (props) => {
                           gutter={[0, 18]}
                           align="middle"
                           justify="center"
+                          style={{marginBottom: "20px"}}
                         >
                           <Col span={24}>
                             <Card bordered={false}>

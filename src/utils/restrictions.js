@@ -21,8 +21,9 @@ function keystrokesHandler(e) {
         e.key &&
         ["c", "x", "v", "u", "i"].includes(e.key.toLowerCase()) &&
         e.ctrlKey
-    )
-        e.preventDefault();
+    ){
+        // e.preventDefault();
+    }
 }
 
 // function tabExitHandler(contestId) {
